@@ -1,7 +1,7 @@
 <main class="login-container">
     <div class="form-container">
-        <form [formGroup]="loginForm" class="login-form" (submit)="submitForm()">
-            <h3>Login with your musically account</h3>
+        <form [formGroup]="registrationForm" (submit)="submitRegistrationForm()" class="login-form">
+            <h3>Create your musically account</h3>
             <div class="input-container">
                 <label for="email">Email</label>
                 <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
@@ -10,9 +10,9 @@
                 <label for="password">Password</label>
                 <input id="password" type="password" formControlName="password" />
             </div>
-            <a class="register-link" [routerLink]="['../register']" routerLinkActive="router-link-active">Don't have
+            <a class="register-link" [routerLink]="['../login']" routerLinkActive="router-link-active">Already have
                 an account?</a>
-            <button class="submit-btn" type="submit">Lets go...</button>
+            <button class="submit-btn" type="submit">Verify email...</button>
         </form>
 
     </div>

@@ -1,21 +1,10 @@
-import { NgFor } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { QuoteService } from '../quote.service';
-import { Quote } from '../quote';
-import { QuoteComponent } from '../quote/quote.component';
+import { Component} from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
-  imports: [NgFor, QuoteComponent],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
-export class AuthComponent {
-  quoteService: QuoteService = inject(QuoteService);
-  quotes: Quote[] = [];
-
-  constructor() {
-    this.quotes = this.quoteService.getAllQuotes();
-  }
-}
+export class AuthComponent {}

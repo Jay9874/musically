@@ -5,31 +5,14 @@
         <div class="circle circle-3"></div>
     </div>
     <div class="overlay"></div>
-    <div class="auth-nav-section">
-        <section>
-            <nav>
-                <ul>
-                    <li class="company-logo">
-                        <img src="musically.svg" alt="company_logo" />
-                        <span>Musically</span>
-                    </li>
-                </ul>
-            </nav>
-        </section>
-        <section class="main-section">
-            <div class="center-container">
-                <div class="title">
-                    <h2>Listen to musically anywhere, anytime</h2>
-                    <p>All your favorite music playlist at one place and of course for freeee...!</p>
-                </div>
-                <div class="quote-cards-container">
-                    <app-quote class="quote-card" *ngFor="let quote of quotes" [quote]="quote">
-                    </app-quote>
-                </div>
-                <button class="next-view">Start listening...</button>
-            </div>
-
-        </section>
-    </div>
+    <section class="auth-nav-section">
+        <nav>
+            <a routerLink="/auth" class="company-logo">
+                <img src="musically.svg" alt="company_logo" />
+                <span>Musically</span>
+            </a>
+        </nav>
+    </section>
+    <router-outlet></router-outlet>
 
 </main>
