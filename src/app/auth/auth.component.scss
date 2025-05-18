@@ -1,0 +1,103 @@
+.auth-page {
+    background:black;
+    background:rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    position: absolute;
+    z-index: 2;
+    height: 100vh;
+    width: 100%;
+}
+
+.background-shapes {
+    position: fixed;
+    height: 100%;
+    z-index: -1;
+    width: 100%;
+
+    .circle {
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        border-radius: 25px;
+        background-color: green;
+    }
+    .circle-1{
+        top: 50%;
+
+    }
+    .circle-2{
+        top: 75%;
+        left: 45%;
+    }
+    .circle-3{
+        left: 15%;
+        top: 15%;
+    }
+}
+
+.auth-nav-section {
+    nav {
+        display: flex;
+        padding: 1rem 4rem;
+        align-items: center;
+        height: 64px;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    .company-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        img {
+            height: 30px;
+            width: 30px;
+        }
+    }
+}
+
+.main-section {
+    .center-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        height: calc(100vh - 64px);
+        color: white;
+        max-width: 500px;
+        margin: 0 auto;
+        .title{
+            text-align: center;
+
+            h2{
+                padding: 1rem;
+            }
+            p{
+                padding: 0 5rem;
+            }
+        }
+    }
+
+    .quote-cards-container{
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        width: 100%;
+        overflow: scroll;
+        margin-top: 4rem;
+    }
+
+    .next-view{
+        margin-top: 1rem;
+        padding: .5rem 4rem;
+        border-radius: 10px;
+        outline: none;
+        border: none;
+        background-color: gray;
+        color: white;
+    }
+}
