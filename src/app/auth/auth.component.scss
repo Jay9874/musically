@@ -1,41 +1,55 @@
 .auth-page {
-    background:black;
-    background:rgba(0,0,0,0.8);
-    backdrop-filter: blur(10px);
-    position: absolute;
-    z-index: 2;
-    height: 100vh;
-    width: 100%;
+    min-height: 100vh;
 }
 
 .background-shapes {
     position: fixed;
+    top: 0;
+    left: 0;
     height: 100%;
-    z-index: -1;
     width: 100%;
+    z-index: -2;
+    background-color: black;
 
     .circle {
         position: absolute;
-        height: 50px;
-        width: 50px;
-        border-radius: 25px;
-        background-color: green;
+        height: 300px;
+        width: 300px;
+        border-radius: 150px;
+        background: radial-gradient(#997a1d, #30491c);
     }
-    .circle-1{
-        top: 50%;
 
+    .circle-1 {
+        top: 50%;
+        background: radial-gradient(#518a22, #1c3b1a);
     }
-    .circle-2{
+
+    .circle-2 {
         top: 75%;
         left: 45%;
+        background: radial-gradient(#89371a, #111c01);
     }
-    .circle-3{
+
+    .circle-3 {
         left: 15%;
         top: 15%;
     }
 }
 
+.overlay {
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px); // for safari
+    background-color: #00000040;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
+
 .auth-nav-section {
+    background: transparent;
     nav {
         display: flex;
         padding: 1rem 4rem;
@@ -52,6 +66,8 @@
         align-items: center;
         justify-content: center;
         gap: 5px;
+        color: white;
+
         img {
             height: 30px;
             width: 30px;
@@ -70,34 +86,37 @@
         color: white;
         max-width: 500px;
         margin: 0 auto;
-        .title{
+
+        .title {
             text-align: center;
 
-            h2{
+            h2 {
                 padding: 1rem;
             }
-            p{
+
+            p {
                 padding: 0 5rem;
             }
         }
     }
 
-    .quote-cards-container{
+    .quote-cards-container {
         display: flex;
         align-items: center;
         gap: 2rem;
         width: 100%;
         overflow: scroll;
         margin-top: 4rem;
+        padding: 0 2rem;
     }
 
-    .next-view{
-        margin-top: 1rem;
+    .next-view {
+        margin-top: 2rem;
         padding: .5rem 4rem;
         border-radius: 10px;
-        outline: none;
-        border: none;
-        background-color: gray;
+        border: 1px solid rgba(128, 128, 128, 0.5);
+        background: transparent;
         color: white;
+        cursor: pointer;
     }
 }

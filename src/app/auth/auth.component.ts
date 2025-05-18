@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { QuoteService } from '../quote.service';
 import { Quote } from '../quote';
