@@ -1,16 +1,22 @@
 {
-    "version": 2,
-    "public": true,
-    "name": "musically",
-    "rewrites": [
-      {
-        "source": "/(.*)",
-        "destination": "/api"
-      }
-    ],
-    "functions": {
-      "api/index.js": {
-        "includeFiles": "dist/musically/**"
-      }
+  "version": 2,
+  "public": true,
+  "name": "musically",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.js"
+    }
+  ],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "dist/musically/**"
     }
   }
+}
