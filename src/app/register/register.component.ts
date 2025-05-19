@@ -7,7 +7,7 @@ import { AuthService } from '../auth.service';
   selector: 'app-register',
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent {
   authService = inject(AuthService);

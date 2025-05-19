@@ -4,10 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
+  url = 'http://localhost:4000/api';
   constructor() {}
 
-  submitLoginForm(email: string, password: string) {
-    return `Got your input: ${email}, ${password}`;
+  async submitLoginForm(email: string, password: string): Promise<object> {
+    const data = await fetch(`${this.url}?id=hello`);
+    const res = await data.json();
+    return res;
   }
 
   submitRegistrationForm(email: string, password: string) {

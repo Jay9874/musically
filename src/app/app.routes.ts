@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthComponent } from './auth/auth.component';
-import path from 'path';
+import { AuthIndexComponent } from './auth-index/auth-index.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { AuthIndexComponent } from './auth-index/auth-index.component';
 
 export const routes: Routes = [
   {

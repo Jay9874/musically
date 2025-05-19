@@ -5,7 +5,7 @@ import { Quote } from '../quote';
   selector: 'app-quote',
   imports: [],
   templateUrl: './quote.component.html',
-  styleUrl: './quote.component.scss',
+  styleUrl: './quote.component.css',
 })
 export class QuoteComponent {
   @Input() quote!: Quote;

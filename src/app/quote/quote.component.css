@@ -4,8 +4,10 @@
     background-color: rgba(128, 128, 128, 0.5);
     backdrop-filter: blur(10px);
     width: 400px;
+  }
+  
+  .quote-container .about-author {
+    margin: 1rem 0 0;
+  }
 
-    .about-author {
-        margin: 1rem 0 0;
-    }
-}
+  

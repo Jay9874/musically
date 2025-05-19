@@ -5,6 +5,6 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   selector: 'app-auth',
   imports: [RouterOutlet, RouterLink],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.scss',
+  styleUrl: './auth.component.css',
 })
 export class AuthComponent {}

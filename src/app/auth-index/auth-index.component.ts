@@ -10,7 +10,7 @@ import { NgFor } from '@angular/common';
   selector: 'app-auth-index',
   imports: [RouterLink, QuoteComponent, NgFor],
   templateUrl: './auth-index.component.html',
-  styleUrl: './auth-index.component.scss',
+  styleUrl: './auth-index.component.css',
 })
 export class AuthIndexComponent {
   quoteService: QuoteService = inject(QuoteService);
