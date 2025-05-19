@@ -2,12 +2,6 @@
   "version": 2,
   "public": true,
   "name": "musically",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
