@@ -8,8 +8,7 @@
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:musically": "node dist/musically/server/server.mjs",
-    "vercel-build": "npm run build && npm run serve:ssr:musically"
+    "serve:ssr:musically": "node dist/musically/server/server.mjs"
   },
   "private": true,
   "dependencies": {
