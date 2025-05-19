@@ -47,12 +47,12 @@ export function app(): express.Express {
 }
 
 const server = app();
-if (isMainModule(import.meta.url)) {
-  const port = process.env['PORT'] || 4000;
-  server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:\${port}`);
-  });
-}
+// if (isMainModule(import.meta.url)) {
+//   const port = process.env['PORT'] || 4000;
+//   server.listen(port, () => {
+//     console.log(`Node Express server listening on http://localhost:\${port}`);
+//   });
+// }
 
 console.warn('Node Express server started');
 

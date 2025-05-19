@@ -1,15 +1,16 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "dist/musically/server/server.mjs",
-      "use": "@vercel/node"
+    "version": 2,
+    "public": true,
+    "name": "musically",
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/api"
+      }
+    ],
+    "functions": {
+      "api/index.js": {
+        "includeFiles": "dist/musically/**"
+      }
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/musically/server/server.mjs"
-    }
-  ]
-}
+  }
