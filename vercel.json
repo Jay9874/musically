@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/dist/musically/browser/index.html"
+      "dest": "dist/musically/server/server.mjs"
     }
   ]
 }
