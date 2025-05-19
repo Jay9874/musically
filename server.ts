@@ -54,7 +54,7 @@ const server = app();
 //   });
 // }
 
-console.warn('Node Express server started');
+console.log('Node Express server started');
 
 // This exposes the RequestHandler
 export const reqHandler = createNodeRequestHandler(server);
