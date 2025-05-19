@@ -1,11 +1,15 @@
 {
-  "version": 2,
-  "public": true,
-  "name": "musically",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/musically/server/server.mjs"
-    }
-  ]
-}
+    "version": 2,
+    "builds": [
+      {
+        "src": "dist/server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "dist/server.js"
+      }
+    ]
+  }

@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng serve",
-    "start": "node dist/musically/server/server.mjs",
-    "build": "ng build --configuration production",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "vercel-build": "tsc",
     "serve:ssr:musically": "node dist/musically/server/server.mjs"
   },
   "private": true,
