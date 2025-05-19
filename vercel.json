@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node",
+        "config": {
+           "handler": "dist/musically/server/server.mjs",
+           "runtime": "nodejs16.x",
+           "includeFiles": ["dist/musically/browser/**", "dist/musically/server/**", "package.json"]
+        }
+      }
+    ],
+     "routes": [
+       {
+         "src": "/(.*)",
+         "dest": "/dist/musically/browser/index.html"
+       }
+     ]
+  }
