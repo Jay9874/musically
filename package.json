@@ -5,10 +5,9 @@
     "ng": "ng",
     "dev": "ng serve",
     "start": "node dist/musically/server/server.mjs",
-    "build-dev": "ng build --configuration production",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "vercel-build": "ng build",
     "serve:ssr:musically": "node dist/musically/server/server.mjs"
   },
   "private": true,

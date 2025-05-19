@@ -5,12 +5,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/index.js"
+      "dest": "dist/musically/server/server.mjs"
     }
-  ],
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "dist/musically/**"
-    }
-  }
+  ]
 }
