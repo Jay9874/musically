@@ -43,3 +43,6 @@ Thumbs.db
 
 # package-lock.json
 package-lock.json
+
+#environment variables
+.env
