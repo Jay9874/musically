@@ -1,14 +1,30 @@
-import { Client } from 'pg';
-import dotenv from "dotenv";
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      user: string;
+      password: string;
+      host: string;
+      port: number;
+      database: string;
+    }
+  }
+}
 
+import * as dotenv from 'dotenv';
 dotenv.config();
+import { Pool } from 'pg';
 
-const client = new Client({
+const pool = new Pool({
   user: process.env.user,
   password: process.env.password,
   host: process.env.host,
-  port: Number(process.env.port),
+  port: process.env.port,
   database: process.env.database,
 });
 
-export { client };
+pool
+  .connect()
+  .then(() => console.log('Connected to PostgreSQL'))
+  .catch((err) => console.error('DB Connection Error:', err));
+
+export { pool };

@@ -16,4 +16,21 @@
         </form>
 
     </div>
+    <ng-container *ngIf="data$ | async as data">
+        <ng-container [ngSwitch]="data.state">
+          
+          <p *ngSwitchCase="'loading'">Loading...</p>
+          
+          <ng-container *ngSwitchCase="'error'">
+            <p *ngIf="isErrored(data)">Error: {{ data.error?.message || (data.error | json) }}</p>
+          </ng-container>
+          
+          <ng-container *ngSwitchCase="'loaded'">
+            <p>{{ data.data | json }}</p>
+          </ng-container>
+          
+        </ng-container>
+      </ng-container>
+      
+
 </main>

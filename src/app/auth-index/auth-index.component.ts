@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { QuoteService } from '../quote.service';
+import { QuoteService } from '../quote/services/quote.service';
 import { inject } from '@angular/core';
-import { Quote } from '../quote';
+import { Quote } from '../quote/services/quote';
 import { QuoteComponent } from '../quote/quote.component';
 import { NgFor } from '@angular/common';
 
