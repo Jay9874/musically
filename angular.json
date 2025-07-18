@@ -14,13 +14,10 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist/musically",
-            // New in v19: outputMode
             "outputMode": "server",
-            
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -102,7 +99,7 @@
   "cli": {
     "analytics": "7453ba37-fca5-45c7-964f-6b4e10c26123",
     "cache": {
-      "enabled": false
+      "enabled": true
     }
   }
 }

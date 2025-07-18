@@ -22,15 +22,12 @@
           <p *ngSwitchCase="'loading'">Loading...</p>
           
           <ng-container *ngSwitchCase="'error'">
-            <p *ngIf="isErrored(data)">Error: {{ data.error?.message || (data.error | json) }}</p>
+            <!-- <p *ngIf="isErrored(data)">Error: {{ data.error?.message || (data.error | json) }}</p> -->
           </ng-container>
           
           <ng-container *ngSwitchCase="'loaded'">
             <p>{{ data.data | json }}</p>
           </ng-container>
-          
         </ng-container>
       </ng-container>
-      
-
 </main>

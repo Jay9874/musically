@@ -8,6 +8,7 @@ import {
   VERSION,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ToastService } from './toast/services/toast.service';
 
 @Component({
   selector: 'app-root',

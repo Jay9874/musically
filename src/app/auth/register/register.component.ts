@@ -26,5 +26,10 @@ export class RegisterComponent {
       this.registrationForm.value.email ?? '',
       this.registrationForm.value.password ?? ''
     );
+    this.data$.subscribe({
+      next: (value) =>
+        console.log('Observable emitted the next value: ' + value),
+      error: (err) => console.error('Observable emitted an error: ' + err),
+    });
   }
 }

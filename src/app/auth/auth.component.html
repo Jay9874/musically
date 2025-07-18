@@ -11,8 +11,20 @@
                 <img src="musically.svg" alt="company_logo" />
                 <span>Musically</span>
             </a>
+            <button type="button" id="nav-action-btn" title="Click to show a toast" (click)="showToast()">Toast</button>
         </nav>
     </section>
+
+    <!-- Toast container -->
+    <div class="toast-container">
+        @for (toast of toast.toasts(); track $index; let i = $index) {
+        <div class="toast">
+            <span>{{ toast.message }}</span>
+            <button (click)="removeToast(toast.id)">X</button>
+        </div>
+
+        }
+    </div>
     <router-outlet></router-outlet>
 
 </main>

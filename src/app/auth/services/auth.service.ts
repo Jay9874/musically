@@ -16,18 +16,9 @@ export class AuthService {
     return res;
   }
 
-  // submitRegistrationForm(email: string, password: string) {
-  //   this.http
-  //     .post('http://localhost:4200/api/auth/register', { email, password })
-  //     .subscribe({
-  //       next: (res) => console.log('Success', res),
-  //       error: (err) => console.error('Error', err),
-  //     });
-  // }
-
   submitRegistrationForm(email: string, password: string) {
     return toLoadingStateStream(
-      this.http.post('https://api.mywebsite.com/data', {
+      this.http.post('http://localhost:4200/api/auth/register', {
         email,
         password,
       })

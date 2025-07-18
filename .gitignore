@@ -46,3 +46,6 @@ package-lock.json
 
 #environment variables
 .env
+
+# ignore cache files
+.angular

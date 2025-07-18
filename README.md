@@ -1,5 +1,5 @@
 # Musically 
- I built this app to listen anytime, anywhere for free
+ I built this app to listen music anytime, anywhere for free
 
  
  ## Setting up locally
