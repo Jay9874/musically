@@ -35,15 +35,104 @@ export class ToastService {
     }
   };
 
-  remove = (toastId: string): void => {
-    console.log('called remove: ', toastId);
-    console.log('toasts: ', this.toasts());
+  error = (message: string, duration: number = 1000): string => {
+    try {
+      // Generate a unique ID for each toast
+      const id = Date.now().toString();
+      const newToast: Toast = { message, duration, id, type: 'error' };
 
-    // Filter out the toast with the matching ID to create a new array (immutable update)
+      this.toasts.update((prev) => [...prev, newToast]);
+
+      console.log('all toasts: ', this.toasts());
+      setTimeout(() => {
+        this.remove(newToast.id);
+      }, duration);
+
+      return newToast.id;
+    } catch (err) {
+      console.log('err while adding toast: ', err);
+      throw err;
+    }
+  };
+
+  success = (message: string, duration: number = 1000): string => {
+    try {
+      // Generate a unique ID for each toast
+      const id = Date.now().toString();
+      const newToast: Toast = { message, duration, id, type: 'success' };
+      this.toasts.update((prev) => [...prev, newToast]);
+      setTimeout(() => {
+        this.remove(newToast.id);
+      }, duration);
+
+      return newToast.id;
+    } catch (err) {
+      console.log('err while adding toast: ', err);
+      throw err;
+    }
+  };
+
+  loading = (message: string, duration: number = 1000): string => {
+    try {
+      // Generate a unique ID for each toast
+      const id = Date.now().toString();
+      const newToast: Toast = { message, duration, id, type: 'loading' };
+      this.toasts.update((prev) => [...prev, newToast]);
+
+      console.log('all toasts: ', this.toasts());
+      setTimeout(() => {
+        this.remove(newToast.id);
+      }, duration);
+
+      return newToast.id;
+    } catch (err) {
+      console.log('err while adding toast: ', err);
+      throw err;
+    }
+  };
+
+  info = (message: string, duration: number = 1000): string => {
+    try {
+      // Generate a unique ID for each toast
+      const id = Date.now().toString();
+      const newToast: Toast = { message, duration, id, type: 'info' };
+      this.toasts.update((prev) => [...prev, newToast]);
+
+      console.log('all toasts: ', this.toasts());
+      setTimeout(() => {
+        this.remove(newToast.id);
+      }, duration);
+
+      return newToast.id;
+    } catch (err) {
+      console.log('err while adding toast: ', err);
+      throw err;
+    }
+  };
+
+  warning = (message: string, duration: number = 1000): string => {
+    try {
+      // Generate a unique ID for each toast
+      const id = Date.now().toString();
+      const newToast: Toast = { message, duration, id, type: 'warning' };
+      this.toasts.update((prev) => [...prev, newToast]);
+
+      console.log('all toasts: ', this.toasts());
+      setTimeout(() => {
+        this.remove(newToast.id);
+      }, duration);
+
+      return newToast.id;
+    } catch (err) {
+      console.log('err while adding toast: ', err);
+      throw err;
+    }
+  };
+
+  remove = (toastId: string): void => {
     const modifiedToasts: Toast[] = this.toasts().filter(
       (toast) => toast.id !== toastId
     );
-
     // Update the reactive state with the new array
     this.toasts.set(modifiedToasts);
   };

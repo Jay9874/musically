@@ -14,6 +14,10 @@ export const login = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // Example user, get from database
     const { email, password } = req.body;
+
+    console.log('email: ', email);
+    console.log('password: ', password);
+
     const user = [{ email: email ?? '' }, { password: password ?? '' }];
 
     // Return json with success message
@@ -28,6 +32,8 @@ export const register = async (
 ) => {
   try {
     const { email, password } = req.body;
+
+    console.log('email: ', email);
     const values = [email, password];
 
     // First check if any user exists with this email

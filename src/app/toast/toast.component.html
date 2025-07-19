@@ -1,1 +1,11 @@
-<p>toast works!</p>
+<!-- Will cover the whole body -->
+<main class="toast-container">
+    <!-- Toast card (align based on user pref and style with css class) -->
+    <section class="toast-card-container {{alignment.horizontal}} {{alignment.vertical}}">
+        @for (toast of toastService.toasts(); track $index; let i=$index) {
+        <div class="toast {{toast.type}}">
+            {{toast.message}}
+        </div>
+        }
+    </section>
+</main>
