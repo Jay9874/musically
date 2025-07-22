@@ -20,6 +20,7 @@ export class AuthService {
       map((res) => {
         console.log('res: ', res);
         this.toast.success('Signed in');
+        return res;
       }),
       catchError((err) => {
         console.log('err occurred while signing: ', err);

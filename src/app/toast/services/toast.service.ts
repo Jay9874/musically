@@ -44,9 +44,9 @@ export class ToastService {
       this.toasts.update((prev) => [...prev, newToast]);
 
       console.log('all toasts: ', this.toasts());
-      setTimeout(() => {
-        this.remove(newToast.id);
-      }, duration);
+      // setTimeout(() => {
+      //   this.remove(newToast.id);
+      // }, duration);
 
       return newToast.id;
     } catch (err) {
@@ -61,9 +61,9 @@ export class ToastService {
       const id = Date.now().toString();
       const newToast: Toast = { message, duration, id, type: 'success' };
       this.toasts.update((prev) => [...prev, newToast]);
-      setTimeout(() => {
-        this.remove(newToast.id);
-      }, duration);
+      // setTimeout(() => {
+      //   this.remove(newToast.id);
+      // }, duration);
 
       return newToast.id;
     } catch (err) {

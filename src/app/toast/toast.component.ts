@@ -1,6 +1,6 @@
-import { Component, inject, Input, input, signal } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ToastService } from './services/toast.service';
-import { Alignment, Toast } from '../../../types/interfaces/interfaces.toast';
+import { Alignment } from '../../../types/interfaces/interfaces.toast';
 
 @Component({
   selector: 'app-toast',
@@ -11,4 +11,6 @@ import { Alignment, Toast } from '../../../types/interfaces/interfaces.toast';
 export class ToastComponent {
   @Input() alignment: Alignment = { vertical: 'top', horizontal: 'center' };
   toastService: ToastService = inject(ToastService);
+
+  constructor() {}
 }

@@ -12,14 +12,4 @@ export class AuthComponent {
   // services
   toast: ToastService = inject(ToastService);
   constructor() {}
-
-  // To show and hide toast
-  showToast = (): void => {
-    this.toast.add('This is a toast message.');
-  };
-
-  // To remove toast
-  removeToast = (id: string): void => {
-    this.toast.remove(id);
-  };
 }

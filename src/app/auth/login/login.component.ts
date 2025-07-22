@@ -18,8 +18,8 @@ export class LoginComponent {
     password: new FormControl(''),
   });
 
-  async submitForm() {
-    console.log("called sign in")
+  submitForm() {
+    console.log('called sign in');
     this.authService
       .submitLoginForm(
         this.loginForm.value.email ?? '',
