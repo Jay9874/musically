@@ -20,9 +20,6 @@ export class AuthService {
       map((res) => {
         console.log('res: ', res);
         this.toast.success('Signed in');
-        this.toast.error('Signed in');
-        this.toast.warning('Signed in');
-        this.toast.info('Signed in');
         return res;
       }),
       catchError((err) => {
