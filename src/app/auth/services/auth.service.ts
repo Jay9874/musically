@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { toLoadingStateStream } from '../../loading-state-stream';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { ToastService } from '../../toast/services/toast.service';
@@ -32,10 +32,19 @@ export class AuthService {
 
   submitRegistrationForm(email: string, password: string) {
     return toLoadingStateStream(
-      this.http.post('http://localhost:4200/api/auth/register', {
-        email,
-        password,
-      })
+      this.http
+        .post('http://localhost:4200/api/auth/register', {
+          email,
+          password,
+        })
+        .pipe(
+          map((res) => res),
+          catchError((err: HttpErrorResponse) => {
+            this.toast.error('Something went wrong while signing up.');
+            console.log('err as sign up: ', err);
+            return throwError(() => err);
+          })
+        )
     );
   }
 }

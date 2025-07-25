@@ -3,7 +3,7 @@ export type ToastHorizontalAlignment = 'left' | 'center' | 'right';
 export type ToastVerticalAlignment = 'top' | 'bottom';
 
 export interface Toast {
-  id: string;
+  id: number;
   message: string;
   duration: number;
   type: ToastType;

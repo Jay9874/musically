@@ -29,16 +29,19 @@
 }
 
 .toast {
-    width: 200px;
+    width: 300px;
     border-radius: 10px;
     padding: 0.75rem 1rem;
     text-align: center;
-    color: white;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    position: absolute;
+    /* position: absolute; */
     transition: all 350ms ease-in-out;
+    transform: translateX(0);
+}
+.toast.toast-2{
+    transform: translateX(30px);
 }
 
 .toast.error {
@@ -66,20 +69,20 @@
 }
 
 /************ The stacking effect of toasts */
-.toast:nth-child(n+3) {
+/* .toast:nth-child(n+3) {
     display: hidden;
-}
+} */
 
 .toast:nth-child(3) {
-    transform: perspective(20px) translateZ(-4px) translate(0, -20px);
-    z-index: -3;
+    /* transform: perspective(20px) translateZ(-4px) translate(0, -20px); */
+    /* z-index: -3; */
 }
 
 .toast:nth-child(2) {
-    transform: perspective(20px) translateZ(-2px) translate(0, -10px);
-    z-index: -2;
+    /* transform: perspective(20px) translateZ(-2px) translate(0, -10px); */
+    /* z-index: -2; */
 }
 
 .toast:nth-child(1) {
-    z-index: 1;
+    /* z-index: 1; */
 }
