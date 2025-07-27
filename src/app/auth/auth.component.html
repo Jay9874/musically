@@ -7,11 +7,12 @@
     <div class="overlay"></div>
     <section class="auth-nav-section">
         <nav>
-            <a routerLink="/auth" class="company-logo">
+            <a (click)="onBrandClick()" routerLink=" /auth" class="company-logo">
                 <img src="musically.svg" alt="company_logo" />
                 <span>Musically</span>
             </a>
-            <button type="button" id="nav-action-btn" title="Click to show a toast">Action</button>
+            <button type="button" (click)="onActionClick()" id="nav-action-btn"
+                title="Click to show a toast">Action</button>
         </nav>
     </section>
     <router-outlet></router-outlet>

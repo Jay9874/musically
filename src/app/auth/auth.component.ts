@@ -12,4 +12,12 @@ export class AuthComponent {
   // services
   toast: ToastService = inject(ToastService);
   constructor() {}
+
+  onActionClick(): void {
+    this.toast.success('Signed in');
+  }
+
+  onBrandClick(): void {
+    this.toast.info('Moving to home page...');
+  }
 }

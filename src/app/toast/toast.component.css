@@ -5,6 +5,11 @@
     padding: 0.5rem;
 }
 
+/**** ON hover show all the toasts */
+/* .toast-container:hover .toast{
+    position: static;
+} */
+
 .toast-container.top {
     top: 50px;
 }
@@ -15,7 +20,7 @@
 
 .toast-container.top.center,
 .toast-container.bottom.center {
-    left: calc(50% - 100px);
+    left: calc(50% - 200px);
 }
 
 .toast-container.top.left,
@@ -28,20 +33,26 @@
     right: 20px;
 }
 
+.toast-card-container {
+    position: relative;
+}
+
+#toast-placeholder {
+    width: 400px;
+    height: 50px;
+}
+
 .toast {
-    width: 300px;
     border-radius: 10px;
-    padding: 0.75rem 1rem;
-    text-align: center;
+    padding: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    /* position: absolute; */
-    transition: all 350ms ease-in-out;
-    transform: translateX(0);
-}
-.toast.toast-2{
-    transform: translateX(30px);
+    position: absolute;
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .toast.error {
@@ -69,20 +80,94 @@
 }
 
 /************ The stacking effect of toasts */
-/* .toast:nth-child(n+3) {
-    display: hidden;
-} */
-
-.toast:nth-child(3) {
-    /* transform: perspective(20px) translateZ(-4px) translate(0, -20px); */
-    /* z-index: -3; */
+.toast.frontier:not(.remove) {
+    animation: frontierMoveIn 200ms forwards;
 }
 
-.toast:nth-child(2) {
-    /* transform: perspective(20px) translateZ(-2px) translate(0, -10px); */
-    /* z-index: -2; */
+.toast.move-second:not(.remove) {
+    z-index: -2;
+    animation: frontierMoveSecond 200ms forwards;
+
 }
 
-.toast:nth-child(1) {
-    /* z-index: 1; */
+.toast.move-last:not(.remove) {
+    z-index: -3;
+    animation: secondMoveLast 200ms forwards;
+}
+
+/*** if the remove class is added */
+.toast.frontier.remove {
+    animation: disappear 200ms forwards;
+}
+
+.toast.toast.move-second.remove {
+    animation: disappearSecond 200ms forwards;
+}
+
+.toast.toast.move-last.remove {
+    animation: disappearLast 200ms forwards;
+}
+
+
+
+/************* Animations */
+@keyframes frontierMoveIn {
+    0% {
+        transform: translate(0, -30px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+@keyframes frontierMoveSecond {
+    0% {
+        transform: translate(0);
+    }
+
+    100% {
+        transform: perspective(30px) translateZ(-2px) translate(0, 15px);
+    }
+}
+
+@keyframes secondMoveLast {
+    0% {
+        transform: perspective(30px) translateZ(-2px) translate(0, 15px);
+    }
+
+    100% {
+        transform: perspective(30px) translateZ(-4px) translate(0, 30px);
+    }
+}
+
+@keyframes disappear {
+    to {
+        transform: translate(0, -5px);
+        opacity: 0;
+    }
+}
+
+@keyframes disappearSecond {
+    from {
+        transform: perspective(30px) translateZ(-2px) translate(0, 15px);
+        opacity: 1;
+    }
+
+    to {
+        transform: perspective(30px) translateZ(-2px) translate(0, -5px);
+        opacity: 0;
+    }
+}
+
+@keyframes disappearLast {
+    from {
+        transform: perspective(30px) translateZ(-4px) translate(0, 30px);
+        opacity: 1;
+    }
+
+    to {
+        transform: perspective(30px) translateZ(-4px) translate(0, -5px);
+        opacity: 0;
+    }
 }

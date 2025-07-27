@@ -10,21 +10,14 @@ import { ToastService } from '../../toast/services/toast.service';
 export class AuthService {
   url = 'http://localhost:4200/api/auth';
 
-  // Toast service
-  toast: ToastService = inject(ToastService);
-
   constructor(private http: HttpClient) {}
 
   submitLoginForm(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.url}/login`, { email, password }).pipe(
       map((res) => {
-        console.log('res: ', res);
-        this.toast.success('Signed in');
         return res;
       }),
       catchError((err) => {
-        console.log('err occurred while signing: ', err);
-        this.toast.error('Err occurred while signing.');
         return throwError(() => new Error(err));
       })
     );
@@ -40,8 +33,6 @@ export class AuthService {
         .pipe(
           map((res) => res),
           catchError((err: HttpErrorResponse) => {
-            this.toast.error('Something went wrong while signing up.');
-            console.log('err as sign up: ', err);
             return throwError(() => err);
           })
         )

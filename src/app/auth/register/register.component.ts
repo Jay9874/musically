@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { LoadingState } from '../../loading-state.interface';
+import { ToastService } from '../../toast/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,9 @@ import { LoadingState } from '../../loading-state.interface';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  authService = inject(AuthService);
+  authService: AuthService = inject(AuthService);
+  toast: ToastService = inject(ToastService);
+
   registrationForm = new FormGroup({
     email: new FormControl(''),
     password: new FormControl(''),
@@ -27,9 +30,8 @@ export class RegisterComponent {
       this.registrationForm.value.password ?? ''
     );
     this.data$.subscribe({
-      next: (value) =>
-        console.log('Observable emitted the next value: ' + value),
-      error: (err) => console.error('Observable emitted an error: ' + err),
+      next: (value) => this.toast.success('Registered successfully'),
+      error: (err) => this.toast.error('Could not register'),
     });
   }
 }

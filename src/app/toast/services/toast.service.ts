@@ -8,59 +8,35 @@ import {
   providedIn: 'root',
 })
 export class ToastService {
+  readonly DEFAULT_DURATION: number = 1400;
   toasts = signal<Toast[]>([]);
-  toastId = signal<number>(1);
 
   constructor() {}
 
-  // add = (
-  //   message: string,
-  //   duration: number = 1000,
-  //   type: ToastType = 'success'
-  // ): string => {
-  //   try {
-  //     // Generate a unique ID for each toast
-  //     const id = Date.now().toString();
-  //     const newToast: Toast = { message, duration, type, id };
-
-  //     this.toasts.update((prev) => [...prev, newToast]);
-
-  //     console.log('all toasts: ', this.toasts());
-  //     setTimeout(() => {
-  //       this.remove(newToast.id);
-  //     }, duration);
-
-  //     return newToast.id;
-  //   } catch (err) {
-  //     console.log('err while adding toast: ', err);
-  //     throw err;
-  //   }
-  // };
-
-  error = (message: string, duration: number = 1000): number => {
+  add = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION,
+    type: ToastType = 'info'
+  ): number => {
     try {
-      // Generate a unique ID for each toast
-      if (this.toasts().length === 3) {
-        const modifiedArr: Toast[] = this.toasts().filter(
-          (toast, i) => i !== 0
-        );
-        this.toasts.set(modifiedArr);
-        this.toastId.set(1);
-      }
-      // const id = Date.now().toString();
+      let newToastArray: Toast[] = this.toasts();
+
+      const id = Date.now();
       const newToast: Toast = {
         message,
         duration,
-        id: this.toastId(),
-        type: 'error',
+        id: id,
+        type,
       };
+      if (newToastArray.length === 3) {
+        newToastArray.splice(0, 1);
+      }
+      newToastArray = [...newToastArray, newToast];
+      this.toasts.set(newToastArray);
 
-      this.toasts.update((prev) => [...prev, newToast]);
-      this.toastId.update((prev) => prev + 1);
-      console.log('all toasts: ', this.toasts());
-      // setTimeout(() => {
-      //   this.remove(newToast.id);
-      // }, duration);
+      setTimeout(() => {
+        this.remove(newToast.id);
+      }, duration);
 
       return newToast.id;
     } catch (err) {
@@ -69,120 +45,39 @@ export class ToastService {
     }
   };
 
-  success = (message: string, duration: number = 1000): number => {
-    try {
-      // Generate a unique ID for each toast
-      if (this.toasts().length === 3) {
-        const modifiedArr: Toast[] = this.toasts().filter(
-          (toast, i) => i !== 0
-        );
-        this.toasts.set(modifiedArr);
-        this.toastId.set(1);
-      }
-      // const id = Date.now().toString();
-      const newToast: Toast = {
-        message,
-        duration,
-        id: this.toastId(),
-        type: 'success',
-      };
-
-      this.toasts.update((prev) => [...prev, newToast]);
-      this.toastId.update((prev) => prev + 1);
-      console.log('all toasts: ', this.toasts());
-
-      return newToast.id;
-    } catch (err) {
-      console.log('err while adding toast: ', err);
-      throw err;
-    }
+  error = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION
+  ): number => {
+    return this.add(message, duration, 'error');
   };
 
-  loading = (message: string, duration: number = 1000): number => {
-    try {
-      // Generate a unique ID for each toast
-      if (this.toasts().length === 3) {
-        const modifiedArr: Toast[] = this.toasts().filter(
-          (toast, i) => i !== 0
-        );
-        this.toasts.set(modifiedArr);
-        this.toastId.set(1);
-      }
-      // const id = Date.now().toString();
-      const newToast: Toast = {
-        message,
-        duration,
-        id: this.toastId(),
-        type: 'loading',
-      };
-
-      this.toasts.update((prev) => [...prev, newToast]);
-      this.toastId.update((prev) => prev + 1);
-      console.log('all toasts: ', this.toasts());
-
-      return newToast.id;
-    } catch (err) {
-      console.log('err while adding toast: ', err);
-      throw err;
-    }
+  success = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION
+  ): number => {
+    return this.add(message, duration, 'success');
   };
 
-  info = (message: string, duration: number = 1000): number => {
-    try {
-      // Generate a unique ID for each toast
-      if (this.toasts().length === 3) {
-        const modifiedArr: Toast[] = this.toasts().filter(
-          (toast, i) => i !== 0
-        );
-        this.toasts.set(modifiedArr);
-        this.toastId.set(1);
-      }
-      // const id = Date.now().toString();
-      const newToast: Toast = {
-        message,
-        duration,
-        id: this.toastId(),
-        type: 'info',
-      };
-
-      this.toasts.update((prev) => [...prev, newToast]);
-      this.toastId.update((prev) => prev + 1);
-      console.log('all toasts: ', this.toasts());
-
-      return newToast.id;
-    } catch (err) {
-      console.log('err while adding toast: ', err);
-      throw err;
-    }
+  loading = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION
+  ): number => {
+    return this.add(message, duration, 'loading');
   };
 
-  warning = (message: string, duration: number = 1000): number => {
-    try {
-      // Generate a unique ID for each toast
-      if (this.toasts().length === 3) {
-        const modifiedArr: Toast[] = this.toasts().filter(
-          (toast, i) => i !== 0
-        );
-        this.toasts.set(modifiedArr);
-        this.toastId.set(1);
-      }
-      // const id = Date.now().toString();
-      const newToast: Toast = {
-        message,
-        duration,
-        id: this.toastId(),
-        type: 'warning',
-      };
+  info = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION
+  ): number => {
+    return this.add(message, duration, 'info');
+  };
 
-      this.toasts.update((prev) => [...prev, newToast]);
-      this.toastId.update((prev) => prev + 1);
-      console.log('all toasts: ', this.toasts());
-
-      return newToast.id;
-    } catch (err) {
-      console.log('err while adding toast: ', err);
-      throw err;
-    }
+  warning = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION
+  ): number => {
+    return this.add(message, duration, 'warning');
   };
 
   remove = (toastId: number): void => {

@@ -3,12 +3,19 @@
     <!-- Toast card (align based on user pref and style with css class) -->
     <section class="toast-card-container">
         @for (toast of toastService.toasts(); track $index; let i=$index) {
-        <div class="toast {{toast.type}} toast-{{toast.id}}">
-            <img height="20" width="20" src="/svgs/toast_{{toast.type}}.svg"
-                alt="toast type representing icon" />
-                <span>{{toast.message}}</span>
-                <span>{{toast.id}}</span>
+        <!-- <div
+            class="toast {{toast.type}} toast-{{toast.id.toString()}} {{ this.toasts().length=== 2&& toast.id < this.toasts()[0].id? 'move-second': this.toasts().length=== 3&& toast.id < this.toasts()[2].id? 'move-last': 'frontier'}}"> -->
+        <!-- <div
+            class="toast {{toast.type}} toast-{{toast.id.toString()}} {{i===0?'move-last':i===1?'move-second':'frontier'}}"> -->
+        <!-- <div #toast [id]="toast.id.toString()" class="toast {{toast.type}} toast-{{toast.id.toString()}} {{getPosition(i)}}"> -->
+        <div #toast [id]="toast.id.toString()" class="toast {{toast.type}} toast-{{toast.id.toString()}}">
+            <img height="20" width="20" src="/svgs/toast_{{toast.type}}.svg" alt="toast type representing icon" />
+            <span>{{toast.message}}</span>
+            <span>{{toast.id}}</span>
         </div>
         }
+
+        <!-- The placeholder to toasts -->
+        <div id="toast-placeholder"></div>
     </section>
 </main>

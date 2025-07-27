@@ -19,7 +19,6 @@ export class LoginComponent {
   });
 
   submitForm() {
-    console.log('called sign in');
     this.authService
       .submitLoginForm(
         this.loginForm.value.email ?? '',
@@ -27,14 +26,13 @@ export class LoginComponent {
       )
       .subscribe({
         next: (data) => {
-          console.log('got the login data: ', data);
+          this.toast.success('Logged in successfully');
         },
         error: (err) => {
-          console.error('Error fetching posts:', err);
-          this.toast.error('Failed to load posts.');
+          this.toast.error('Failed to login.');
         },
         complete: () => {
-          console.log('Posts fetching complete.');
+          // console.log('logged in');
         },
       });
   }
