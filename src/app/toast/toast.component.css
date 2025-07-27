@@ -2,7 +2,7 @@
     position: fixed;
     display: flex;
     justify-content: center;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
 }
 
 /**** ON hover show all the toasts */
@@ -11,7 +11,7 @@
 } */
 
 .toast-container.top {
-    top: 50px;
+    top: 1rem;
 }
 
 .toast-container.bottom {
@@ -20,7 +20,7 @@
 
 .toast-container.top.center,
 .toast-container.bottom.center {
-    left: calc(50% - 200px);
+    left: calc(50% - 216px);
 }
 
 .toast-container.top.left,
@@ -35,6 +35,7 @@
 
 .toast-card-container {
     position: relative;
+    width: 100%;
 }
 
 #toast-placeholder {
@@ -50,6 +51,9 @@
     gap: 0.5rem;
     position: absolute;
     width: 400px;
+}
+
+.toast>span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -80,18 +84,24 @@
 }
 
 /************ The stacking effect of toasts */
+.toast.move-second {
+    z-index: -2;
+}
+
+.toast.move-last {
+    z-index: -3;
+}
+
 .toast.frontier:not(.remove) {
     animation: frontierMoveIn 200ms forwards;
 }
 
 .toast.move-second:not(.remove) {
-    z-index: -2;
     animation: frontierMoveSecond 200ms forwards;
 
 }
 
 .toast.move-last:not(.remove) {
-    z-index: -3;
     animation: secondMoveLast 200ms forwards;
 }
 
@@ -169,5 +179,27 @@
     to {
         transform: perspective(30px) translateZ(-4px) translate(0, -5px);
         opacity: 0;
+    }
+}
+
+
+/************** Media queries for width */
+@media screen and (max-width: 432px) {
+    .toast-container {
+        width: 100%;
+        left: 0;
+    }
+
+    .toast-container.top.center,
+    .toast-container.bottom.center {
+        left: 0;
+    }
+
+    #toast-placeholder {
+        width: 100%;
+    }
+
+    .toast {
+        width: 100%;
     }
 }
