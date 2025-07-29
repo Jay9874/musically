@@ -10,10 +10,11 @@
                 <label for="password">Password</label>
                 <input id="password" type="password" formControlName="password" />
             </div>
-            <a class="register-link" [routerLink]="['../register']" routerLinkActive="router-link-active">Don't have
+            <a title="Create a new account" class="register-link" [routerLink]="['../register']"
+                routerLinkActive="router-link-active">Don't have
                 an account?</a>
-            <button class="submit-btn" type="submit">Lets go...</button>
+            <button [disabled]="loginForm.invalid" class="submit-btn" type="submit"
+                title="{{loginForm.invalid?'Enter your email and password': 'Click to sign in'}}">Lets go...</button>
         </form>
-
     </div>
 </main>

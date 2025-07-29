@@ -35,12 +35,12 @@
     outline: none;
     font-size: 1rem;
     border-radius: 5px;
-    border: none;
-    background-color: rgba(128, 128, 128, 0.5);
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    background-color: transparent;
     color: white;
   }
   
-  .form-container .login-form .submit-btn {
+ .submit-btn {
     margin-top: 3rem;
     padding: 0.5rem;
     border-radius: 5px;
@@ -51,6 +51,12 @@
     font-size: 1rem;
   }
   
+  .submit-btn:disabled{
+    background-color: rgba(128, 128, 128, 0.483);
+    color: rgba(255, 255, 255, 0.454);
+    cursor: not-allowed;
+  }
+
   .form-container .login-form .register-link {
     margin-top: 1rem;
     font-size: 0.75rem;
