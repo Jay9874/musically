@@ -1,34 +1,31 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../toast/services/toast.service';
+import { User } from '../../../../types/interfaces/interfaces.user';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
   authService = inject(AuthService);
   toast: ToastService = inject(ToastService);
-  loginForm = new FormGroup({
-    email: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
+
+  // Form model
+  user = model<User>({
+    email: '',
+    password: '',
   });
+
+  constructor() {}
 
   submitForm() {
     this.authService
-      .submitLoginForm(
-        this.loginForm.value.email ?? '',
-        this.loginForm.value.password ?? ''
-      )
+      .submitLoginForm(this.user().email, this.user().password)
       .subscribe({
         next: (data) => {
           this.toast.success('Logged in successfully');
@@ -40,19 +37,5 @@ export class LoginComponent {
           // console.log('logged in');
         },
       });
-  }
-
-  validatePassword(): boolean {
-    // It will check for 
-    /*
-      1. Atleast one capital letter,
-      2. Atleast one small letter,
-      3. Atleast one special character,
-      4. Atleast one digit,
-      5. Length should be atleast 8 or more
-    */
-    const passwordRegex: RegExp = /([A-Z])([a-z])([0-9]){8, }/;
-    if(this.loginForm.value.password)
-    return true;
   }
 }
