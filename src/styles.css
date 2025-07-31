@@ -14,7 +14,7 @@
   --gray12: hsl(0, 0%, 9%);
   /* Toast */
   --normal-bg: #fff;
-  --normal-border: var(--gray4);
+  --normal-border: var(--gray7);
   --normal-text: var(--gray12);
   --success-bg: hsl(143, 85%, 96%);
   --success-border: hsl(145, 92%, 91%);
