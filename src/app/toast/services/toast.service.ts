@@ -34,9 +34,9 @@ export class ToastService {
       newToastArray = [...newToastArray, newToast];
       this.toasts.set(newToastArray);
 
-      setTimeout(() => {
-        this.remove(newToast.id);
-      }, duration);
+      // setTimeout(() => {
+      //   this.remove(newToast.id);
+      // }, duration);
 
       return newToast.id;
     } catch (err) {
@@ -51,19 +51,18 @@ export class ToastService {
   ): number => {
     return this.add(message, duration, 'error');
   };
+  loading = (
+    message: string,
+    duration: number = this.DEFAULT_DURATION
+  ): number => {
+    return this.add(message, duration, 'loading');
+  };
 
   success = (
     message: string,
     duration: number = this.DEFAULT_DURATION
   ): number => {
     return this.add(message, duration, 'success');
-  };
-
-  loading = (
-    message: string,
-    duration: number = this.DEFAULT_DURATION
-  ): number => {
-    return this.add(message, duration, 'loading');
   };
 
   info = (

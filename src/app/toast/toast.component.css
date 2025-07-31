@@ -83,6 +83,12 @@
     border: 2px solid var(--info-border);
 }
 
+.toast.loading {
+    background-color: var(--normal-bg);
+    border: 2px solid var(--normal-border);
+    color: var(--normal-text);
+}
+
 /************ The stacking effect of toasts */
 .toast.move-second {
     z-index: -2;

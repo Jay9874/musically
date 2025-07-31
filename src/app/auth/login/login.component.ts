@@ -28,7 +28,8 @@ export class LoginComponent {
       .submitLoginForm(this.user().email, this.user().password)
       .subscribe({
         next: (data) => {
-          this.toast.success('Logged in successfully');
+
+          this.toast.loading('Logged in successfully');
         },
         error: (err) => {
           this.toast.error('Failed to login.');

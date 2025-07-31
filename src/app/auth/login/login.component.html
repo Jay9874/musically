@@ -1,6 +1,27 @@
 <main class="login-container">
     <div class="form-container">
         <form #loginForm="ngForm" class="login-form" (ngSubmit)="submitForm()">
+            <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="#c4c4c4" stroke-linecap="round">
+                    <line x1="35" y1="25" x2="45" y2="25" />
+                    <line x1="32.071" y1="17.929" x2="39.142" y2="10.858" />
+                    <line x1="25" y1="15" x2="25" y2="5" />
+                    <line x1="17.929" y1="17.929" x2="10.858" y2="10.858" />
+                    <line x1="15" y1="25" x2="5" y2="25" />
+                    <line x1="12.071" y1="32.071" x2="15" y2="39.142" />
+                    <line x1="25" y1="35" x2="25" y2="45" />
+                    <line x1="32.071" y1="35" x2="39.142" y2="39.142" />
+
+                    <!-- <rect x="10" y="10" width="15" height="4" rx="2" />
+                    <rect x="7.071" y="-7.071" width="15" height="4" rx="2" transform="rotate(-45, 7.071, 0)" />
+                    <rect x="0" y="-10" width="4" height="10" rx="2" />
+                    <rect x="-7.071" y="-7.071" width="15" height="4" rx="2" transform="rotate(45, 7.071, 0)" />
+                    <rect x="-10" y="0" width="4" height="10" rx="2" />
+                    <rect x="-7.071" y="7.071" width="15" height="4" rx="2" transform="rotate(225, 7.071, 0)" />
+                    <rect x="0" y="10" width="15" height="4" rx="2" transform="rotate(260, 7.071, 0)" />
+                    <rect x="7.071" y="7.071" width="15" height="4" rx="2" transform="rotate(300, 7.071, 0)" /> -->
+                </g>
+            </svg>
             <h3>Login with your musically account</h3>
             <div class="input-container">
                 <label for="email">Email</label>
@@ -10,7 +31,7 @@
             <div class="input-container">
                 <label for="password">Password</label>
                 <input id="password" type="password" [(ngModel)]="user().password" name="password"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#@$%&])(?=.{8,20}$)\S*$"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#@$%&])(?=.{8,20}$)\S*$"
                     placeholder="A strong 8-20 character password" required />
             </div>
             <a title="Create a new account" class="register-link" [routerLink]="['../register']"

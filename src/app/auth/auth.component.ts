@@ -14,7 +14,7 @@ export class AuthComponent {
   constructor() {}
 
   onActionClick(): void {
-    this.toast.success('Signed in');
+    this.toast.loading('Signed in');
   }
 
   onBrandClick(): void {

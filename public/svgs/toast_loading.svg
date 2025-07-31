@@ -1,0 +1,13 @@
+<svg height="40" width="40" xmlns="http://www.w3.org/2000/svg" >
+    <g fill="#c4c4c4">
+        <rect width="4" height="10" rx="2" />
+        <rect x="20" width="20" height="4" rx="2" transform=" rotate(45, -10, 2)" />
+        <rect width="4" height="10" rx="2" />
+        <rect width="4" height="10" rx="2" />
+        <rect width="4" height="10" rx="2" />
+        <rect width="4" height="10" rx="2" />
+        <rect width="4" height="10" rx="2" />
+        <rect width="4" height="10" rx="2" />
+    </g>
+
+</svg>
