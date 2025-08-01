@@ -1,37 +1,60 @@
 <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
     <style>
-        circle {
-            fill: transparent;
-            stroke: #c4c4c440;
-        }
-
         line {
             stroke-width: 2;
+            stroke-linecap="round"
+            animation-name: lightUp;
+            animation-duration: 500ms;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+            animation-delay: calc(var(--i) * 125ms);
         }
+        line:nth-child(1) { --i: 0;}
+        line:nth-child(2) { --i: 1;}
+        line:nth-child(3) { --i: 2;}
+        line:nth-child(4) { --i: 3;}
+        line:nth-child(5) { --i: 4;}
+        line:nth-child(6) { --i: 5;}
+        line:nth-child(7) { --i: 6;}
+        line:nth-child(8) { --i: 7;}
+
+        @keyframes lightUp {
+            0% { stroke: #C4C4C4FF;}
+            12.5% {stroke: #C4C4C4E0;}
+            25% {stroke: #C4C4C4BF;}
+            37.5% {stroke: #C4C4C499;}
+            50% { stroke: #C4C4C480;}
+            62.5% {stroke: #C4C4C460;}
+            75% { stroke: #C4C4C440;}
+            87.5% {stroke: #C4C4C420;}
+            100% {stroke: #C4C4C400;}
+        }
+
     </style>
-    <g stroke="#c4c4c4" stroke-linecap="round">
+    <g stroke="#c4c4c4">
         <!-- The first one horizontally right -->
         <line x1="30" y1="25" x2="40" y2="25" />
 
-        <!-- second one at 45deg  top right-->
-        <line x1="28.5355" y1="21.4645" x2="35.6065" y2="14.3935" />
-
-        <!-- third one vertically above -->
-        <line x1="25" y1="20" x2="25" y2="10" />
-
-        <!-- fourth one 135 deg  top left-->
-        <line x1="21.4645" y1="21.4645" x2="14.3935" y2="14.3935" />
-
-        <!-- fifth one 180 deg horizontally left -->
-        <line x1="20" y1="25" x2="10" y2="25" />
-
-        <!-- sixth one 225 deg bottom left -->
-        <line x1="21.4645" y1="28.5355" x2="14.3935" y2="35.6065" />
+        <!-- eighth 315 deg one bottom right -->
+        <line x1="28.5355" y1="28.5355" x2="35.6065" y2="35.6065" />
 
         <!-- seventh one vertically down -->
         <line x1="25" y1="30" x2="25" y2="40" />
 
-        <!-- eighth 315 deg one bottom right -->
-        <line x1="28.5355" y1="28.5355" x2="35.6065" y2="35.6065" />
+        <!-- sixth one 225 deg bottom left -->
+        <line x1="21.4645" y1="28.5355" x2="14.3935" y2="35.6065" />
+
+        <!-- fifth one 180 deg horizontally left -->
+        <line x1="20" y1="25" x2="10" y2="25" />
+
+        <!-- fourth one 135 deg  top left-->
+        <line x1="21.4645" y1="21.4645" x2="14.3935" y2="14.3935" />
+
+        <!-- third one vertically above -->
+        <line x1="25" y1="20" x2="25" y2="10" />
+
+        <!-- second one at 45deg  top right-->
+        <line x1="28.5355" y1="21.4645" x2="35.6065" y2="14.3935" />
     </g>
 </svg>
