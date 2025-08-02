@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -23,6 +23,7 @@ export class RegisterComponent {
   });
 
   data$!: Observable<LoadingState>;
+  constructor(private router: Router) {}
 
   submitRegistrationForm() {
     this.data$ = this.authService.submitRegistrationForm(
@@ -30,8 +31,11 @@ export class RegisterComponent {
       this.registrationForm.value.password ?? ''
     );
     this.data$.subscribe({
-      next: (value) => this.toast.success('Registered successfully'),
-      error: (err) => this.toast.error('Could not register'),
+      next: (value) => {
+        this.toast.success('Registered successfully');
+        this.router.navigate(['auth']);
+      },
+      error: (err) => this.toast.error(err.message),
     });
   }
 }

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { toLoadingStateStream } from '../../loading-state-stream';
 import { catchError, map, Observable, throwError } from 'rxjs';
@@ -9,6 +9,7 @@ import { ToastService } from '../../toast/services/toast.service';
 })
 export class AuthService {
   url = 'http://localhost:4200/api/auth';
+  loading = signal(true);
 
   constructor(private http: HttpClient) {}
 

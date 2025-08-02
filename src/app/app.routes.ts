@@ -1,34 +1,36 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { AuthComponent } from './auth/auth.component';
-import { AuthIndexComponent } from './auth-index/auth-index.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    loadComponent: () =>
+      import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
   },
   {
     path: 'auth',
-    component: AuthComponent,
+    loadComponent: () =>
+      import('../app/auth/auth.component').then((m) => m.AuthComponent),
     title: 'Musically | Auth',
     children: [
       {
         path: '',
-        component: AuthIndexComponent,
-        title: 'Musically | Auth',
+        redirectTo: 'login',
       },
       {
         path: 'login',
-        component: LoginComponent,
+        loadComponent: () =>
+          import('../app/auth/login/login.component').then(
+            (m) => m.LoginComponent
+          ),
         title: 'Musically | Login',
       },
       {
         path: 'register',
-        component: RegisterComponent,
+        loadComponent: () =>
+          import('../app/auth/register/register.component').then(
+            (m) => m.RegisterComponent
+          ),
         title: 'Musically | Register',
       },
     ],
