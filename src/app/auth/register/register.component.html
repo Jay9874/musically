@@ -1,18 +1,23 @@
 <main class="login-container">
     <div class="form-container">
-        <form [formGroup]="registrationForm" (submit)="submitRegistrationForm()" class="login-form">
+        <form #registerForm="ngForm" (submit)="submitRegistrationForm()" class="login-form">
             <h3>Create your musically account</h3>
             <div class="input-container">
                 <label for="email">Email</label>
-                <input id="email" type="email" formControlName="email" placeholder="email@example.com" />
+                <input id="email" type="email" name="email" required [(ngModel)]="user().email"
+                    placeholder="email@example.com" />
             </div>
             <div class="input-container">
                 <label for="password">Password</label>
-                <input id="password" type="password" formControlName="password" />
+                <input id="password" type="password" name="password" [(ngModel)]="user().password"
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#@$%&])(?=.{8,20}$)\S*$"
+                    placeholder="A strong 8-20 character password" required />
             </div>
             <a class="register-link" [routerLink]="['../login']" routerLinkActive="router-link-active">Already have
                 an account?</a>
-            <button class="submit-btn" type="submit">Verify email...</button>
+            <button [disabled]="registerForm.invalid"
+                title="{{registerForm.invalid?'Enter your email and new password': 'Click to sign up'}}"
+                class="submit-btn" type="submit">Verify email...</button>
         </form>
 
     </div>

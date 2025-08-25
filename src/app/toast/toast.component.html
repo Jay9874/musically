@@ -9,7 +9,7 @@
             class="toast {{toast.type}} toast-{{toast.id.toString()}} {{i===0?'move-last':i===1?'move-second':'frontier'}}"> -->
         <!-- <div #toast [id]="toast.id.toString()" class="toast {{toast.type}} toast-{{toast.id.toString()}} {{getPosition(i)}}"> -->
         <div #toast [id]="toast.id.toString()" class="toast {{toast.type}}">
-            <img height="40" width="40" src="/svgs/toast_{{toast.type}}.svg" alt="toast type representing icon" />
+            <img height="20" width="20" src="/svgs/toast_{{toast.type}}.svg" alt="toast type representing icon" />
             <span>{{toast.message}}</span>
         </div>
         }

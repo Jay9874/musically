@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { dirname } from 'path';
+
 import { Request, Response, NextFunction } from 'express';
 import { asyncHandler } from '../middleware/async-middleware';
 import { ApiError } from '../utils/ApiError';
 import { pool } from '../db';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 import { DbUser } from '../types/interfaces/interfaces.user';
+import transporter from '../configs/nodemailer';
 
 const SALT_ROUND: number =
   parseInt(process.env['SALT_ROUND'] as string, 10) || 10; // Fallback to 10 if not set
@@ -41,14 +42,14 @@ export const login = async (
     const emailResult = await pool.query(emailQuery);
     if (emailResult.rowCount === 0)
       return res.status(404).send({
-        error:
+        message:
           'You email does not exists, please check it again or create a new account.',
       });
 
     const user: DbUser = emailResult.rows[0];
 
     // Compare the password
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcryptjs.compare(password, user.password);
     if (!match)
       return res.status(401).send({
         error:
@@ -102,11 +103,15 @@ export const register = async (
       Hash the password and create a new user
      */
 
-    const hash: string = await bcrypt.hash(password, SALT_ROUND);
+    const hash: string = await bcryptjs.hash(password, SALT_ROUND);
+    /*
+      Create an random 6 digit otp for email verification
+    */
+    const otp: string = Math.random().toString(36).slice(-8);
 
     const query = {
-      text: 'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email, created_at',
-      values: [email, hash],
+      text: 'INSERT INTO users (email, password, email_otp) VALUES ($1, $2, $3) RETURNING id, email, created_at',
+      values: [email, hash, otp],
     };
 
     const result = await pool.query(query);
@@ -115,9 +120,18 @@ export const register = async (
         error: 'Could not create users, try again.',
       });
 
+    await transporter.sendMail({
+      from: process.env['GOOGLE_APP_EMAIL'],
+      to: result.rows[0].email,
+      subject: 'Confirm your email for Musically',
+      html: `<h4>Hello there,<h4> <br>
+      <p>Thanks for signing up on Musically. Please confirm your email by clicking on the below link.</p>
+      `,
+    });
+
     console.log('User added:', result.rows[0]);
     return res.status(200).send({
-      user: result.rows[0],
+      message: 'User created, check email to proceed ahead.',
       error: null,
     });
   } catch (err) {

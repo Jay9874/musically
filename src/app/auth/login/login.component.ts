@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../toast/services/toast.service';
 import { User } from '../../../../types/interfaces/interfaces.user';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +32,8 @@ export class LoginComponent {
           this.toast.loading('Logged in successfully');
         },
         error: (err) => {
-          this.toast.error(err.message);
+          const { error }: { error: HttpErrorResponse } = err;
+          this.toast.error(error.message);
         },
         complete: () => {
           // console.log('logged in');

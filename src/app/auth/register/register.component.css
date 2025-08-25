@@ -1,59 +1,64 @@
 .form-container {
-    color: white;
-    max-width: 500px;
-    margin: 0 auto;
-    height: calc(100vh - 64px);
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-  }
-  
-  .form-container .login-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    border: 1px solid rgba(128, 128, 128, 0.5);
-    padding: 2rem;
-    border-radius: 10px;
-  }
-  
-  .form-container .login-form h3 {
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-  
-  .form-container .login-form .input-container {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .form-container .login-form .input-container input {
-    padding: 0.5rem;
-    outline: none;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: none;
-    background-color: rgba(128, 128, 128, 0.5);
-    color: white;
-  }
-  
-  .form-container .login-form .submit-btn {
-    margin-top: 3rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid rgba(128, 128, 128, 0.5);
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  .form-container .login-form .register-link {
-    margin-top: 1rem;
-    font-size: 0.75rem;
-    color: white;
-  }
-  
+  color: white;
+  max-width: 500px;
+  margin: 0 auto;
+  height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.form-container .login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.form-container .login-form h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.form-container .login-form .input-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-container .login-form .input-container input {
+  padding: 0.5rem;
+  outline: none;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  background-color: transparent;
+  color: white;
+}
+
+.submit-btn {
+  margin-top: 3rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.submit-btn:disabled {
+  background-color: rgba(128, 128, 128, 0.483);
+  color: rgba(255, 255, 255, 0.454);
+  cursor: not-allowed;
+}
+
+.form-container .login-form .register-link {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: white;
+}
