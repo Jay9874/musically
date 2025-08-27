@@ -14,8 +14,6 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   submitLoginForm(email: string, password: string): Observable<any> {
-    console.log('email: ', email);
-    console.log('password: ', password);
     return this.http.post<any>(`${this.url}/login`, { email, password }).pipe(
       map((res) => {
         return res;
@@ -35,7 +33,7 @@ export class AuthService {
         })
         .pipe(
           map((res) => res),
-          catchError((err: HttpErrorResponse) => {
+          catchError((err) => {
             return throwError(() => err);
           })
         )

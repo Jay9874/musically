@@ -15,7 +15,6 @@ import {
 import { ToastService } from './services/toast.service';
 import { Alignment, Toast } from '../../../types/interfaces/interfaces.toast';
 import { CommonModule } from '@angular/common';
-import { filter, map, pairwise, startWith, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-toast',
