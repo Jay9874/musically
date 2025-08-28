@@ -1,0 +1,19 @@
+main {
+    color: white;
+}
+
+
+.form-container {
+    color: white;
+    max-width: 500px;
+    margin: 0 auto;
+    height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.user-form h3 {
+    margin-bottom: 1rem;
+    text-align: center;
+}

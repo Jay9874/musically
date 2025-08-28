@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-login',
   imports: [RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrls: ['./login.component.css', '../../../styles.css'],
 })
 export class LoginComponent {
   authService = inject(AuthService);

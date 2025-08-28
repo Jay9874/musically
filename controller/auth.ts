@@ -17,6 +17,11 @@ const SALT_ROUND: number =
 const sessionManger = new SessionManager();
 const EXPIRY_DURATION = Number(process.env['EXPIRY_DURATION']);
 
+const verifyEmailUrl =
+  process.env['NODE_ENV'] === 'development'
+    ? 'http://localhost:4200/auth/new-user'
+    : '';
+
 // @desc     Login the user
 // @route    /login
 // @method   POST
@@ -121,7 +126,6 @@ export const register = async (
     const user = await pool.query(checkExistingUser, [email]);
     if (user.rows.length > 0) {
       return res.status(409).send({
-        data: null,
         message: `User already exists with ${user.rows[0].email}, try other email.`,
       });
     }
@@ -135,6 +139,7 @@ export const register = async (
       Create an random 6 digit otp for email verification
     */
     const otp: string = Math.random().toString(36).slice(-8);
+    const expires_at: string = new Date().toUTCString();
 
     const query = {
       text: 'INSERT INTO users (email, password, email_otp) VALUES ($1, $2, $3) RETURNING id, email, created_at',
@@ -153,18 +158,17 @@ export const register = async (
       subject: 'Confirm your email for Musically',
       html: `<h4>Hello there,<h4> <br>
       <p>Thanks for signing up on Musically. Please confirm your email by clicking on the below link.</p>
+      <a href='${verifyEmailUrl}?token=${otp}'>Verify email</a>
       `,
     });
 
     console.log('User added:', result.rows[0]);
     return res.status(200).send({
       message: 'User created, check email to proceed ahead.',
-      error: null,
     });
   } catch (err) {
     console.log('error: ', err);
     return res.status(500).json({
-      data: null,
       message: 'Could not create user in table.',
     });
   }
@@ -177,3 +181,51 @@ export const errorUser = asyncHandler(
     throw new ApiError({}, 500, 'Handled by asyncHandler');
   }
 );
+
+export const validateVerifyToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { token }: { token: string } = req.body;
+    const query = {
+      text: 'UPDATE users SET verified_email=$1 WHERE token=$2 AND otp_expires_at > NOW() RETURNING *',
+      values: [true, token],
+    };
+
+    const result = await pool.query(query);
+    if (result.rowCount === 0) {
+      return res.status(404).send({
+        message: 'The token is either invalid or expired.',
+      });
+    }
+
+    const user: DbUser = result.rows[0];
+    // Create a session
+    const session: Session | null = await sessionManger.createSession(user.id);
+    if (!session) {
+      return res.status(401).send('The session could not be created.');
+    }
+    const sessionCookie: CookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+    };
+    const longtermCookie: CookieOptions = {
+      ...sessionCookie,
+      maxAge: EXPIRY_DURATION,
+    };
+    res.cookie('musically-session', session, sessionCookie);
+    res.cookie('musically-longterm', session, longtermCookie);
+
+    return res.status(200).send({
+      data: user,
+    });
+  } catch (err) {
+    console.log('err occurred while validating verification link: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong.',
+    });
+  }
+};

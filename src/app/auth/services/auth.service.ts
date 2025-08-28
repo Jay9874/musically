@@ -1,8 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { toLoadingStateStream } from '../../loading-state-stream';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { ToastService } from '../../toast/services/toast.service';
 
 @Injectable({
   providedIn: 'root',

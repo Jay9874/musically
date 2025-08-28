@@ -1,0 +1,31 @@
+<main class="new-user-container">
+    <div class="form-container">
+        <form #userForm="ngForm" class="user-form" (ngSubmit)="saveUserInfo()">
+            <h3>Just few more info...</h3>
+
+            <div class="input-container">
+                <label for="username">Create a unique username</label>
+                <input id="username" type="text" name="username" [(ngModel)]="userInfo().username"
+                    placeholder="type to check availability" required />
+            </div>
+
+            <div class="input-container">
+                <label for="display-name">Display Name</label>
+                <input id="display-name" type="text" name="displayName" [(ngModel)]="userInfo().displayName"
+                    placeholder="may be your pet name" required />
+            </div>
+            <div class="input-container">
+                <label for="first-name">First Name</label>
+                <input id="first-name" type="text" name="firstName" [(ngModel)]="userInfo().firstName"
+                    placeholder="Radha for example" required />
+            </div>
+            <div class="input-container">
+                <label for="last-name">Last Name</label>
+                <input id="last-name" type="text" name="lastName" [(ngModel)]="userInfo().lastName"
+                    placeholder="Rani or something similar" required />
+            </div>
+            <button [disabled]="userForm.invalid" class="submit-btn" type="submit"
+                title="{{userForm.invalid?'Choose a unique username': 'Click to save'}}">Lets go...</button>
+        </form>
+    </div>
+</main>

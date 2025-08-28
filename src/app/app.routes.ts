@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { validateLinkGuard } from './guards/validate-link.guard';
 
 export const routes: Routes = [
   {
@@ -16,7 +17,7 @@ export const routes: Routes = [
       {
         path: '',
         redirectTo: 'login',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'login',
@@ -33,6 +34,15 @@ export const routes: Routes = [
             (m) => m.RegisterComponent
           ),
         title: 'Musically | Register',
+      },
+      {
+        path: 'new-user',
+        canActivate: [validateLinkGuard],
+        loadComponent: () =>
+          import('../app/auth/new-user/new-user.component').then(
+            (m) => m.NewUserComponent
+          ),
+        title: 'Musically | New User',
       },
     ],
   },
