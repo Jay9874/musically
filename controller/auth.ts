@@ -108,7 +108,6 @@ export const register = async (
   try {
     const { email, password } = req.body;
 
-    console.log('email: ', email);
     /*
       Check the input fields for correctness and validity
     */
@@ -142,8 +141,8 @@ export const register = async (
     const expires_at: string = new Date().toUTCString();
 
     const query = {
-      text: 'INSERT INTO users (email, password, email_otp) VALUES ($1, $2, $3) RETURNING id, email, created_at',
-      values: [email, hash, otp],
+      text: 'INSERT INTO users (email, password, email_otp, otp_expires_at) VALUES ($1, $2, $3, $4) RETURNING id, email, created_at',
+      values: [email, hash, otp, expires_at],
     };
 
     const result = await pool.query(query);
@@ -152,13 +151,14 @@ export const register = async (
         message: 'Could not create users, try again.',
       });
 
+    const registeredUser: { email: string; token: string } = result.rows[0];
     await transporter.sendMail({
       from: process.env['GOOGLE_APP_EMAIL'],
-      to: result.rows[0].email,
+      to: registeredUser.email,
       subject: 'Confirm your email for Musically',
       html: `<h4>Hello there,<h4> <br>
       <p>Thanks for signing up on Musically. Please confirm your email by clicking on the below link.</p>
-      <a href='${verifyEmailUrl}?token=${otp}'>Verify email</a>
+      <a href='${verifyEmailUrl}?token=${otp}&email=${registeredUser.email}'>Verify email</a>
       `,
     });
 
@@ -188,10 +188,10 @@ export const validateVerifyToken = async (
   next: NextFunction
 ) => {
   try {
-    const { token }: { token: string } = req.body;
+    const { token, email } = req.query;
     const query = {
-      text: 'UPDATE users SET verified_email=$1 WHERE token=$2 AND otp_expires_at > NOW() RETURNING *',
-      values: [true, token],
+      text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND token=$3 AND otp_expires_at > NOW() RETURNING *',
+      values: [true, email, token],
     };
 
     const result = await pool.query(query);

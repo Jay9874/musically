@@ -10,14 +10,25 @@ export class SecurityService {
   readonly apiBaseUrl: string = 'api/auth/validate-link';
   constructor(private http: HttpClient) {}
 
-  validateVerifyToken(token: string) {
-    return toLoadingStateStream(
-      this.http.get(`${this.apiBaseUrl}?token=${token}`).pipe(
-        map((res) => res),
+  // validateVerifyToken(token: string) {
+  //   return toLoadingStateStream(
+  //     this.http.get(`${this.apiBaseUrl}?token=${token}`).pipe(
+  //       map((res) => res),
+  //       catchError((err) => {
+  //         return throwError(() => err);
+  //       })
+  //     )
+  //   );
+  // }
+
+  validateVerifyToken(token: string, email: string): Observable<boolean> {
+    return this.http
+      .get<boolean>(`${this.apiBaseUrl}?token=${token}&email=${email}`)
+      .pipe(
+        map((res) => true),
         catchError((err) => {
           return throwError(() => err);
         })
-      )
-    );
+      );
   }
 }

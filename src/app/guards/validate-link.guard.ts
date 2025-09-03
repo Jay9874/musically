@@ -1,20 +1,42 @@
-import { CanActivateFn } from '@angular/router';
+import { Injectable } from '@angular/core';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+  UrlTree,
+} from '@angular/router';
+import { ToastService } from '../toast/services/toast.service';
+import { SecurityService } from '../services/security/security.service';
+import { lastValueFrom, Observable } from 'rxjs';
 
-export const validateLinkGuard: CanActivateFn = (route, state) => {
-  // const data$ = this.authService.submitRegistrationForm(
-  //   this.user().email,
-  //   this.user().password
-  // );
-  // this.data$.subscribe({
-  //   next: (value) => {
-  //     console.log('value', value);
-  //     this.toast.success('Registered successfully');
-  //     this.router.navigate(['auth']);
-  //   },
-  //   error: (err) => {
-  //     console.log('err at sign up: ', err);
-  //     this.toast.error(err.message);
-  //   },
-  // });
-  return true;
-};
+@Injectable({
+  providedIn: 'root',
+})
+export class ValidateLinkGuard implements CanActivate {
+  constructor(
+    private toast: ToastService,
+    private securityService: SecurityService,
+    private router: Router
+  ) {}
+
+  async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    try {
+      console.log('the route data: ', route.data);
+      let token: Observable<boolean> = this.securityService.validateVerifyToken(
+        'hello',
+        'hello'
+      );
+      const token$ = await lastValueFrom(token);
+      this.toast.success('Hurrah! your email got verified.');
+      console.log('token is: ', token$);
+      return true;
+    } catch (err) {
+      console.log('Error while validating link: ', err);
+      return false;
+    }
+  }
+}

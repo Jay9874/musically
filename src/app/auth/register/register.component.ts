@@ -34,7 +34,7 @@ export class RegisterComponent {
     this.data$.subscribe({
       next: (value) => {
         console.log('value', value);
-        this.toast.success('Registered successfully');
+        this.toast.success('Account created, check email to activate it.');
         this.router.navigate(['auth']);
       },
       error: (err) => {
