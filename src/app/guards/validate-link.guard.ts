@@ -8,7 +8,8 @@ import {
 } from '@angular/router';
 import { ToastService } from '../toast/services/toast.service';
 import { SecurityService } from '../services/security/security.service';
-import { lastValueFrom, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -20,23 +21,32 @@ export class ValidateLinkGuard implements CanActivate {
     private router: Router
   ) {}
 
-  async canActivate(
+  canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean | UrlTree> {
-    try {
-      console.log('the route data: ', route.data);
-      let token: Observable<boolean> = this.securityService.validateVerifyToken(
-        'hello',
-        'hello'
-      );
-      const token$ = await lastValueFrom(token);
-      this.toast.success('Hurrah! your email got verified.');
-      console.log('token is: ', token$);
-      return true;
-    } catch (err) {
-      console.log('Error while validating link: ', err);
-      return false;
-    }
+  ): Observable<boolean | UrlTree> | boolean {
+    const { email, token } = route.queryParams;
+    if (!email || !token) return false;
+
+    return this.securityService.validateVerifyToken(token, email).pipe(
+      map((res) => {
+        this.toast.success('Hurrah! your email got verified.');
+        return true;
+      }),
+      catchError((err) => {
+        const error: HttpErrorResponse = err;
+        if (error.status === 404) {
+          this.toast.info('We could not find your token, create a new link.');
+        } else if (error.status === 401) {
+          this.toast.error('The link got expired, create a new one.');
+        }
+        return this.router.navigate(['resend-link'], {
+          queryParams: {
+            email: email,
+            code: error.status,
+          },
+        });
+      })
+    );
   }
 }

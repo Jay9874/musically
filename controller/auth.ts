@@ -189,6 +189,18 @@ export const validateVerifyToken = async (
 ) => {
   try {
     const { token, email } = req.query;
+    // First find if the token is expired or not
+    const tokenQuery = {
+      text: 'Select otp_expires_at FROM users WHERE email=$1 AND email_otp=$2',
+      values: [email, token],
+    };
+    const tokenResult = await pool.query(tokenQuery);
+    if (tokenResult.rowCount === 0) {
+      return res.status(404).send({
+        message: 'The otp could not found, did you create one?',
+      });
+    }
+    console.log('found token is: ', tokenResult.rows[0]);
     const query = {
       text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND token=$3 AND otp_expires_at > NOW() RETURNING *',
       values: [true, email, token],

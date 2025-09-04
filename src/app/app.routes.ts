@@ -44,6 +44,10 @@ export const routes: Routes = [
           ),
         title: 'Musically | New User',
       },
+      {
+        path: 'resend-link',
+        
+      }
     ],
   },
 ];

@@ -1,0 +1,9 @@
+<main class="new-user-container">
+    <div class="form-container">
+        <form #userForm="ngForm" class="user-form">
+            <h3>Misplaced link?</h3>
+            <button [disabled]="userForm.invalid" class="submit-btn" type="submit"
+                title="{{userForm.invalid?'Choose a unique username': 'Click to save'}}">Lets go...</button>
+        </form>
+    </div>
+</main>
