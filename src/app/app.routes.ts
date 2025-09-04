@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ValidateLinkGuard } from './guards/validate-link.guard';
+import { ResendLinkGuard } from './guards/resend-link.guard';
 
 export const routes: Routes = [
   {
@@ -46,8 +47,13 @@ export const routes: Routes = [
       },
       {
         path: 'resend-link',
-        
-      }
+        canActivate: [ResendLinkGuard],
+        loadComponent: () =>
+          import('../app/auth/resend-link/resend-link.component').then(
+            (m) => m.ResendLinkComponent
+          ),
+        title: 'Musically | Resend Link',
+      },
     ],
   },
 ];

@@ -124,8 +124,11 @@ export const register = async (
     const checkExistingUser = `SELECT email FROM users WHERE email = $1`;
     const user = await pool.query(checkExistingUser, [email]);
     if (user.rows.length > 0) {
+      // return res.status(409).send({
+      //   message: `User already exists with ${user.rows[0].email}, try other email.`,
+      // });
       return res.status(409).send({
-        message: `User already exists with ${user.rows[0].email}, try other email.`,
+        message: `You are already registered, please login.`,
       });
     }
 
@@ -238,6 +241,56 @@ export const validateVerifyToken = async (
     console.log('err occurred while validating verification link: ', err);
     return res.status(500).send({
       message: 'Something went wrong.',
+    });
+  }
+};
+
+export const resendVerificationLink = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | any> => {
+  try {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).send({
+        message: 'Provide an email to resend verification link.',
+      });
+    }
+    /*
+      Create an random 6 digit otp for email verification
+    */
+    const otp: string = Math.random().toString(36).slice(-8);
+    const expires_at: string = new Date().toUTCString();
+
+    const query = {
+      text: 'UPDATE users SET email_otp=$1, otp_expires_at=$2 WHERE email=$3 RETURNING id, email, created_at',
+      values: [otp, expires_at, email],
+    };
+
+    const result = await pool.query(query);
+    if (result.rowCount === 0)
+      return res.status(403).send({
+        message: 'Could not resend verification link, try again.',
+      });
+
+    const registeredUser: { email: string; token: string } = result.rows[0];
+    await transporter.sendMail({
+      from: process.env['GOOGLE_APP_EMAIL'],
+      to: registeredUser.email,
+      subject: 'Confirm your email for Musically',
+      html: `<h4>Hello there,<h4> <br>
+        <p>No need to worry if your verification link got expired or you misplaced email. Please confirm your email by clicking on the below link.</p>
+        <a href='${verifyEmailUrl}?token=${otp}&email=${registeredUser.email}'>Verify email</a>
+        `,
+    });
+    return res.status(200).send({
+      message: 'Resent verification link, check email.',
+    });
+  } catch (err) {
+    console.log('err while sending resend link: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong',
     });
   }
 };

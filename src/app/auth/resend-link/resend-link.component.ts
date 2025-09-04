@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./resend-link.component.css', '../../../styles.css'],
 })
 export class ResendLinkComponent {
+  readonly apiBaseUrl = 'api/auth/resend-link';
   statusCode = signal<number | null>(null);
   email = signal<string | null>(null);
 
@@ -25,4 +26,6 @@ export class ResendLinkComponent {
     console.log('the code: ', this.statusCode());
     console.log('email: ', this.email());
   }
+
+  onSubmit(): void {}
 }

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { LoadingState } from '../../loading-state.interface';
 import { ToastService } from '../../toast/services/toast.service';
 import { User } from '../../../../types/interfaces/interfaces.user';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -38,8 +39,9 @@ export class RegisterComponent {
         this.router.navigate(['auth']);
       },
       error: (err) => {
+        const { error }: { error: HttpErrorResponse } = err;
         console.log('err at sign up: ', err);
-        this.toast.error(err.message);
+        this.toast.error(error.message);
       },
     });
   }
