@@ -40,7 +40,7 @@ export class ValidateLinkGuard implements CanActivate {
         } else if (error.status === 401) {
           this.toast.error('The link got expired, create a new one.');
         }
-        return this.router.navigate(['resend-link'], {
+        return this.router.navigate(['auth/resend-link'], {
           queryParams: {
             email: email,
             code: error.status,

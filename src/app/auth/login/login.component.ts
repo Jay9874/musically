@@ -25,6 +25,7 @@ export class LoginComponent {
   constructor() {}
 
   submitForm() {
+    this.authService.loading.set(true);
     this.authService
       .submitLoginForm(this.user().email, this.user().password)
       .subscribe({
@@ -36,7 +37,7 @@ export class LoginComponent {
           this.toast.error(error.message);
         },
         complete: () => {
-          // console.log('logged in');
+          this.authService.loading.set(false);
         },
       });
   }

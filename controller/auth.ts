@@ -15,7 +15,8 @@ const SALT_ROUND: number =
   parseInt(process.env['SALT_ROUND'] as string, 10) || 10; // Fallback to 10 if not set
 
 const sessionManger = new SessionManager();
-const EXPIRY_DURATION = Number(process.env['EXPIRY_DURATION']);
+const EXPIRY_DURATION = Number(process.env['EXPIRY_DURATION_MS']); // in ms
+const OTP_EXPIRY = Number(process.env['OTP_EXPIRY_MS']); // in ms
 
 const verifyEmailUrl =
   process.env['NODE_ENV'] === 'development'
@@ -141,11 +142,12 @@ export const register = async (
       Create an random 6 digit otp for email verification
     */
     const otp: string = Math.random().toString(36).slice(-8);
-    const expires_at: string = new Date().toUTCString();
+    const expires_at = new Date();
+    expires_at.setTime(expires_at.getTime() + OTP_EXPIRY);
 
     const query = {
       text: 'INSERT INTO users (email, password, email_otp, otp_expires_at) VALUES ($1, $2, $3, $4) RETURNING id, email, created_at',
-      values: [email, hash, otp, expires_at],
+      values: [email, hash, otp, expires_at.toUTCString()],
     };
 
     const result = await pool.query(query);
@@ -160,8 +162,13 @@ export const register = async (
       to: registeredUser.email,
       subject: 'Confirm your email for Musically',
       html: `<h4>Hello there,<h4> <br>
-      <p>Thanks for signing up on Musically. Please confirm your email by clicking on the below link.</p>
-      <a href='${verifyEmailUrl}?token=${otp}&email=${registeredUser.email}'>Verify email</a>
+      <p>Thanks for signing up on Musically. 
+      Please confirm your email by clicking on the below link.
+      Link will be valid for next <b>${OTP_EXPIRY / 1000} minutes<b>.
+      </p>
+      <a href='${verifyEmailUrl}?token=${otp}&email=${
+        registeredUser.email
+      }'>Verify email</a>
       `,
     });
 
@@ -205,13 +212,13 @@ export const validateVerifyToken = async (
     }
     console.log('found token is: ', tokenResult.rows[0]);
     const query = {
-      text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND token=$3 AND otp_expires_at > NOW() RETURNING *',
+      text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND email_otp=$3 AND otp_expires_at > NOW() RETURNING *',
       values: [true, email, token],
     };
 
     const result = await pool.query(query);
     if (result.rowCount === 0) {
-      return res.status(404).send({
+      return res.status(401).send({
         message: 'The token is either invalid or expired.',
       });
     }
@@ -261,11 +268,14 @@ export const resendVerificationLink = async (
       Create an random 6 digit otp for email verification
     */
     const otp: string = Math.random().toString(36).slice(-8);
-    const expires_at: string = new Date().toUTCString();
-
+    const currentTime = new Date();
+    const expires_at = new Date();
+    console.log('otp expires at: ', OTP_EXPIRY);
+    expires_at.setTime(currentTime.getTime() + OTP_EXPIRY);
+    console.log('the expiry: ', expires_at);
     const query = {
-      text: 'UPDATE users SET email_otp=$1, otp_expires_at=$2 WHERE email=$3 RETURNING id, email, created_at',
-      values: [otp, expires_at, email],
+      text: 'UPDATE users SET email_otp=$1, otp_expires_at=$2 WHERE email=$3 RETURNING id, email, email_otp as token',
+      values: [otp, expires_at.toUTCString(), email],
     };
 
     const result = await pool.query(query);
@@ -280,8 +290,13 @@ export const resendVerificationLink = async (
       to: registeredUser.email,
       subject: 'Confirm your email for Musically',
       html: `<h4>Hello there,<h4> <br>
-        <p>No need to worry if your verification link got expired or you misplaced email. Please confirm your email by clicking on the below link.</p>
-        <a href='${verifyEmailUrl}?token=${otp}&email=${registeredUser.email}'>Verify email</a>
+        <p>No need to worry if your verification link got expired or you misplaced email. 
+        Please confirm your email by clicking on the below link.
+        Link will be valid for next <b>${OTP_EXPIRY / 1000} minutes<b>.
+        </p>
+        <a href='${verifyEmailUrl}?token=${otp}&email=${
+        registeredUser.email
+      }'>Verify email</a>
         `,
     });
     return res.status(200).send({

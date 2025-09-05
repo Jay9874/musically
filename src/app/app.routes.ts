@@ -56,4 +56,12 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('../app/common/not-found/not-found.component').then(
+        (m) => m.NotFoundComponent
+      ),
+    title: 'Musically | 404',
+  },
 ];

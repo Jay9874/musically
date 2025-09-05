@@ -28,6 +28,7 @@ export class RegisterComponent {
   constructor(private router: Router) {}
 
   submitRegistrationForm() {
+    this.authService.loading.set(true);
     this.data$ = this.authService.submitRegistrationForm(
       this.user().email,
       this.user().password
@@ -42,6 +43,9 @@ export class RegisterComponent {
         const { error }: { error: HttpErrorResponse } = err;
         console.log('err at sign up: ', err);
         this.toast.error(error.message);
+      },
+      complete: () => {
+        this.authService.loading.set(false);
       },
     });
   }

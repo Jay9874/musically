@@ -16,7 +16,7 @@
             <a title="Create a new account" class="register-link" [routerLink]="['../register']"
                 routerLinkActive="router-link-active">Don't have
                 an account?</a>
-            <button [disabled]="loginForm.invalid" class="submit-btn" type="submit"
+            <button [disabled]="loginForm.invalid || authService.loading()" class="submit-btn" type="submit"
                 title="{{loginForm.invalid?'Enter your email and password': 'Click to sign in'}}">Lets go...</button>
         </form>
     </div>

@@ -1,16 +1,15 @@
 <main class="new-user-container">
     <div class="form-container">
         <form #userForm="ngForm" class="user-form" (ngSubmit)="onSubmit()">
-            <h3>Misplaced link?</h3>
-            @if(statusCode() === 404){
+            @if(statusCode() == 404){
             <h3>Misplaced your verification email? We are here to help...</h3>
-            }@else if(statusCode() === 401){
+            }@else if(statusCode() == 401){
             <h3>Verification link expired? We are here to help...</h3>
             }
             <p>I know how frustrating it is when you are unable to verify you email.<br>
-                Hit the button below to resend verification link.
+                Hit the button below to resend verification link on your email <b>"{{email()}}"</b>.
             </p>
-            <button [disabled]="userForm.invalid" class="submit-btn" type="submit"
+            <button [disabled]="userForm.invalid || this.securityService.loading() " class="submit-btn" type="submit"
                 title="Resend link">Resend...</button>
         </form>
     </div>
