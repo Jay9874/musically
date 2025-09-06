@@ -13,7 +13,9 @@ export class SecurityService {
 
   validateVerifyToken(token: string, email: string): Observable<boolean> {
     return this.http
-      .get<boolean>(`${this.apiBaseUrl}/validate-link?token=${token}&email=${email}`)
+      .get<boolean>(
+        `${this.apiBaseUrl}/validate-link?token=${token}&email=${email}`
+      )
       .pipe(
         map((res) => true),
         catchError((err) => {
@@ -31,5 +33,14 @@ export class SecurityService {
           return throwError(() => err);
         })
       );
+  };
+
+  validateSession = (): Observable<boolean> => {
+    return this.http.get<boolean>(`${this.apiBaseUrl}/validate-session`).pipe(
+      map((res) => true),
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
   };
 }

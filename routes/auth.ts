@@ -7,6 +7,7 @@ import {
   resendVerificationLink,
   validateVerifyToken,
 } from '../controller/auth';
+import { validateSession } from '../middleware/auth-middleware';
 
 // Setup router
 const router = express.Router();
@@ -22,6 +23,9 @@ router.get('/validate-link', validateVerifyToken);
 
 // Route to resend verification link
 router.get('/resend-link', resendVerificationLink);
+
+// Route to authenticate session
+router.get('/validate-session', validateSession);
 
 // Export router; should always export as default
 export const authRouter = router;

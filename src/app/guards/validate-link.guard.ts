@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { ToastService } from '../toast/services/toast.service';
 import { SecurityService } from '../services/security/security.service';
-import { catchError, map, Observable } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
@@ -28,24 +28,35 @@ export class ValidateLinkGuard implements CanActivate {
     const { email, token } = route.queryParams;
     if (!email || !token) return false;
 
-    return this.securityService.validateVerifyToken(token, email).pipe(
-      map((res) => {
-        this.toast.success('Hurrah! your email got verified.');
-        return true;
+    // First check if there is a valid cookie,
+    // if not then check the email and code
+    return this.securityService.validateSession().pipe(
+      switchMap((res) => {
+        // If session is valid, return an observable that emits true.
+        // this.toast.success('Session verified.');
+        return of(true);
       }),
       catchError((err) => {
-        const error: HttpErrorResponse = err;
-        if (error.status === 404) {
-          this.toast.info('We could not find your token, create a new link.');
-        } else if (error.status === 401) {
-          this.toast.error('The link got expired, create a new one.');
-        }
-        return this.router.navigate(['auth/resend-link'], {
-          queryParams: {
-            email: email,
-            code: error.status,
-          },
-        });
+        // If session validation fails, try to validate the email token
+        return this.securityService.validateVerifyToken(email, token).pipe(
+          switchMap(() => {
+            // If token verification succeeds, return an observable that emits true.
+            this.toast.success('Hurrah! Your email got verified.');
+            return of(true);
+          }),
+          catchError((tokenErr) => {
+            // If token verification fails, return an observable that emits false.
+            const error: HttpErrorResponse = tokenErr;
+            if (error.status === 404) {
+              this.toast.info(
+                'We could not find your token, create a new link.'
+              );
+            } else if (error.status === 401) {
+              this.toast.error('The link got expired, create a new one.');
+            }
+            return of(false);
+          })
+        );
       })
     );
   }

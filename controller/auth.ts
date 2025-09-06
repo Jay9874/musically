@@ -15,7 +15,7 @@ const SALT_ROUND: number =
   parseInt(process.env['SALT_ROUND'] as string, 10) || 10; // Fallback to 10 if not set
 
 const sessionManger = new SessionManager();
-const EXPIRY_DURATION = Number(process.env['EXPIRY_DURATION_MS']); // in ms
+const COOKIE_EXPIRY_DURATION = Number(process.env['SESSION_EXPIRY_MS']); // in ms
 const OTP_EXPIRY = Number(process.env['OTP_EXPIRY_MS']); // in ms
 
 const verifyEmailUrl =
@@ -83,7 +83,7 @@ export const login = async (
     };
     const longtermCookie: CookieOptions = {
       ...sessionCookie,
-      maxAge: EXPIRY_DURATION,
+      maxAge: COOKIE_EXPIRY_DURATION,
     };
     res.cookie('musically-session', session, sessionCookie);
     res.cookie('musically-longterm', session, longtermCookie);
@@ -146,8 +146,8 @@ export const register = async (
     expires_at.setTime(expires_at.getTime() + OTP_EXPIRY);
 
     const query = {
-      text: 'INSERT INTO users (email, password, email_otp, otp_expires_at) VALUES ($1, $2, $3, $4) RETURNING id, email, created_at',
-      values: [email, hash, otp, expires_at.toUTCString()],
+      text: 'INSERT INTO users (email, password, email_otp, otp_expires_at) VALUES ($1, $2, $3, $4) RETURNING *',
+      values: [email, hash, otp, expires_at],
     };
 
     const result = await pool.query(query);
@@ -199,6 +199,11 @@ export const validateVerifyToken = async (
 ) => {
   try {
     const { token, email } = req.query;
+    if (!token || !email) {
+      return res.status(404).send({
+        message: 'Please give use email and otp to verify your identity.',
+      });
+    }
     // First find if the token is expired or not
     const tokenQuery = {
       text: 'Select otp_expires_at FROM users WHERE email=$1 AND email_otp=$2',
@@ -210,7 +215,7 @@ export const validateVerifyToken = async (
         message: 'The otp could not found, did you create one?',
       });
     }
-    console.log('found token is: ', tokenResult.rows[0]);
+    console.log('found row is: ', tokenResult.rows[0]);
     const query = {
       text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND email_otp=$3 AND otp_expires_at > NOW() RETURNING *',
       values: [true, email, token],
@@ -234,12 +239,13 @@ export const validateVerifyToken = async (
       secure: true,
       sameSite: 'lax',
     };
+    console.log('cookie expiry: ', COOKIE_EXPIRY_DURATION);
     const longtermCookie: CookieOptions = {
       ...sessionCookie,
-      maxAge: EXPIRY_DURATION,
+      maxAge: COOKIE_EXPIRY_DURATION,
     };
-    res.cookie('musically-session', session, sessionCookie);
-    res.cookie('musically-longterm', session, longtermCookie);
+    res.cookie('musically-session', session.sessionId, sessionCookie);
+    res.cookie('musically-longterm', session.sessionId, longtermCookie);
 
     return res.status(200).send({
       data: user,
@@ -268,14 +274,12 @@ export const resendVerificationLink = async (
       Create an random 6 digit otp for email verification
     */
     const otp: string = Math.random().toString(36).slice(-8);
-    const currentTime = new Date();
     const expires_at = new Date();
-    console.log('otp expires at: ', OTP_EXPIRY);
-    expires_at.setTime(currentTime.getTime() + OTP_EXPIRY);
-    console.log('the expiry: ', expires_at);
+    expires_at.setTime(expires_at.getTime() + OTP_EXPIRY);
+
     const query = {
       text: 'UPDATE users SET email_otp=$1, otp_expires_at=$2 WHERE email=$3 RETURNING id, email, email_otp as token',
-      values: [otp, expires_at.toUTCString(), email],
+      values: [otp, expires_at, email],
     };
 
     const result = await pool.query(query);

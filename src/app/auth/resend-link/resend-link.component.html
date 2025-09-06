@@ -5,12 +5,14 @@
             <h3>Misplaced your verification email? We are here to help...</h3>
             }@else if(statusCode() == 401){
             <h3>Verification link expired? We are here to help...</h3>
+            }@else {
+            <h3>Something went wrong while validating? try again or send a new link</h3>
             }
             <p>I know how frustrating it is when you are unable to verify you email.<br>
                 Hit the button below to resend verification link on your email <b>"{{email()}}"</b>.
             </p>
             <button [disabled]="userForm.invalid || this.securityService.loading() " class="submit-btn" type="submit"
-                title="Resend link">Resend...</button>
+                title="Resend link">Resend link...</button>
         </form>
     </div>
 </main>
