@@ -17,7 +17,9 @@ export class SecurityService {
         `${this.apiBaseUrl}/validate-link?token=${token}&email=${email}`
       )
       .pipe(
-        map((res) => true),
+        map((res) => {
+          return true;
+        }),
         catchError((err) => {
           return throwError(() => err);
         })

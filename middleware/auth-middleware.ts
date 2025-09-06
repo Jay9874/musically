@@ -40,6 +40,7 @@ export const validateSession = async (
 ): Promise<Response | any> => {
   try {
     const sessionId = req.cookies;
+    console.log('req cookie: ', req.cookies);
     if (!sessionId) {
       return res.status(401).send({
         message: 'You are not authenticated.',

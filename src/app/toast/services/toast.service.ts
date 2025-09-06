@@ -8,7 +8,7 @@ import {
   providedIn: 'root',
 })
 export class ToastService {
-  readonly DEFAULT_DURATION: number = 1400;
+  readonly DEFAULT_DURATION: number = 2000;
   toasts = signal<Toast[]>([]);
 
   constructor() {}

@@ -204,18 +204,20 @@ export const validateVerifyToken = async (
         message: 'Please give use email and otp to verify your identity.',
       });
     }
+
     // First find if the token is expired or not
     const tokenQuery = {
       text: 'Select otp_expires_at FROM users WHERE email=$1 AND email_otp=$2',
       values: [email, token],
     };
+
     const tokenResult = await pool.query(tokenQuery);
+
     if (tokenResult.rowCount === 0) {
       return res.status(404).send({
         message: 'The otp could not found, did you create one?',
       });
     }
-    console.log('found row is: ', tokenResult.rows[0]);
     const query = {
       text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND email_otp=$3 AND otp_expires_at > NOW() RETURNING *',
       values: [true, email, token],
@@ -237,15 +239,15 @@ export const validateVerifyToken = async (
     const sessionCookie: CookieOptions = {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: true,
     };
-    console.log('cookie expiry: ', COOKIE_EXPIRY_DURATION);
+
     const longtermCookie: CookieOptions = {
       ...sessionCookie,
       maxAge: COOKIE_EXPIRY_DURATION,
     };
-    res.cookie('musically-session', session.sessionId, sessionCookie);
-    res.cookie('musically-longterm', session.sessionId, longtermCookie);
+    res.cookie('musically-session', session, sessionCookie);
+    // res.cookie('musically-longterm', session, longtermCookie);
 
     return res.status(200).send({
       data: user,
@@ -293,7 +295,7 @@ export const resendVerificationLink = async (
       from: process.env['GOOGLE_APP_EMAIL'],
       to: registeredUser.email,
       subject: 'Confirm your email for Musically',
-      html: `<h4>Hello there,<h4> <br>
+      html: `<h4>Hello there,<h4>
         <p>No need to worry if your verification link got expired or you misplaced email. 
         Please confirm your email by clicking on the below link.
         Link will be valid for next <b>${OTP_EXPIRY / 1000} minutes<b>.

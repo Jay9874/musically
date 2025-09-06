@@ -28,24 +28,17 @@ export class ValidateLinkGuard implements CanActivate {
     const { email, token } = route.queryParams;
     if (!email || !token) return false;
 
-    // First check if there is a valid cookie,
-    // if not then check the email and code
     return this.securityService.validateSession().pipe(
       switchMap((res) => {
-        // If session is valid, return an observable that emits true.
-        // this.toast.success('Session verified.');
         return of(true);
       }),
       catchError((err) => {
-        // If session validation fails, try to validate the email token
-        return this.securityService.validateVerifyToken(email, token).pipe(
-          switchMap(() => {
-            // If token verification succeeds, return an observable that emits true.
+        return this.securityService.validateVerifyToken(token, email).pipe(
+          switchMap((res) => {
             this.toast.success('Hurrah! Your email got verified.');
             return of(true);
           }),
           catchError((tokenErr) => {
-            // If token verification fails, return an observable that emits false.
             const error: HttpErrorResponse = tokenErr;
             if (error.status === 404) {
               this.toast.info(
@@ -54,7 +47,12 @@ export class ValidateLinkGuard implements CanActivate {
             } else if (error.status === 401) {
               this.toast.error('The link got expired, create a new one.');
             }
-            return of(false);
+            return this.router.navigate(['auth/resend-link'], {
+              queryParams: {
+                email: email,
+                code: error.status,
+              },
+            });
           })
         );
       })

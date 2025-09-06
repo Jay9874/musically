@@ -20,13 +20,13 @@ export class SessionManager {
       expiryTime.setTime(expiryTime.getTime() + this.expiry_duration);
 
       const query = {
-        text: 'INSERT INTO sessions(userId, expires_at) VALUES($1, $2) RETURNING *',
+        text: 'INSERT INTO sessions(userId, expires_at) VALUES($1, $2) ON CONFLICT(userId) DO UPDATE SET expires_at=EXCLUDED.expires_at RETURNING *',
         values: [userId, expiryTime],
       };
 
       const result = await pool.query(query);
       if (result.rowCount === 0) return null;
-      console.log('the session created: ', result.rows[0]);
+
       return result.rows[0];
     } catch (err) {
       console.log('error while creating session: ', err);
