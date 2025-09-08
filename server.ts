@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import cookieParser from 'cookie-parser';
 
 // All the routes
 import { authRouter } from './routes/auth';
@@ -14,6 +15,7 @@ import { authRouter } from './routes/auth';
 export function app(): express.Express {
   const server = express();
   server.use(express.json());
+  server.use(cookieParser());
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
   const browserDistFolder = resolve(serverDistFolder, '../browser');
 

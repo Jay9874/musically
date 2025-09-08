@@ -12,13 +12,15 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<Response | any> => {
   try {
-    const sessionId = req.cookies;
+    const sessionId: unknown = req.cookies;
     if (!sessionId) {
       return res.status(401).send({
         message: 'You are not authenticated.',
       });
     }
-    const session: Session | null = await sessionManger.checkSession(sessionId);
+    const session: Session | null = await sessionManger.checkSession(
+      sessionId as number
+    );
     if (!session) {
       return res.status(401).send({
         message: 'Your session seems to have expired.',
@@ -39,14 +41,15 @@ export const validateSession = async (
   next: NextFunction
 ): Promise<Response | any> => {
   try {
-    const sessionId = req.cookies;
-    console.log('req cookie: ', req.cookies);
+    const sessionId: unknown = req.cookies;
     if (!sessionId) {
       return res.status(401).send({
         message: 'You are not authenticated.',
       });
     }
-    const session: Session | null = await sessionManger.checkSession(sessionId);
+    const session: Session | null = await sessionManger.checkSession(
+      sessionId as number
+    );
     if (!session) {
       return res.status(401).send({
         message: 'Your session seems to have expired.',

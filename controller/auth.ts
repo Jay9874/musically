@@ -78,19 +78,21 @@ export const login = async (
     }
     const sessionCookie: CookieOptions = {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'lax',
     };
     const longtermCookie: CookieOptions = {
       ...sessionCookie,
       maxAge: COOKIE_EXPIRY_DURATION,
     };
-    res.cookie('musically-session', session, sessionCookie);
-    res.cookie('musically-longterm', session, longtermCookie);
+    res.cookie('musically-session', session.id, sessionCookie);
+    res.cookie('musically-longterm', session.id, longtermCookie);
 
     return res.status(200).send({
-      user: user,
-      error: null,
+      user: {
+        email: user.email,
+        id: user.id,
+      },
     });
   } catch (err) {
     console.log('an error occurred while signing in: ', err);
@@ -192,6 +194,86 @@ export const errorUser = asyncHandler(
   }
 );
 
+// export const validateVerifyToken = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { token, email } = req.query;
+//     if (!token || !email) {
+//       return res.status(404).send({
+//         message: 'Please give use email and otp to verify your identity.',
+//       });
+//     }
+
+//     // First find if the token is expired or not
+//     const tokenQuery = {
+//       text: 'SELECT otp_expires_at FROM users WHERE email=$1 AND email_otp=$2',
+//       values: [email, token],
+//     };
+
+//     const tokenResult = await pool.query(tokenQuery);
+
+//     if (tokenResult.rowCount === 0) {
+//       return res.status(404).send({
+//         message: 'The otp could not found, did you create one?',
+//       });
+//     }
+//     const query = {
+//       text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND email_otp=$3 AND otp_expires_at > NOW() RETURNING *',
+//       values: [true, email, token],
+//     };
+
+//     const result = await pool.query(query);
+//     if (result.rowCount === 0) {
+//       return res.status(401).send({
+//         message: 'The token is either invalid or expired.',
+//       });
+//     }
+
+//     const user: DbUser = result.rows[0];
+//     // Create a session
+//     const session: Session | null = await sessionManger.createSession(user.id);
+//     if (!session) {
+//       return res.status(401).send('The session could not be created.');
+//     }
+
+//     const sessionCookie: CookieOptions = {
+//       httpOnly: true,
+//       secure: process.env['NODE_ENV'] === 'production' ? true : false, // Use secure in production
+//       sameSite: 'lax', // Required for cross-origin
+//       path: '/', // Ensure cookie is available site-wide
+//     };
+
+//     // Set CORS headers
+//     res.set('Access-Control-Allow-Credentials', 'true');
+//     res.set('Access-Control-Allow-Origin', 'http://localhost:4200'); // Replace with your frontend origin
+
+//     res.cookie('musically-session', `${session.id}`, sessionCookie);
+//     // const sessionCookie: CookieOptions = {
+//     //   httpOnly: true,
+//     //   secure: false,
+//     //   sameSite: 'none',
+//     //   encode: String,
+//     // };
+//     // res.cookie('musically-session', `${session.id}`, sessionCookie);
+
+//     return res.status(200).send({
+//       user: {
+//         email: user.email,
+//         id: user.id,
+//       },
+//       session: session.id,
+//     });
+//   } catch (err) {
+//     console.log('err occurred while validating verification link: ', err);
+//     return res.status(500).send({
+//       message: 'Something went wrong.',
+//     });
+//   }
+// };
+
 export const validateVerifyToken = async (
   req: Request,
   res: Response,
@@ -201,13 +283,13 @@ export const validateVerifyToken = async (
     const { token, email } = req.query;
     if (!token || !email) {
       return res.status(404).send({
-        message: 'Please give use email and otp to verify your identity.',
+        message: 'Please provide email and OTP to verify your identity.',
       });
     }
 
-    // First find if the token is expired or not
+    // Check if token is expired
     const tokenQuery = {
-      text: 'Select otp_expires_at FROM users WHERE email=$1 AND email_otp=$2',
+      text: 'SELECT otp_expires_at FROM users WHERE email=$1 AND email_otp=$2',
       values: [email, token],
     };
 
@@ -215,9 +297,10 @@ export const validateVerifyToken = async (
 
     if (tokenResult.rowCount === 0) {
       return res.status(404).send({
-        message: 'The otp could not found, did you create one?',
+        message: 'The OTP could not be found. Did you create one?',
       });
     }
+
     const query = {
       text: 'UPDATE users SET verified_email=$1 WHERE email=$2 AND email_otp=$3 AND otp_expires_at > NOW() RETURNING *',
       values: [true, email, token],
@@ -236,24 +319,24 @@ export const validateVerifyToken = async (
     if (!session) {
       return res.status(401).send('The session could not be created.');
     }
+
     const sessionCookie: CookieOptions = {
       httpOnly: true,
-      secure: true,
-      sameSite: true,
+      secure: process.env['NODE_ENV'] === 'production' ? true : false, // Secure in production
+      sameSite: 'none',
     };
 
-    const longtermCookie: CookieOptions = {
-      ...sessionCookie,
-      maxAge: COOKIE_EXPIRY_DURATION,
-    };
-    res.cookie('musically-session', session, sessionCookie);
-    // res.cookie('musically-longterm', session, longtermCookie);
+    res.cookie('musically-session', 'hello', sessionCookie);
 
     return res.status(200).send({
-      data: user,
+      user: {
+        email: user.email,
+        id: user.id,
+      },
+      session: session.id,
     });
   } catch (err) {
-    console.log('err occurred while validating verification link: ', err);
+    console.log('Error occurred while validating verification link: ', err);
     return res.status(500).send({
       message: 'Something went wrong.',
     });

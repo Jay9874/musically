@@ -28,34 +28,33 @@ export class ValidateLinkGuard implements CanActivate {
     const { email, token } = route.queryParams;
     if (!email || !token) return false;
 
-    return this.securityService.validateSession().pipe(
-      switchMap((res) => {
-        return of(true);
+    // return this.securityService.validateSession().pipe(
+    //   switchMap((res) => {
+    //     return of(true);
+    //   }),
+    //   catchError((err) => {
+    return this.securityService.validateVerifyToken(token, email).pipe(
+      map((res) => {
+        console.log('res: ', res);
+        this.toast.success('Hurrah! Your email got verified.');
+        return true;
       }),
-      catchError((err) => {
-        return this.securityService.validateVerifyToken(token, email).pipe(
-          switchMap((res) => {
-            this.toast.success('Hurrah! Your email got verified.');
-            return of(true);
-          }),
-          catchError((tokenErr) => {
-            const error: HttpErrorResponse = tokenErr;
-            if (error.status === 404) {
-              this.toast.info(
-                'We could not find your token, create a new link.'
-              );
-            } else if (error.status === 401) {
-              this.toast.error('The link got expired, create a new one.');
-            }
-            return this.router.navigate(['auth/resend-link'], {
-              queryParams: {
-                email: email,
-                code: error.status,
-              },
-            });
-          })
-        );
+      catchError((tokenErr) => {
+        const error: HttpErrorResponse = tokenErr;
+        if (error.status === 404) {
+          this.toast.info('We could not find your token, create a new link.');
+        } else if (error.status === 401) {
+          this.toast.error('The link got expired, create a new one.');
+        }
+        return this.router.navigate(['auth/resend-link'], {
+          queryParams: {
+            email: email,
+            code: error.status,
+          },
+        });
       })
     );
+    // })
+    // );
   }
 }

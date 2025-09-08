@@ -1,6 +1,6 @@
 export interface Session {
-  sessionId: string;
-  user: SessionUser;
+  id: string;
+  userid: SessionUser;
 }
 
 export interface SessionUser {
