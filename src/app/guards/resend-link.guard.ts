@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   CanActivate,
   ActivatedRouteSnapshot,
@@ -7,19 +7,16 @@ import {
   UrlTree,
 } from '@angular/router';
 import { ToastService } from '../toast/services/toast.service';
-import { SecurityService } from '../services/security/security.service';
-import { catchError, map, Observable, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResendLinkGuard implements CanActivate {
-  constructor(
-    private toast: ToastService,
-    private securityService: SecurityService,
-    private router: Router
-  ) {}
+  private toast: ToastService = inject(ToastService);
+  private router: Router = inject(Router);
+  
+  constructor() {}
+
 
   canActivate(
     route: ActivatedRouteSnapshot,

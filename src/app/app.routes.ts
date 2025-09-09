@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { ValidateLinkGuard } from './guards/validate-link.guard';
 import { ResendLinkGuard } from './guards/resend-link.guard';
+import { validateLinkGuard } from './guards/validate-link.guard';
 
 export const routes: Routes = [
   {
@@ -38,7 +38,7 @@ export const routes: Routes = [
       },
       {
         path: 'new-user',
-        canActivate: [ValidateLinkGuard],
+        canActivate: [validateLinkGuard],
         loadComponent: () =>
           import('../app/auth/new-user/new-user.component').then(
             (m) => m.NewUserComponent

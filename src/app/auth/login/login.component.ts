@@ -25,6 +25,7 @@ export class LoginComponent {
   constructor() {}
 
   submitForm() {
+    console.log('clicked submit');
     this.authService.loading.set(true);
     this.authService
       .submitLoginForm(this.user().email, this.user().password)
@@ -34,7 +35,9 @@ export class LoginComponent {
         },
         error: (err) => {
           const { error }: { error: HttpErrorResponse } = err;
+          console.log('err:', error);
           this.toast.error(error.message);
+          this.authService.loading.set(false);
         },
         complete: () => {
           this.authService.loading.set(false);

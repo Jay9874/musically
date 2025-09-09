@@ -47,7 +47,7 @@ export const login = async (
 
     // Check if email exists in db
     const emailQuery = {
-      text: 'SELECT email, password, verified_email FROM users WHERE email=$1',
+      text: 'SELECT email, password, verified_email, id FROM users WHERE email=$1',
       values: [email],
     };
     const emailResult = await pool.query(emailQuery);
@@ -58,7 +58,6 @@ export const login = async (
       });
 
     const user: DbUser = emailResult.rows[0];
-    console.log('the user found is: ', user);
     // Compare the password
     if (!user.verified_email) {
       return res
@@ -74,7 +73,9 @@ export const login = async (
     // Create a session
     const session: Session | null = await sessionManger.createSession(user.id);
     if (!session) {
-      return res.status(401).send('The session could not be created.');
+      return res
+        .status(401)
+        .send({ message: 'The session could not be created.' });
     }
     const sessionCookie: CookieOptions = {
       httpOnly: true,

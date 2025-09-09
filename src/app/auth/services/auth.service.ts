@@ -8,7 +8,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 })
 export class AuthService {
   readonly apiBaseUrl = 'http://localhost:4200/api/auth';
-  loading = signal(true);
+  loading = signal(false);
 
   constructor(private http: HttpClient) {}
 

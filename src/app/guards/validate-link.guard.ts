@@ -1,60 +1,53 @@
-import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-  UrlTree,
-} from '@angular/router';
+import { CanActivateFn, Router, RouterEvent, UrlTree } from '@angular/router';
 import { ToastService } from '../toast/services/toast.service';
 import { SecurityService } from '../services/security/security.service';
-import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { inject } from '@angular/core';
+import { catchError, map, Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class ValidateLinkGuard implements CanActivate {
-  constructor(
-    private toast: ToastService,
-    private securityService: SecurityService,
-    private router: Router
-  ) {}
+export const validateLinkGuard: CanActivateFn = (
+  route,
+  state
+): Observable<boolean | UrlTree> | boolean => {
+  // Services
+  const toast: ToastService = inject(ToastService);
+  const securityService: SecurityService = inject(SecurityService);
+  const router: Router = inject(Router);
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | boolean {
+  try {
     const { email, token } = route.queryParams;
     if (!email || !token) return false;
-
-    // return this.securityService.validateSession().pipe(
-    //   switchMap((res) => {
-    //     return of(true);
-    //   }),
-    //   catchError((err) => {
-    return this.securityService.validateVerifyToken(token, email).pipe(
+    return securityService.validateSession().pipe(
       map((res) => {
         console.log('res: ', res);
-        this.toast.success('Hurrah! Your email got verified.');
         return true;
       }),
-      catchError((tokenErr) => {
-        const error: HttpErrorResponse = tokenErr;
-        if (error.status === 404) {
-          this.toast.info('We could not find your token, create a new link.');
-        } else if (error.status === 401) {
-          this.toast.error('The link got expired, create a new one.');
-        }
-        return this.router.navigate(['auth/resend-link'], {
-          queryParams: {
-            email: email,
-            code: error.status,
-          },
-        });
+      catchError((err) => {
+        console.log('err: ', err);
+        return securityService.validateVerifyToken(token, email).pipe(
+          map((res) => {
+            console.log('res: ', res);
+            toast.success('Hurrah! Your email got verified.');
+            return true;
+          }),
+          catchError((tokenErr) => {
+            const error: HttpErrorResponse = tokenErr;
+            if (error.status === 404) {
+              toast.info('We could not find your token, create a new link.');
+            } else if (error.status === 401) {
+              toast.error('The link got expired, create a new one.');
+            }
+            return router.navigate(['auth/resend-link'], {
+              queryParams: {
+                email: email,
+                code: error.status,
+              },
+            });
+          })
+        );
       })
     );
-    // })
-    // );
+  } catch (err) {
+    return false;
   }
-}
+};

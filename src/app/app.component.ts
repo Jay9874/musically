@@ -8,8 +8,7 @@ import {
   VERSION,
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ToastService } from './toast/services/toast.service';
-import { ToastComponent } from "./toast/toast.component";
+import { ToastComponent } from './toast/toast.component';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +18,7 @@ import { ToastComponent } from "./toast/toast.component";
   styleUrl: './app.component.css',
 })
 export class AppComponent {
+  title = 'ang_app';
   version = VERSION.full;
   server: string | undefined;
   transferState = inject(TransferState);
