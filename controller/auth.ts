@@ -323,18 +323,21 @@ export const validateVerifyToken = async (
 
     const sessionCookie: CookieOptions = {
       httpOnly: true,
-      secure: process.env['NODE_ENV'] === 'production' ? true : false, // Secure in production
-      sameSite: 'none',
+      secure: false,
+      sameSite: 'lax',
     };
-
-    res.cookie('musically-session', 'hello', sessionCookie);
+    const longtermCookie: CookieOptions = {
+      ...sessionCookie,
+      maxAge: COOKIE_EXPIRY_DURATION,
+    };
+    res.cookie('musically-session', session.id, sessionCookie);
+    res.cookie('musically-longterm', session.id, longtermCookie);
 
     return res.status(200).send({
       user: {
         email: user.email,
         id: user.id,
       },
-      session: session.id,
     });
   } catch (err) {
     console.log('Error occurred while validating verification link: ', err);

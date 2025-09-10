@@ -1,15 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { CanActivateFn } from '@angular/router';
 
-import { ResendLinkGuard } from './resend-link.guard';
+import { resendLinkGuard } from './resend-link.guard';
 
 describe('resendLinkGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => {
-    const resendLinkGuard = new ResendLinkGuard();
-    return TestBed.runInInjectionContext(() =>
-      resendLinkGuard.canActivate(...guardParameters)
-    );
-  };
+  const executeGuard: CanActivateFn = (...guardParameters) => 
+      TestBed.runInInjectionContext(() => resendLinkGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

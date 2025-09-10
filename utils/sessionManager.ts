@@ -36,8 +36,9 @@ export class SessionManager {
 
   async checkSession(sessionId: number): Promise<Session | null> {
     try {
+      console.log('session id: ', sessionId);
       const query = {
-        text: 'SELECT userid, id FROM session WHERE id=$1 AND expires_at > NOW()',
+        text: 'SELECT userid, id FROM sessions WHERE id=$1 AND expires_at > NOW()',
         values: [sessionId],
       };
 

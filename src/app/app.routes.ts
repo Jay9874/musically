@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ResendLinkGuard } from './guards/resend-link.guard';
+import { resendLinkGuard } from './guards/resend-link.guard';
 import { validateLinkGuard } from './guards/validate-link.guard';
 
 export const routes: Routes = [
@@ -47,7 +47,7 @@ export const routes: Routes = [
       },
       {
         path: 'resend-link',
-        canActivate: [ResendLinkGuard],
+        canActivate: [resendLinkGuard],
         loadComponent: () =>
           import('../app/auth/resend-link/resend-link.component').then(
             (m) => m.ResendLinkComponent

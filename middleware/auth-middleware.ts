@@ -41,7 +41,7 @@ export const validateSession = async (
   next: NextFunction
 ): Promise<Response | any> => {
   try {
-    const sessionId: unknown = req.cookies;
+    const sessionId: unknown = req.cookies['musically-session'];
     if (!sessionId) {
       return res.status(401).send({
         message: 'You are not authenticated.',
