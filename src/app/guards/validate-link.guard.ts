@@ -15,29 +15,18 @@ export const validateLinkGuard: CanActivateFn = async (
   const { email, token } = route.queryParams;
   if (!email || !token) return false;
   try {
-    const validate$ = securityService.validateSession();
-    let session = await lastValueFrom(validate$);
-    return true;
-  } catch (err) {
-    // const error: HttpErrorResponse = err;
-    // if (error.status === 404) {
-    //   toast.info('We could not find your token, create a new link.');
-    // } else if (error.status === 401) {
-    //   toast.error('The link got expired, create a new one.');
-    // }
     const verify$ = securityService.validateVerifyToken(token, email);
     let success = await lastValueFrom(verify$);
     console.log('res: ', success);
     toast.success('Hurrah! Your email got verified.');
-    if (success) return true;
-    else {
-      console.log('err at validate guard: ', err);
-      return router.navigate(['auth/resend-link'], {
-        queryParams: {
-          email: email,
-          code: 401,
-        },
-      });
-    }
+    return router.navigate(['auth']);
+  } catch (err) {
+    console.log('err at validate guard: ', err);
+    return router.navigate(['auth/resend-link'], {
+      queryParams: {
+        email: email,
+        code: 401,
+      },
+    });
   }
 };
