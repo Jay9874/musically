@@ -31,7 +31,7 @@ export class LoginComponent {
       .submitLoginForm(this.user().email, this.user().password)
       .subscribe({
         next: (data) => {
-          this.toast.loading('Logged in successfully');
+          this.toast.success('Logged in successfully');
         },
         error: (err) => {
           const { error }: { error: HttpErrorResponse } = err;

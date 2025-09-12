@@ -1,0 +1,58 @@
+main {
+    display: flex;
+
+}
+
+.sidebar {
+    flex-basis: auto;
+    flex-grow: 15;
+    flex-shrink: 1;
+    background-color: #aeaeae;
+    height: 100vh;
+    padding: var(--section-padding);
+}
+
+.main-container {
+    flex-basis: auto;
+    flex-grow: 85;
+    flex-shrink: 1;
+    background-color: #dfdfdf;
+}
+
+
+.top-nav {
+    display: flex;
+    padding: 1rem 5%;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    background-color: #aeaeae;
+}
+
+/* #link-to-signin {
+    padding: 0.5rem 1.5rem;
+    border-radius: 18px;
+    border: 1px solid gray;
+    color: white;
+    background: transparent;
+    cursor: pointer;
+    transition: all 300ms ease-in;
+} */
+
+.auth-nav-section li {
+    list-style-type: none;
+}
+
+#brand-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+#brand-logo {
+    height: 30px;
+    width: 30px;
+}

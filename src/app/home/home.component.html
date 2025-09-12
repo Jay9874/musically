@@ -1,12 +1,14 @@
 <main>
-    <a [routerLink]="['/auth']" routerLinkActive="router-link-active" >Auth</a>
     <section class="sidebar">
-        side bar links
-    </section>
-    <section class="top-nav">
-        top navigation
+        <a routerLink="" id="brand-name">
+            <img id="brand-logo" src="musically.svg" alt="company_logo" />
+            <span>Musically</span>
+        </a>
     </section>
     <section class="main-container">
-        Main view
+        <section class="top-nav">
+            <a routerLink="/auth" id="link-to-signin">Sign
+                In</a>
+        </section>
     </section>
 </main>

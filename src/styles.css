@@ -28,6 +28,9 @@
   --error-bg: hsl(359, 100%, 97%);
   --error-border: hsl(359, 100%, 94%);
   --error-text: hsl(360, 100%, 45%);
+
+  /* Section */
+  --section-padding: 1rem;
 }
 
 * {
