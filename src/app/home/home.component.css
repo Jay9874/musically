@@ -1,43 +1,61 @@
 main {
     display: flex;
+    position: relative;
+}
 
+li {
+    list-style: none;
 }
 
 .sidebar {
+    position: sticky;
+    top: 0;
     flex-basis: auto;
     flex-grow: 15;
     flex-shrink: 1;
-    background-color: #aeaeae;
+    background-color: #252526;
     height: 100vh;
     padding: var(--section-padding);
 }
 
-.main-container {
+.right-section {
     flex-basis: auto;
     flex-grow: 85;
     flex-shrink: 1;
-    background-color: #dfdfdf;
 }
 
 
 .top-nav {
+    position: sticky;
+    top: 0;
     display: flex;
-    padding: 1rem 5%;
+    padding: 0.5rem 2rem;
     align-items: center;
     justify-content: space-between;
     height: 64px;
-    background-color: #aeaeae;
+    background-color: rgb(44 44 44);
 }
 
-/* #link-to-signin {
-    padding: 0.5rem 1.5rem;
-    border-radius: 18px;
-    border: 1px solid gray;
+.top-nav-child {
+    flex-basis: auto;
+    flex-shrink: 1;
+}
+
+.main-container {
+    min-height: 200vh;
+    background-color: #1f1f1f;
+}
+
+#signin-link {
+    padding: 0.25rem 1.25rem;
+    border-radius: 6px;
     color: white;
-    background: transparent;
+    background: #d50017;
     cursor: pointer;
-    transition: all 300ms ease-in;
-} */
+    text-decoration: none;
+    font-size: 1rem;
+    /* transition: all 300ms ease-in; */
+}
 
 .auth-nav-section li {
     list-style-type: none;
@@ -55,4 +73,82 @@ main {
 #brand-logo {
     height: 30px;
     width: 30px;
+}
+
+.music-controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-grow: 5;
+    padding: 0 1rem;
+}
+
+.music-control-btn {
+    border: none;
+    padding: 0.125rem;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.song-info {
+    display: flex;
+    background-color: #323232;
+    flex-grow: 60;
+}
+
+.song-thumbnail {
+    padding: 0.25rem;
+}
+
+.song-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4d4d4d;
+    width: 100%;
+}
+
+.volume-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem;
+    flex-grow: 5;
+    padding: 0 1rem;
+}
+
+.volume-level {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+progress::-webkit-progress-value {
+    background-color: #aaaaaa;
+    /* Green for the filled part */
+    border-radius: 2.5px;
+    width: 100px;
+}
+
+/* For Firefox, the 'progress' element itself styles the filled portion */
+progress {
+    background-color: #aaaaaa;
+    height: 5px;
+    border-radius: 2.5px;
+    width: 100px;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #4b4b4b;
+    /* Light gray for the track */
+    border-radius: 2.5px;
+    width: 100px;
+}
+
+progress::-moz-progress-bar {
+    background-color: #4b4b4b;
+    border-radius: 2.5px;
+    width: 100px;
 }

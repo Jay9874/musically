@@ -4,11 +4,58 @@
             <img id="brand-logo" src="musically.svg" alt="company_logo" />
             <span>Musically</span>
         </a>
+        <div>
+            Search box
+        </div>
+        <nav>
+            <ul>
+                <li>Home</li>
+                <li>New</li>
+                <li>
+                    Radio
+                </li>
+            </ul>
+        </nav>
     </section>
-    <section class="main-container">
+    <section class="right-section">
         <section class="top-nav">
-            <a routerLink="/auth" id="link-to-signin">Sign
-                In</a>
+            <div class="music-controls-container top-nav-child">
+                <button class="music-control-btn shuffle-btn">
+                    <img height="17.5" width="17.5" src="icons/shuffle.svg" alt="shuffle icons" />
+                </button>
+                <button class="music-control-btn play-back-btn">
+                    <img height="25" width="25" src="icons/play-back.svg" alt="shuffle icons" />
+                </button>
+                <button class="music-control-btn play-btn">
+                    <img height="30" width="30" src="icons/play.svg" alt="shuffle icons" />
+                </button>
+                <button class="music-control-btn play-forward-btn">
+                    <img height="25" width="25" src="icons/play-forward.svg" alt="shuffle icons" />
+                </button>
+                <button class="music-control-btn repeat-btn">
+                    <img height="17.5" width="17.5" src="icons/repeat.svg" alt="shuffle icons" />
+                </button>
+            </div>
+            <div class="song-info top-nav-child">
+                <div class="song-thumbnail" aria-label="Song thumbnail">
+                    <img height="30" width="30" src="icons/musical-notes.svg" alt="music note icon" />
+                </div>
+                <div class="song-progress">
+                    <img id="brand-logo" src="musically.svg" alt="company_logo" />
+                </div>
+            </div>
+            <div class="volume-container top-nav-child">
+                <div class="volume-level">
+                    <img height="17.5" width="17.5" src="icons/volume-high.svg" alt="volume icon" />
+                    <progress id="file" max="100" value="70">70%</progress>
+                </div>
+                <img height="20" width="20" src="icons/list.svg" alt="list of music icon" />
+                <a routerLink="/auth" id="signin-link">Sign
+                    In</a>
+            </div>
+        </section>
+        <section class="main-container">
+            Main music list
         </section>
     </section>
 </main>

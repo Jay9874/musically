@@ -40,6 +40,10 @@
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+html{
+  background-color: #1f1f1f;
+}
+
 
 /* Reusable CSS */
 form {
