@@ -23,13 +23,15 @@ li {
     position: relative;
 }
 
-.search-box-icon{
+.search-box-icon {
     position: absolute;
-    top: calc(50% + 0.5rem -  11.25px);
+    top: calc(50% + 0.5rem - 11.25px);
     left: 0.25rem;
 }
-.search-field{
+
+.search-field {
     padding-left: 1.75rem;
+    width: 100px;
 }
 
 .sidebar-links {
@@ -68,6 +70,17 @@ li {
     background-color: rgb(44 44 44);
 }
 
+.navigation-bar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    background-color: rgb(44 44 44);
+}
+
 .top-nav-child {
     flex-basis: auto;
     flex-shrink: 1;
@@ -82,11 +95,17 @@ li {
     padding: 0.25rem 1.25rem;
     border-radius: 6px;
     color: white;
-    background: #d50017;
+    background: #fa586a;
     cursor: pointer;
     text-decoration: none;
     font-size: 1rem;
-    /* transition: all 300ms ease-in; */
+}
+
+#signin-link-text {
+    color: #fa586a;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.90rem;
 }
 
 .auth-nav-section li {
@@ -96,7 +115,6 @@ li {
 #brand-name {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     gap: 5px;
     color: white;
     text-decoration: none;
@@ -139,6 +157,13 @@ li {
     align-items: center;
     background-color: #4d4d4d;
     width: 100%;
+    padding: 0.5rem;
+}
+
+.progress-brand-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
 }
 
 .volume-container {
@@ -183,4 +208,46 @@ progress::-moz-progress-bar {
     background-color: #4b4b4b;
     border-radius: 2.5px;
     width: 100px;
+}
+
+
+
+/******************* Media Query at 1000px ************/
+@media screen and (480px <=width <=1000px) {
+    .top-nav {
+        padding: 0.5rem;
+    }
+
+    .music-controls-container {
+        display: none;
+    }
+
+    .volume-container {
+        display: none;
+    }
+
+    .navigation-bar {
+        display: none;
+    }
+}
+
+/******************* Media Query at < 480px ************/
+@media screen and (max-width: 479px) {
+    .sidebar {
+        display: none;
+    }
+
+    .top-nav {
+        display: none;
+    }
+}
+
+@media screen and (min-width:1001px) {
+    .progress-signin {
+        display: none;
+    }
+
+    .navigation-bar {
+        display: none;
+    }
 }
