@@ -4,16 +4,26 @@
             <img id="brand-logo" src="musically.svg" alt="company_logo" />
             <span>Musically</span>
         </a>
-        <div>
-            Search box
+        <div class="search-box">
+            <label for="search-song" class="search-box-icon">
+                <img height="20" width="20" src="icons/search-outline.svg" alt="search icon" />
+            </label>
+            <input id="search-song" class="search-field" type="text" placeholder="Search" />
         </div>
         <nav>
-            <ul>
-                <li>Home</li>
-                <li>New</li>
-                <li>
-                    Radio
-                </li>
+            <ul class="sidebar-links">
+                <button class="sidebar-link">
+                    <img height="20" width="20" src="icons/home.svg" alt="home button icon" />
+                    <span>Home</span>
+                </button>
+                <button class="sidebar-link">
+                    <img height="20" width="20" src="icons/menu.svg" alt="home button icon" />
+                    <span>New</span>
+                </button>
+                <button class="sidebar-link">
+                    <img height="20" width="20" src="icons/radio.svg" alt="home button icon" />
+                    <span>Radio</span>
+                </button>
             </ul>
         </nav>
     </section>
@@ -50,8 +60,14 @@
                     <progress id="file" max="100" value="70">70%</progress>
                 </div>
                 <img height="20" width="20" src="icons/list.svg" alt="list of music icon" />
+                @if(user()){
+                <div>
+                    <p>{{user()?.userId}}</p>
+                </div>
+                }@else {
                 <a routerLink="/auth" id="signin-link">Sign
                     In</a>
+                }
             </div>
         </section>
         <section class="main-container">

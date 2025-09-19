@@ -47,7 +47,7 @@ export const login = async (
 
     // Check if email exists in db
     const emailQuery = {
-      text: 'SELECT email, password, verified_email, id FROM users WHERE email=$1',
+      text: 'SELECT email, roles, password, verified_email, id FROM users WHERE email=$1',
       values: [email],
     };
     const emailResult = await pool.query(emailQuery);
@@ -92,7 +92,8 @@ export const login = async (
     return res.status(200).send({
       user: {
         email: user.email,
-        id: user.id,
+        userId: user.id,
+        roles: user.roles,
       },
     });
   } catch (err) {
@@ -147,10 +148,11 @@ export const register = async (
     const otp: string = Math.random().toString(36).slice(-8);
     const expires_at = new Date();
     expires_at.setTime(expires_at.getTime() + OTP_EXPIRY);
+    const roles = ['normal'];
 
     const query = {
-      text: 'INSERT INTO users (email, password, email_otp, otp_expires_at) VALUES ($1, $2, $3, $4) RETURNING *',
-      values: [email, hash, otp, expires_at],
+      text: 'INSERT INTO users (email, password, email_otp, otp_expires_at, roles) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      values: [email, hash, otp, expires_at, roles],
     };
 
     const result = await pool.query(query);

@@ -1,5 +1,5 @@
 import { Component, inject, model } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../../toast/services/toast.service';
@@ -22,7 +22,7 @@ export class LoginComponent {
     password: '',
   });
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   submitForm() {
     console.log('clicked submit');
@@ -32,6 +32,7 @@ export class LoginComponent {
       .subscribe({
         next: (data) => {
           this.toast.success('Logged in successfully');
+          this.router.navigate(['']);
         },
         error: (err) => {
           const { error }: { error: HttpErrorResponse } = err;

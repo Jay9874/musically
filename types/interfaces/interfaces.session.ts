@@ -1,9 +1,12 @@
 export interface Session {
   id: string;
-  userid: SessionUser;
+  user: SessionUser;
 }
+
+type Roles = 'Admin' | 'Creator' | 'Normal';
 
 export interface SessionUser {
   email: string;
   userId: number;
+  roles: Roles[];
 }

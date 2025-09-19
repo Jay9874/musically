@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Session } from '../types/interfaces/interfaces.session';
+import { Session, SessionUser } from '../types/interfaces/interfaces.session';
 import { pool } from '../db';
 
 export class SessionManager {
@@ -36,9 +36,8 @@ export class SessionManager {
 
   async checkSession(sessionId: number): Promise<Session | null> {
     try {
-      console.log('session id: ', sessionId);
       const query = {
-        text: 'SELECT userid, id FROM sessions WHERE id=$1 AND expires_at > NOW()',
+        text: 'SELECT userid, sessions.id, roles, email FROM sessions JOIN users ON userid=users.id AND sessions.id=$1 AND expires_at > NOW()',
         values: [sessionId],
       };
 
@@ -46,7 +45,16 @@ export class SessionManager {
       if (result.rowCount === 0) {
         return null;
       }
-      return result.rows[0];
+      const user: SessionUser | null = {
+        userId: result.rows[0].userid,
+        email: result.rows[0].email,
+        roles: result.rows[0].roles,
+      };
+      const session: Session = {
+        id: result.rows[0].id,
+        user: user,
+      };
+      return session;
     } catch (err) {
       console.log('err while checking session: ', err);
       return null;

@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   makeStateKey,
+  OnInit,
   REQUEST,
   REQUEST_CONTEXT,
   TransferState,
@@ -9,6 +10,7 @@ import {
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from './toast/toast.component';
+import { AuthService } from './auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +19,14 @@ import { ToastComponent } from './toast/toast.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'ang_app';
   version = VERSION.full;
   server: string | undefined;
   transferState = inject(TransferState);
   serverKey = makeStateKey<string>('server');
+
+  authService: AuthService = inject(AuthService);
 
   constructor() {
     const request = inject(REQUEST, { optional: true });
@@ -41,5 +45,9 @@ export class AppComponent {
       this.transferState.set(this.serverKey, this.server);
     }
     this.server = this.transferState.get(this.serverKey, '');
+  }
+
+  ngOnInit(): void {
+    this.authService.validateSession().subscribe();
   }
 }
