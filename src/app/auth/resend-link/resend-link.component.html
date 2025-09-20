@@ -1,18 +1,45 @@
 <main class="new-user-container">
     <div class="form-container">
         <form #userForm="ngForm" class="user-form" (ngSubmit)="onSubmit()">
-            @if(statusCode() == 404){
-            <h3>Misplaced your verification email? We are here to help...</h3>
-            }@else if(statusCode() == 401){
-            <h3>Verification link expired? We are here to help...</h3>
+            @if (linkFor() === 'expired_otp') {
+            <div>
+                @if(statusCode() == 404){
+                <h3>Misplaced your verification email? We are here to help...</h3>
+                }@else if(statusCode() == 401){
+                <h3>Verification link expired? We are here to help...</h3>
+                }@else {
+                <h3>Something went wrong while validating? try again or send a new link</h3>
+                }
+                <p>I know how frustrating it is when you are unable to verify you email.<br>
+                    Hit the button below to resend verification link on your email <b>"{{email()}}"</b>.
+                </p>
+                <button [disabled]="userForm.invalid || this.securityService.loading() " class="submit-btn"
+                    type="submit" title=" Resend link">Resend link...</button>
+            </div>
             }@else {
-            <h3>Something went wrong while validating? try again or send a new link</h3>
-            }
-            <p>I know how frustrating it is when you are unable to verify you email.<br>
-                Hit the button below to resend verification link on your email <b>"{{email()}}"</b>.
+            <h3>Forgot your password? We are here to help...</h3>
+            <p>I know how frustrating it is when you just can't remember password.<br>
+                Type in your registered email and we will guide you to recover your account.
             </p>
+            <div class="input-container">
+                <label for="email">Registered email</label>
+                <input auto id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" name="email"
+                    [(ngModel)]="email" placeholder="email@example.com" required />
+            </div>
             <button [disabled]="userForm.invalid || this.securityService.loading() " class="submit-btn" type="submit"
-                title="Resend link">Resend link...</button>
+                title="Get a recovery link via email">
+                @if (securityService.loading()) {
+                <ul id="loading-container">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                }@else {
+                Get recovery link
+                }
+            </button>
+            }
         </form>
     </div>
 </main>

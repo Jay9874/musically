@@ -53,6 +53,16 @@ export const routes: Routes = [
             (m) => m.ResendLinkComponent
           ),
         title: 'Musically | Resend Link',
+        data: { for: 'expired_otp' },
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('../app/auth/resend-link/resend-link.component').then(
+            (m) => m.ResendLinkComponent
+          ),
+        title: 'Musically | Forgot',
+        data: { for: 'forgot_password' },
       },
     ],
   },

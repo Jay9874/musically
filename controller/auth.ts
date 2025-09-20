@@ -21,6 +21,11 @@ const verifyEmailUrl =
     ? 'http://localhost:4200/auth/new-user'
     : '';
 
+const recoverAccountUrl =
+  process.env['NODE_ENV'] === 'development'
+    ? 'http://localhost:4200/auth/reset-password'
+    : '';
+
 // @desc     Login the user
 // @route    /login
 // @method   POST
@@ -213,20 +218,27 @@ export const register = async (
       });
 
     const registeredUser: { email: string; email_otp: string } = result.rows[0];
-    await transporter.sendMail({
-      from: process.env['GOOGLE_APP_EMAIL'],
-      to: registeredUser.email,
-      subject: 'Confirm your email for Musically',
-      html: `<h4>Hello there,<h4> <br>
+    await transporter
+      .sendMail({
+        from: process.env['GOOGLE_APP_EMAIL'],
+        to: registeredUser.email,
+        subject: 'Confirm your email for Musically',
+        html: `<h4>Hello there,<h4> <br>
       <p>Thanks for signing up on Musically. 
       Please confirm your email by clicking on the below link.
       Link will be valid for next <b>${OTP_EXPIRY / (60 * 1000)} minutes<b>.
       </p>
       <a href='${verifyEmailUrl}?token=${registeredUser.email_otp}&email=${
-        registeredUser.email
-      }'>Verify email</a>
+          registeredUser.email
+        }'>Verify email</a>
       `,
-    });
+      })
+      .catch((err) => {
+        console.log('err occurred while sending mail: ', err);
+        return res.status(400).send({
+          message: 'The link could not be send, check email for correctness.',
+        });
+      });
 
     console.log('User added:', result.rows[0]);
     return res.status(200).send({
@@ -324,6 +336,18 @@ export const resendVerificationLink = async (
         message: 'Provide an email to resend verification link.',
       });
     }
+
+    // Check if already existing recover request
+    const existingToken = await pool.query(
+      'SELECT username FROM users WHERE otp_expires_at > NOW()'
+    );
+    if (existingToken.rowCount !== 0) {
+      return res.status(409).send({
+        message:
+          'You already have a recover request, complete it with old link.',
+      });
+    }
+
     /*
       Create an random 6 digit otp for email verification
     */
@@ -343,25 +367,108 @@ export const resendVerificationLink = async (
       });
 
     const registeredUser: { email: string; token: string } = result.rows[0];
-    await transporter.sendMail({
-      from: process.env['GOOGLE_APP_EMAIL'],
-      to: registeredUser.email,
-      subject: 'Confirm your email for Musically',
-      html: `<h4>Hello there,<h4>
+    await transporter
+      .sendMail({
+        from: process.env['GOOGLE_APP_EMAIL'],
+        to: registeredUser.email,
+        subject: 'Confirm your email for Musically',
+        html: `<h4>Hello there,<h4>
         <p>No need to worry if your verification link got expired or you misplaced email. 
         Please confirm your email by clicking on the below link.
         Link will be valid for next <b>${OTP_EXPIRY / (60 * 1000)} minutes<b>.
         </p>
         <a href='${verifyEmailUrl}?token=${otp}&email=${
-        registeredUser.email
-      }'>Verify email</a>
+          registeredUser.email
+        }'>Verify email</a>
         `,
-    });
+      })
+      .catch((err) => {
+        console.log('err occurred while sending mail: ', err);
+        return res.status(400).send({
+          message: 'The link could not be send, check email for correctness.',
+        });
+      });
+
     return res.status(200).send({
       message: 'Resent verification link, check email.',
     });
   } catch (err) {
     console.log('err while sending resend link: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong',
+    });
+  }
+};
+
+export const recoverAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | any> => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).send({
+        message: 'Provide an email to send recovery email.',
+      });
+    }
+
+    // Check if already existing recover request
+    const existingToken = await pool.query(
+      'SELECT username FROM users WHERE otp_expires_at > NOW()'
+    );
+    if (existingToken.rowCount !== 0) {
+      return res.status(409).send({
+        message:
+          'You already have a recover request, complete it with old link.',
+      });
+    }
+    /*
+      Create an random 6 digit otp for email verification
+    */
+    const otp: string = Math.random().toString(36).slice(-8);
+    const expires_at = new Date();
+    expires_at.setTime(expires_at.getTime() + OTP_EXPIRY);
+
+    const query = {
+      text: 'UPDATE users SET email_otp=$1, otp_expires_at=$2 WHERE email=$3 RETURNING id, email, email_otp as token',
+      values: [otp, expires_at, email],
+    };
+
+    const result = await pool.query(query);
+    if (result.rowCount === 0)
+      return res.status(403).send({
+        message: 'Could not send recovery email, try again.',
+      });
+
+    const registeredUser: { email: string; token: string } = result.rows[0];
+    await transporter
+      .sendMail({
+        from: process.env['GOOGLE_APP_EMAIL'],
+        to: registeredUser.email,
+        subject: 'Recover your account',
+        html: `<h4>Hello there,<h4>
+        <p>No need to worry if you forgot password. 
+        Please set a new password by clicking on the below link.
+        Link will be valid for next <b>${OTP_EXPIRY / (60 * 1000)} minutes<b>.
+        </p>
+        <a href='${recoverAccountUrl}?token=${registeredUser.token}&email=${
+          registeredUser.email
+        }'>Verify email</a>
+        `,
+      })
+      .catch((err) => {
+        console.log('err occurred while sending mail: ', err);
+        return res.status(400).send({
+          message: 'The link could not be send, check email for correctness.',
+        });
+      });
+
+    return res.status(200).send({
+      message: 'Sent a recovery link, check email.',
+    });
+  } catch (err) {
+    console.log('err while recovering account: ', err);
     return res.status(500).send({
       message: 'Something went wrong',
     });

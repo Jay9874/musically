@@ -4,6 +4,7 @@ import express from 'express';
 import {
   login,
   logout,
+  recoverAccount,
   register,
   resendVerificationLink,
   usernameAvailability,
@@ -22,6 +23,8 @@ router.get('/logout', logout);
 
 // Setup all routes for user
 router.post('/register', register);
+
+router.post('/recovery', recoverAccount);
 
 // Route to validate verify link
 router.get('/validate-link', validateVerifyToken);

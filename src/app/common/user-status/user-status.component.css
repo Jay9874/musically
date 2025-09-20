@@ -5,7 +5,7 @@
     background: #d50017;
     cursor: pointer;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1rem; 
 }
 
 .avatar {
@@ -20,6 +20,7 @@
     position: relative;
     max-width: 95px;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 .avatar-options {

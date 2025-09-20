@@ -4,8 +4,8 @@
             <h3>Login with your musically account</h3>
             <div class="input-container">
                 <label for="email">Email</label>
-                <input id="email" type="email" name="email" [(ngModel)]="user().email" placeholder="email@example.com"
-                    required />
+                <input auto id="email" type="email" name="email" [(ngModel)]="user().email"
+                    placeholder="email@example.com" required />
             </div>
             <div class="input-container">
                 <label for="password">Password</label>
@@ -13,9 +13,14 @@
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#@$%&])(?=.{8,20}$)\S*$"
                     placeholder="A strong 8-20 character password" required />
             </div>
-            <a title="Create a new account" class="register-link" [routerLink]="['../register']"
-                routerLinkActive="router-link-active">Don't have
-                an account?</a>
+            <div class="other-links">
+                <a title="Create a new account" class="register-link" [routerLink]="['../register']"
+                    routerLinkActive="router-link-active">Don't have
+                    an account?</a>
+                <a title="Create a new account" class="register-link" [routerLink]="['../forgot-password']"
+                    routerLinkActive="router-link-active">Forgot password?</a>
+            </div>
+
             <button [disabled]="loginForm.invalid || authService.loading()" class="submit-btn" type="submit"
                 title="{{loginForm.invalid?'Enter your email and password': 'Click to sign in'}}">
                 @if (this.authService.loading()) {

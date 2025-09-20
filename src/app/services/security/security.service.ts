@@ -48,5 +48,14 @@ export class SecurityService {
     );
   };
 
-  
+  recover = (email: string): Observable<boolean> => {
+    return this.http
+      .post<boolean>(`${this.apiBaseUrl}/recovery`, { email })
+      .pipe(
+        map((res) => true),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  };
 }

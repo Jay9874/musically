@@ -18,3 +18,9 @@
   font-size: 0.75rem;
   color: white;
 }
+
+.other-links {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
