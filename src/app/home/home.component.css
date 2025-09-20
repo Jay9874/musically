@@ -10,9 +10,8 @@ li {
 .sidebar {
     position: sticky;
     top: 0;
-    flex-basis: auto;
-    flex-grow: 5;
-    flex-shrink: 1;
+    flex-basis: 280px;
+    flex-shrink: 0;
     background-color: #252526;
     height: 100vh;
     padding: var(--section-padding);
@@ -21,6 +20,7 @@ li {
 .search-box {
     padding: 2rem 0 1rem;
     position: relative;
+    width: 100%;
 }
 
 .search-box-icon {
@@ -31,7 +31,8 @@ li {
 
 .search-field {
     padding-left: 1.75rem;
-    width: 100px;
+    width: 100%;
+    ;
 }
 
 .sidebar-links {
@@ -54,7 +55,7 @@ li {
 
 .right-section {
     flex-basis: auto;
-    flex-grow: 95;
+    flex-grow: 85;
     flex-shrink: 1;
 }
 
@@ -63,7 +64,7 @@ li {
     position: sticky;
     top: 0;
     display: flex;
-    padding: 0.5rem 2rem;
+    padding: 1rem;
     align-items: center;
     justify-content: space-between;
     height: 64px;
@@ -73,11 +74,15 @@ li {
 .navigation-bar {
     position: sticky;
     top: 0;
+    z-index: 10;
+    background-color: rgb(44 44 44);
+}
+
+.mobile-top-nav {
     display: flex;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 1rem;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
     background-color: rgb(44 44 44);
 }
 
@@ -91,25 +96,167 @@ li {
     background-color: #1f1f1f;
 }
 
-#signin-link {
-    padding: 0.25rem 1.25rem;
-    border-radius: 6px;
-    color: white;
-    background: #fa586a;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 1rem;
+
+
+/* Menu button */
+#menu-button {
+    background-color: transparent;
+    border: none;
+    padding: 14px 8px;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-#signin-link-text {
-    color: #fa586a;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 0.90rem;
+#menu-button>span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    border-radius: 1px;
+    background-color: #fa586a;
 }
 
-.auth-nav-section li {
-    list-style-type: none;
+#menu-bar-up.active {
+    animation: moveUpRotate 350ms ease-in-out forwards;
+}
+
+#menu-bar-down.active {
+    animation: moveDownRotate 350ms ease-in-out forwards;
+}
+
+#menu-bar-up.inactive {
+    animation: upInitialPosition 350ms ease-in-out forwards;
+}
+
+#menu-bar-down.inactive {
+    animation: downInitialPosition 350ms ease-in-out forwards;
+}
+
+@keyframes upInitialPosition {
+    0% {
+        transform: translateY(5px) rotate(45deg);
+    }
+
+    50% {
+        transform: translateY(5px) rotate(0);
+    }
+
+    100% {
+        transform: translateY(0) rotate(0);
+    }
+}
+
+@keyframes downInitialPosition {
+    0% {
+        transform: translateY(-5px) rotate(-45deg);
+    }
+
+    50% {
+        transform: translateY(-5px) rotate(0);
+    }
+
+    100% {
+        transform: translateY(0) rotate(0);
+    }
+}
+
+
+@keyframes moveDownRotate {
+    0% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-5px) rotate(0);
+    }
+
+    100% {
+        transform: translateY(-5px) rotate(45deg);
+    }
+}
+
+@keyframes moveUpRotate {
+    0% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(5px) rotate(0);
+    }
+
+    100% {
+        transform: translateY(5px) rotate(-45deg);
+    }
+}
+
+.mobile-menu {
+    background-color: rgb(44 44 44);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    height: 100vh;
+    z-index: -1;
+    padding: 2rem;
+}
+
+.mobile-menu.active {
+    animation: menuMoveIn 350ms ease-in-out forwards;
+}
+
+.mobile-menu.inactive {
+    animation: menuMoveOut 350ms ease-in-out forwards;
+}
+
+@keyframes menuMoveIn {
+    0% {
+        bottom: 0;
+    }
+
+    100% {
+        bottom: -100vh
+    }
+}
+
+@keyframes menuMoveOut {
+    0% {
+        bottom: -100vh;
+    }
+
+    100% {
+        bottom: 0
+    }
+}
+
+/******* Mobile Music Controller */
+.bottom-music-player {
+    position: fixed;
+    z-index: 2;
+    bottom: 1rem;
+    width: 100vw;
+}
+
+.mobile-music-controller {
+    border-radius: 1rem;
+    background-color: rgb(44 44 44);
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+}
+
+.bottom-controls {
+    display: flex;
+    align-items: center;
+}
+
+.mobile-song-thumbnail {
+    padding: 0.5rem;
+    background-color: #323232;
+    border-radius: 0.5rem;
+    border: 1px solid #3a3a3a;
 }
 
 #brand-name {
@@ -127,11 +274,15 @@ li {
 
 .music-controls-container {
     display: flex;
+    flex-grow: 20;
+}
+
+.top-controls {
+    display: flex;
+    margin: 0 auto;
+    gap: 0.5rem;
     justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    flex-grow: 5;
-    padding: 0 1rem;
 }
 
 .music-control-btn {
@@ -144,7 +295,7 @@ li {
 .song-info {
     display: flex;
     background-color: #323232;
-    flex-grow: 60;
+    flex-grow: 70;
 }
 
 .song-thumbnail {
@@ -171,8 +322,8 @@ li {
     align-items: center;
     justify-content: space-between;
     gap: 0.25rem;
-    flex-grow: 5;
-    padding: 0 1rem;
+    flex-grow: 10;
+    padding-left: 1rem;
 }
 
 .volume-level {
@@ -229,6 +380,15 @@ progress::-moz-progress-bar {
     .navigation-bar {
         display: none;
     }
+
+    .sidebar {
+        flex-basis: 28%;
+        flex-shrink: 1;
+    }
+
+    .bottom-music-player {
+        display: none;
+    }
 }
 
 /******************* Media Query at < 480px ************/
@@ -248,6 +408,10 @@ progress::-moz-progress-bar {
     }
 
     .navigation-bar {
+        display: none;
+    }
+
+    .bottom-music-player {
         display: none;
     }
 }

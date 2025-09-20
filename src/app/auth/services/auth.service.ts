@@ -33,12 +33,17 @@ export class AuthService {
       );
   }
 
-  submitRegistrationForm(email: string, password: string): Observable<any> {
+  submitRegistrationForm(
+    email: string,
+    password: string,
+    username: string
+  ): Observable<any> {
     // return toLoadingStateStream(
     return this.http
       .post<any>(`${this.apiBaseUrl}/register`, {
         email,
         password,
+        username,
       })
       .pipe(
         map((res) => res),
@@ -64,4 +69,31 @@ export class AuthService {
         })
       );
   };
+
+  logout(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiBaseUrl}/logout`).pipe(
+      map((res) => {
+        console.log('the res is: ', res);
+        return true;
+      }),
+      catchError((err) => {
+        console.log('err while logging out: ', err);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  checkAvailability(username: string): Observable<boolean> {
+    return this.http
+      .get<boolean>(`${this.apiBaseUrl}/username?username=${username}`)
+      .pipe(
+        map((res) => {
+          console.log('res is: ', res);
+          return true;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  }
 }

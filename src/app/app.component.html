@@ -1,6 +1,8 @@
 <main>
-  <!-- The toast component -->
+  <!-- The toast component (only if there are any toast.) -->
+  @if (toast.toasts().length > 0) {
   <app-toast />
+  }
   <!-- The route content -->
   <router-outlet></router-outlet>
 </main>

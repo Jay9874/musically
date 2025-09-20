@@ -1,0 +1,15 @@
+<div class="user-status">
+    @if(authService.user()){
+    <button (click)="onAvatarClick()" type="button" name="avatar-button" class="avatar">
+        <p>{{authService.user()?.username}}</p>
+    </button>
+    }@else {
+    <a routerLink="/auth" id="signin-link">Sign
+        In</a>
+    }
+    @if (isMenuVisible()) {
+    <div class="avatar-options">
+        <button (click)="onLogout()" type="button" name="logout-button" class="logout-btn">Log out</button>
+    </div>
+    }
+</div>

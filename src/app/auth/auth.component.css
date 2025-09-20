@@ -50,7 +50,11 @@
 }
 
 .auth-nav-section {
-  background: transparent;
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+  /* background: transparent; */
+  position: sticky;
+  top: 0;
 }
 
 .auth-nav-section nav {
@@ -60,21 +64,6 @@
   align-items: center;
   justify-content: space-between;
   height: 64px;
-}
-
-.auth-nav-section nav #nav-action-btn {
-  padding: 0.5rem 1.5rem;
-  border-radius: 18px;
-  border: 1px solid gray;
-  color: white;
-  background: transparent;
-  cursor: pointer;
-  transition: all 300ms ease-in;
-}
-
-
-.auth-nav-section li {
-  list-style-type: none;
 }
 
 .auth-nav-section .company-logo {
@@ -89,16 +78,4 @@
 .auth-nav-section .company-logo img {
   height: 30px;
   width: 30px;
-}
-
-
-/************* Toast classes */
-.toast-container {
-  color: white;
-}
-
-.toast {
-  padding: 1rem;
-  border: 1px solid gray;
-  border-radius: 10px;
 }

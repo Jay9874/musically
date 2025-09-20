@@ -37,7 +37,7 @@ export class SessionManager {
   async checkSession(sessionId: number): Promise<Session | null> {
     try {
       const query = {
-        text: 'SELECT userid, sessions.id, roles, email FROM sessions JOIN users ON userid=users.id AND sessions.id=$1 AND expires_at > NOW()',
+        text: 'SELECT userid, username, sessions.id, roles, email FROM sessions JOIN users ON userid=users.id AND sessions.id=$1 AND expires_at > NOW()',
         values: [sessionId],
       };
 
@@ -49,6 +49,7 @@ export class SessionManager {
         userId: result.rows[0].userid,
         email: result.rows[0].email,
         roles: result.rows[0].roles,
+        username: result.rows[0].username,
       };
       const session: Session = {
         id: result.rows[0].id,

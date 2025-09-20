@@ -11,6 +11,7 @@ import {
 import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from './toast/toast.component';
 import { AuthService } from './auth/services/auth.service';
+import { ToastService } from './toast/services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit {
   serverKey = makeStateKey<string>('server');
 
   authService: AuthService = inject(AuthService);
+  toast: ToastService = inject(ToastService);
 
   constructor() {
     const request = inject(REQUEST, { optional: true });

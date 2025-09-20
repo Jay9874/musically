@@ -2,10 +2,10 @@
   color: white;
   max-width: 500px;
   margin: 0 auto;
-  height: calc(100vh - 64px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .form-container .login-form {
@@ -30,35 +30,50 @@
   gap: 5px;
 }
 
-.form-container .login-form .input-container input {
-  padding: 0.5rem;
-  outline: none;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid rgba(128, 128, 128, 0.5);
-  background-color: transparent;
+.form-container .login-form .register-link {
+  margin-top: 1rem;
+  font-size: 0.75rem;
   color: white;
 }
 
-.submit-btn {
-  margin-top: 3rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid rgba(128, 128, 128, 0.5);
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  font-size: 1rem;
+.username-input {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
 }
 
-.submit-btn:disabled {
+
+.username-input>input {
+  flex-grow: 1;
+}
+
+.username-input>button {
+  padding: 0.5rem;
+  background-color: #323232;
+  color: #fff;
+  border-radius: 5px;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.username-input>button:disabled {
   background-color: rgba(128, 128, 128, 0.483);
   color: rgba(255, 255, 255, 0.454);
   cursor: not-allowed;
 }
 
-.form-container .login-form .register-link {
-  margin-top: 1rem;
-  font-size: 0.75rem;
-  color: white;
+.username-input>button:focus {
+  outline: 1px solid white;
+}
+
+
+/******************* Media Query at < 480px ************/
+@media screen and (max-width: 479px) {
+  .username-input{
+    flex-direction: column;
+
+  }
 }

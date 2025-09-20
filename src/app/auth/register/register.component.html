@@ -5,7 +5,31 @@
             <div class="input-container">
                 <label for="email">Email</label>
                 <input id="email" type="email" name="email" required [(ngModel)]="user().email"
-                    placeholder="email@example.com" />
+                    placeholder="email@example.com" required />
+            </div>
+            <div class="input-container">
+                <label for="username">Username</label>
+                <div class="username-input">
+                    <input id="username" type="text" name="username" (ngModelChange)="onUsernameChange($event)"
+                        [ngModel]="user().username" placeholder="eg. speedy-spider_1" required />
+                    <button (click)="checkAvailability()" [disabled]="authService.loading()|| user().username === ''"
+                        type="button" name="check-username-button">
+                        @if (usernameAvailable()) {
+                        <img height="20" width="20" src="svgs/toast_success.svg" alt="right check icon" />
+                        <span style="color: #008a2e;">Available</span>
+                        }@else if(this.authService.loading()){
+                        <ul id="loading-container">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        }
+                        @else{
+                        Check availability
+                        }
+                    </button>
+                </div>
             </div>
             <div class="input-container">
                 <label for="password">Password</label>
@@ -15,10 +39,20 @@
             </div>
             <a class="register-link" [routerLink]="['../login']" routerLinkActive="router-link-active">Already have
                 an account?</a>
-            <button [disabled]="registerForm.invalid"
+            <button [disabled]="registerForm.invalid || !usernameAvailable() || authService.loading()"
                 title="{{registerForm.invalid?'Enter your email and new password': 'Click to sign up'}}"
-                class="submit-btn" type="submit">Verify email...</button>
+                class="submit-btn" type="submit">
+                @if (this.authService.loading()) {
+                <ul id="loading-container">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                }@else {
+                Verify email
+                }
+            </button>
         </form>
-
     </div>
 </main>

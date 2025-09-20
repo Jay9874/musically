@@ -3,10 +3,11 @@ export interface Session {
   user: SessionUser;
 }
 
-type Roles = 'Admin' | 'Creator' | 'Normal';
+type Roles = 'admin' | 'creator' | 'normal';
 
 export interface SessionUser {
   email: string;
   userId: number;
+  username: string;
   roles: Roles[];
 }

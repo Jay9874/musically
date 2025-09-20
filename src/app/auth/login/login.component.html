@@ -17,7 +17,18 @@
                 routerLinkActive="router-link-active">Don't have
                 an account?</a>
             <button [disabled]="loginForm.invalid || authService.loading()" class="submit-btn" type="submit"
-                title="{{loginForm.invalid?'Enter your email and password': 'Click to sign in'}}">Lets go...</button>
+                title="{{loginForm.invalid?'Enter your email and password': 'Click to sign in'}}">
+                @if (this.authService.loading()) {
+                <ul id="loading-container">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                }@else {
+                Lets goo
+                }
+            </button>
         </form>
     </div>
 </main>

@@ -69,7 +69,6 @@ form {
 
 input {
   padding: 0.5rem;
-  outline: none;
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid rgba(128, 128, 128, 0.5);
@@ -96,4 +95,75 @@ button[type='submit']:disabled {
   background-color: rgba(128, 128, 128, 0.483);
   color: rgba(255, 255, 255, 0.454);
   cursor: not-allowed;
+}
+
+
+
+/************************* Loader animation **********************/
+#loading-container {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+#loading-container>li {
+  position: absolute;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  list-style-type: none;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+#loading-container>li:nth-child(1) {
+  left: -10px;
+  animation: stage1 0.6s infinite;
+}
+
+#loading-container>li:nth-child(2) {
+  left: -10px;
+  animation: stage2 0.6s infinite;
+}
+
+#loading-container>li:nth-child(3) {
+  left: 6px;
+  animation: stage2 0.6s infinite;
+}
+
+#loading-container>li:nth-child(4) {
+  left: 22px;
+  animation: stage3 0.6s infinite;
+}
+
+@keyframes stage1 {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes stage3 {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes stage2 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(16px, 0);
+  }
 }

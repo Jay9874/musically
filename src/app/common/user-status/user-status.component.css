@@ -1,0 +1,58 @@
+#signin-link {
+    padding: 0.25rem 1.25rem;
+    border-radius: 6px;
+    color: white;
+    background: #d50017;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.avatar {
+    padding: 0.25rem 1.25rem;
+    border-radius: 6px;
+    background-color: #323232;
+    border: 1px solid #3a3a3a;
+    color: #a9a9a9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 95px;
+    text-overflow: ellipsis;
+}
+
+.avatar-options {
+    background-color: #323232;
+    padding: 1rem 0;
+    position: absolute;
+    z-index: 2;
+    top: 100%;
+    right: 1rem;
+    border-radius: 0.25rem;
+}
+
+.logout-btn {
+    background-color: #d50017;
+    border: none;
+    white-space: nowrap;
+    color: #fff;
+    border: 1px 0 0 1px 0;
+    border-color: #3a3a3a;
+    border-style: solid;
+    width: 100%;
+    padding: 0.5rem 1rem;
+}
+
+/******************* Media Query at < 480px ************/
+@media screen and (max-width: 479px) {
+    #signin-link {
+        color: #fa586a;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.90rem;
+        padding: 0;
+        border-radius: 0;
+        background-color: transparent;
+    }
+}
