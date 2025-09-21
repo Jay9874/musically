@@ -96,4 +96,20 @@ export class AuthService {
         })
       );
   }
+
+  changePassword(password: string): Observable<boolean> {
+    return this.http
+      .post<boolean>(`${this.apiBaseUrl}/change-password`, {
+        password,
+      })
+      .pipe(
+        map((res) => {
+          console.log('the res: ', res);
+          return true;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  }
 }
