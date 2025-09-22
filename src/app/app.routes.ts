@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { resendLinkGuard } from './guards/resend-link.guard';
 import { validateLinkGuard } from './guards/validate-link.guard';
+import { resetPasswordGuard } from './guards/reset-password.guard';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,15 @@ export const routes: Routes = [
             (m) => m.NewUserComponent
           ),
         title: 'Musically | New User',
+      },
+      {
+        path: 'reset-password',
+        canActivate: [resetPasswordGuard],
+        loadComponent: () =>
+          import('../app/auth/reset-password/reset-password.component').then(
+            (m) => m.ResetPasswordComponent
+          ),
+        title: 'Musically | Recovery',
       },
       {
         path: 'resend-link',

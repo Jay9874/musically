@@ -23,9 +23,13 @@
             </p>
             <div class="input-container">
                 <label for="email">Registered email</label>
-                <input auto id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" type="email" name="email"
-                    [(ngModel)]="email" placeholder="email@example.com" required />
+                <input auto id="email" type="email" name="email" [(ngModel)]="email" placeholder="email@example.com"
+                    required />
             </div>
+            
+            <a title="Create a new account" class="register-link" [routerLink]="['../register']"
+                routerLinkActive="router-link-active">Don't have
+                an account?</a>
             <button [disabled]="userForm.invalid || this.securityService.loading() " class="submit-btn" type="submit"
                 title="Get a recovery link via email">
                 @if (securityService.loading()) {

@@ -50,14 +50,14 @@ export const login = async (
 
     // Check if email exists in db
     const emailQuery = {
-      text: 'SELECT email, username, roles, password, verified_email, id FROM users WHERE email=$1',
+      text: 'SELECT email, username, roles, password, verified_email, id FROM users WHERE email=$1 OR username=$1',
       values: [email],
     };
     const emailResult = await pool.query(emailQuery);
     if (emailResult.rowCount === 0)
       return res.status(404).send({
         message:
-          'You email does not exists, please check it again or create a new account.',
+          'You email/username does not exists, please check it again or create a new account.',
       });
 
     const user: DbUser = emailResult.rows[0];
@@ -238,12 +238,14 @@ export const register = async (
         return res.status(400).send({
           message: 'The link could not be send, check email for correctness.',
         });
+      })
+      .then(() => {
+        console.log('User added:', result.rows[0]);
+        return res.status(200).send({
+          message: 'User created, check email to proceed ahead.',
+        });
       });
-
-    console.log('User added:', result.rows[0]);
-    return res.status(200).send({
-      message: 'User created, check email to proceed ahead.',
-    });
+    return;
   } catch (err) {
     console.log('error: ', err);
     return res.status(500).json({
@@ -412,7 +414,18 @@ export const recoverAccount = async (
         message: 'Provide an email to send recovery email.',
       });
     }
+    // Check if email exists in the database
+    const validEmail = {
+      text: 'SELECT email FROM users WHERE email=$1',
+      values: [email],
+    };
 
+    const existingEmail = await pool.query(validEmail);
+    if (existingEmail.rowCount === 0) {
+      return res.status(404).send({
+        message: 'Your email does not exits, please register first.',
+      });
+    }
     // Check if already existing recover request
     const existingToken = await pool.query(
       'SELECT username FROM users WHERE otp_expires_at > NOW()'
@@ -462,11 +475,12 @@ export const recoverAccount = async (
         return res.status(400).send({
           message: 'The link could not be send, check email for correctness.',
         });
+      })
+      .then(() => {
+        return res.status(200).send({
+          message: 'Sent a recovery link, check email.',
+        });
       });
-
-    return res.status(200).send({
-      message: 'Sent a recovery link, check email.',
-    });
   } catch (err) {
     console.log('err while recovering account: ', err);
     return res.status(500).send({
@@ -515,6 +529,105 @@ export const usernameAvailability = async (
     console.log('err occurred at availability check : ', err);
     return res.status(500).send({
       message: 'Something went wrong.',
+    });
+  }
+};
+
+export const changePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { password, email, token } = req.body;
+    /*
+      Check the input fields for correctness and validity
+    */
+    if (!email)
+      return res.status(400).send({
+        message: 'The email is required, please enter your correct email',
+      });
+    if (!password)
+      return res.status(400).send({
+        message: 'Please create a strong password and enter.',
+      });
+
+    if (!token)
+      return res.status(400).send({
+        message: 'The recovery token is invalid, provide a valid one.',
+      });
+
+    // First check if any user exists with this email
+    const checkExistingUser = {
+      text: 'SELECT email FROM users WHERE email = $1',
+      values: [email],
+    };
+    const existingUser = await pool.query(checkExistingUser);
+    if (existingUser.rowCount === 0) {
+      return res.status(404).send({
+        message: `Email is invalid, provide a correct email.`,
+      });
+    }
+
+    // First check if any user exists with this email
+    const validTokenQuery = {
+      text: 'SELECT email FROM users WHERE email = $1 AND token=$2 AND otp_expires_at > NOW()',
+      values: [email, token],
+    };
+    const validToken = await pool.query(validTokenQuery);
+    if (validToken.rowCount === 0) {
+      return res.status(404).send({
+        message: `The link is expired or invalid. Create a new request.`,
+      });
+    }
+
+    /* Any user does not exists with this email and username
+      Hash the password and create a new user
+     */
+    const hash: string = await bcryptjs.hash(password, SALT_ROUND);
+
+    const updatePasswordQuery = {
+      text: 'UPDATE users SET password=$1 RETURNING email, username, roles, id',
+      values: [hash],
+    };
+
+    const result = await pool.query(updatePasswordQuery);
+    if (result.rowCount === 0)
+      return res.status(403).send({
+        message: 'Could not create users, try again.',
+      });
+
+    const user: DbUser = result.rows[0];
+    const session: Session | null = await sessionManger.createSession(user.id);
+    if (!session) {
+      return res
+        .status(401)
+        .send({ message: 'The session could not be created.' });
+    }
+    const sessionCookie: CookieOptions = {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+    };
+    const longtermCookie: CookieOptions = {
+      ...sessionCookie,
+      maxAge: COOKIE_EXPIRY_DURATION,
+    };
+    res.cookie('musically-session', session.id, sessionCookie);
+    res.cookie('musically-longterm', session.id, longtermCookie);
+
+    return res.status(200).send({
+      user: {
+        email: user.email,
+        userId: user.id,
+        username: user.username,
+        roles: user.roles,
+      },
+    });
+  } catch (err) {
+    console.log('error: ', err);
+    return res.status(500).json({
+      message: 'Could not create user in table.',
     });
   }
 };

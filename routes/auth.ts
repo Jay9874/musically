@@ -24,6 +24,9 @@ router.get('/logout', logout);
 // Setup all routes for user
 router.post('/register', register);
 
+
+router.post('/change-password', register);
+
 router.post('/recovery', recoverAccount);
 
 // Route to validate verify link

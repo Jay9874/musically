@@ -97,10 +97,16 @@ export class AuthService {
       );
   }
 
-  changePassword(password: string): Observable<boolean> {
+  changePassword(
+    password: string,
+    email: string,
+    token: string
+  ): Observable<boolean> {
     return this.http
       .post<boolean>(`${this.apiBaseUrl}/change-password`, {
         password,
+        email,
+        token,
       })
       .pipe(
         map((res) => {

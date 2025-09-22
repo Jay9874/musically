@@ -1,13 +1,13 @@
 import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SecurityService } from '../../services/security/security.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../toast/services/toast.service';
 
 @Component({
   selector: 'app-resend-link',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './resend-link.component.html',
   styleUrls: ['./resend-link.component.css', '../../../styles.css'],
 })

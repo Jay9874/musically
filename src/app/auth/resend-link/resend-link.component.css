@@ -17,3 +17,9 @@ main {
     margin-bottom: 1rem;
     text-align: center;
 }
+
+.register-link {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: white;
+}

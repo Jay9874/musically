@@ -3,9 +3,9 @@
         <form #loginForm="ngForm" class="login-form" (ngSubmit)="submitForm()">
             <h3>Login with your musically account</h3>
             <div class="input-container">
-                <label for="email">Email</label>
-                <input auto id="email" type="email" name="email" [(ngModel)]="user().email"
-                    placeholder="email@example.com" required />
+                <label for="email">Email/Username</label>
+                <input auto id="email" type="text" name="username" [(ngModel)]="user().email"
+                    placeholder="your email or username" required />
             </div>
             <div class="input-container">
                 <label for="password">Password</label>
@@ -17,7 +17,7 @@
                 <a title="Create a new account" class="register-link" [routerLink]="['../register']"
                     routerLinkActive="router-link-active">Don't have
                     an account?</a>
-                <a title="Create a new account" class="register-link" [routerLink]="['../forgot-password']"
+                <a title="Recover your account" class="register-link" [routerLink]="['../forgot-password']"
                     routerLinkActive="router-link-active">Forgot password?</a>
             </div>
 
