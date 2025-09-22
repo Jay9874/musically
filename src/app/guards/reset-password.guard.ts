@@ -8,9 +8,8 @@ export const resetPasswordGuard: CanActivateFn = (route, state) => {
 
   const { email, token } = route.queryParams;
   if (!email || !token) {
-    toast.error('Could not validate link, try again.');
     toast.error('The recovery link is invalid, try again.');
-    return router.navigate(['login']);
+    return router.navigate(['auth']);
   }
   return true;
 };

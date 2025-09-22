@@ -1,19 +1,8 @@
-import {
-  Component,
-  inject,
-  model,
-  OnInit,
-  signal,
-  Signal,
-} from '@angular/core';
+import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../../toast/services/toast.service';
 import { AuthService } from '../services/auth.service';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 interface NewPassword {
@@ -30,6 +19,9 @@ interface NewPassword {
 export class ResetPasswordComponent implements OnInit {
   toast: ToastService = inject(ToastService);
   authService: AuthService = inject(AuthService);
+  route: ActivatedRoute = inject(ActivatedRoute);
+  router: Router = inject(Router);
+
   email = signal<string | null>(null);
   token = signal<string | null>(null);
 
@@ -38,28 +30,35 @@ export class ResetPasswordComponent implements OnInit {
     confirmPassword: '',
   });
 
-  constructor(private router: Router, private route: ActivatedRouteSnapshot) {}
+  constructor() {}
 
   ngOnInit(): void {
-    const { email, token } = this.route.queryParams;
+    const snapshot = this.route.snapshot;
+    const { email, token } = snapshot.queryParams;
     if (!(email && token)) {
       this.toast.error('The recovery link is invalid, try again.');
-      this.router.navigate(['login']);
+      this.router.navigate(['..'], { relativeTo: this.route });
     } else {
       this.email.set(email);
       this.token.set(token);
     }
   }
 
-  submitForm() {
+  submitForm(): void {
     if (
       this.newPassword().password !== '' &&
-      this.newPassword().password === this.newPassword().confirmPassword
-    )
-      if (!this.email() || this.token()) {
-        this.toast.error('The recovery link is invalid, try again.');
-        this.router.navigate(['login']);
-      }
+      this.newPassword().password !== this.newPassword().confirmPassword
+    ) {
+      this.toast.error(
+        'The passwords do not match. Enter exactly same passwords'
+      );
+      return;
+    }
+    if (!this.email() || !this.token()) {
+      this.toast.error('The recovery link is invalid, try again.');
+      this.router.navigate(['..'], { relativeTo: this.route });
+      return;
+    }
     this.authService.loading.set(true);
     this.authService
       .changePassword(this.newPassword().password, this.email()!, this.token()!)
@@ -73,7 +72,6 @@ export class ResetPasswordComponent implements OnInit {
           const { error }: { error: HttpErrorResponse } = err;
           console.log('err:', error);
           this.toast.error(error.message);
-          this.authService.loading.set(false);
           this.authService.loading.set(false);
         },
       });

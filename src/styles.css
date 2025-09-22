@@ -76,6 +76,10 @@ input {
   color: white;
 }
 
+input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
 input:focus {
   outline: 1px solid white;
 }

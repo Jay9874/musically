@@ -2,6 +2,7 @@ import express from 'express';
 
 // Import controllers from
 import {
+  changePassword,
   login,
   logout,
   recoverAccount,
@@ -24,8 +25,7 @@ router.get('/logout', logout);
 // Setup all routes for user
 router.post('/register', register);
 
-
-router.post('/change-password', register);
+router.post('/change-password', changePassword);
 
 router.post('/recovery', recoverAccount);
 

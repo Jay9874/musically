@@ -249,7 +249,7 @@ export const register = async (
   } catch (err) {
     console.log('error: ', err);
     return res.status(500).json({
-      message: 'Could not create user in table.',
+      message: 'Something went wrong',
     });
   }
 };
@@ -554,7 +554,8 @@ export const changePassword = async (
 
     if (!token)
       return res.status(400).send({
-        message: 'The recovery token is invalid, provide a valid one.',
+        message:
+          'No token found in recovery link, try again or create a new request.',
       });
 
     // First check if any user exists with this email
@@ -571,12 +572,12 @@ export const changePassword = async (
 
     // First check if any user exists with this email
     const validTokenQuery = {
-      text: 'SELECT email FROM users WHERE email = $1 AND token=$2 AND otp_expires_at > NOW()',
+      text: 'SELECT email FROM users WHERE email = $1 AND email_otp=$2 AND otp_expires_at > NOW()',
       values: [email, token],
     };
     const validToken = await pool.query(validTokenQuery);
     if (validToken.rowCount === 0) {
-      return res.status(404).send({
+      return res.status(403).send({
         message: `The link is expired or invalid. Create a new request.`,
       });
     }
@@ -594,7 +595,7 @@ export const changePassword = async (
     const result = await pool.query(updatePasswordQuery);
     if (result.rowCount === 0)
       return res.status(403).send({
-        message: 'Could not create users, try again.',
+        message: 'Could not update password, try again.',
       });
 
     const user: DbUser = result.rows[0];
@@ -627,7 +628,7 @@ export const changePassword = async (
   } catch (err) {
     console.log('error: ', err);
     return res.status(500).json({
-      message: 'Could not create user in table.',
+      message: 'Something went wrong.',
     });
   }
 };

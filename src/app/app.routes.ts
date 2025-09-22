@@ -10,6 +10,13 @@ export const routes: Routes = [
       import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
   },
+  // Users profile routes
+  {
+    path: 'user/:username',
+    loadComponent: () =>
+      import('../app/home/home.component').then((m) => m.HomeComponent),
+    title: 'Musically | Home',
+  },
   {
     path: 'auth',
     loadComponent: () =>

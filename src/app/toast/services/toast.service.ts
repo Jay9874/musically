@@ -1,4 +1,4 @@
-import { Injectable, model, signal } from '@angular/core';
+import { effect, Injectable, model, signal } from '@angular/core';
 import {
   Toast,
   ToastType,

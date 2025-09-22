@@ -103,7 +103,7 @@ export class AuthService {
     token: string
   ): Observable<boolean> {
     return this.http
-      .post<boolean>(`${this.apiBaseUrl}/change-password`, {
+      .post<AuthResponse>(`${this.apiBaseUrl}/change-password`, {
         password,
         email,
         token,
@@ -111,6 +111,7 @@ export class AuthService {
       .pipe(
         map((res) => {
           console.log('the res: ', res);
+          this.user.set(res.user);
           return true;
         }),
         catchError((err) => {
