@@ -2,20 +2,30 @@
     <div class="form-container">
         <form #userForm="ngForm" class="user-form" (ngSubmit)="onSubmit()">
             @if (linkFor() === 'expired_otp') {
-            <div>
-                @if(statusCode() == 404){
-                <h3>Misplaced your verification email? We are here to help...</h3>
-                }@else if(statusCode() == 401){
-                <h3>Verification link expired? We are here to help...</h3>
+
+            @if(statusCode() == 404){
+            <h3>Misplaced your verification email? We are here to help...</h3>
+            }@else if(statusCode() == 401){
+            <h3>Verification link expired? We are here to help...</h3>
+            }@else {
+            <h3>Something went wrong while validating? try again or send a new link</h3>
+            }
+            <p>I know how frustrating it is when you are unable to verify you email.<br>
+                Hit the button below to resend verification link on your email <b>"{{email()}}"</b>.
+            </p>
+            <button [disabled]="userForm.invalid || this.securityService.loading()" class="submit-btn" type="submit"
+                title="Resend link">
+                @if (securityService.loading()) {
+                <ul id="loading-container">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
                 }@else {
-                <h3>Something went wrong while validating? try again or send a new link</h3>
+                Resend link
                 }
-                <p>I know how frustrating it is when you are unable to verify you email.<br>
-                    Hit the button below to resend verification link on your email <b>"{{email()}}"</b>.
-                </p>
-                <button [disabled]="userForm.invalid || this.securityService.loading() " class="submit-btn"
-                    type="submit" title=" Resend link">Resend link...</button>
-            </div>
+            </button>
             }@else {
             <h3>Forgot your password? We are here to help...</h3>
             <p>I know how frustrating it is when you just can't remember password.<br>
@@ -26,7 +36,7 @@
                 <input auto id="email" type="email" name="email" [(ngModel)]="email" placeholder="email@example.com"
                     required />
             </div>
-            
+
             <a title="Create a new account" class="register-link" [routerLink]="['../register']"
                 routerLinkActive="router-link-active">Don't have
                 an account?</a>

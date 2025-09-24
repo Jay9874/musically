@@ -1,5 +1,5 @@
 import { Component, effect, inject, model, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { SessionUser } from '../../../types/interfaces/interfaces.session';
@@ -10,7 +10,13 @@ type MenuStates = 'active' | 'inactive';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, FormsModule, UserStatusComponent, HasAccessDirective],
+  imports: [
+    RouterLink,
+    FormsModule,
+    UserStatusComponent,
+    RouterOutlet,
+    HasAccessDirective,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

@@ -46,11 +46,13 @@ export class ResendLinkComponent {
       next: (res) => {
         console.log('res: ', res);
         this.toast.success('Resent verification email successfully.');
+        this.securityService.loading.set(false);
       },
       error: (err) => {
         console.log('err: ', err);
         const { error }: { error: HttpErrorResponse } = err;
         this.toast.error(error.message);
+        this.securityService.loading.set(false);
       },
     });
   }

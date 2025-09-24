@@ -9,14 +9,19 @@ export const routes: Routes = [
     loadComponent: () =>
       import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
+    children: [
+      // Users profile routes
+      {
+        path: 'user/:username',
+        loadComponent: () =>
+          import('../app/home/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+        title: 'Musically | Profile',
+      },
+    ],
   },
-  // Users profile routes
-  {
-    path: 'user/:username',
-    loadComponent: () =>
-      import('../app/home/home.component').then((m) => m.HomeComponent),
-    title: 'Musically | Home',
-  },
+
   {
     path: 'auth',
     loadComponent: () =>

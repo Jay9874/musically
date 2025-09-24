@@ -5,7 +5,7 @@
     background: #d50017;
     cursor: pointer;
     text-decoration: none;
-    font-size: 1rem; 
+    font-size: 1rem;
 }
 
 .avatar {
@@ -25,24 +25,26 @@
 
 .avatar-options {
     background-color: #323232;
-    padding: 1rem 0;
+    padding: 1rem;
     position: absolute;
     z-index: 2;
     top: 100%;
     right: 1rem;
     border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.logout-btn {
+.avatar-btn {
     background-color: #d50017;
-    border: none;
     white-space: nowrap;
+    border: none;
     color: #fff;
-    border: 1px 0 0 1px 0;
-    border-color: #3a3a3a;
-    border-style: solid;
     width: 100%;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 /******************* Media Query at < 480px ************/

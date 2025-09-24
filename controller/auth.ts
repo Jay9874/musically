@@ -57,7 +57,7 @@ export const login = async (
     if (emailResult.rowCount === 0)
       return res.status(404).send({
         message:
-          'You email/username does not exists, please check it again or create a new account.',
+          'Your email/username does not exists, please check it again or create a new account.',
       });
 
     const user: DbUser = emailResult.rows[0];
