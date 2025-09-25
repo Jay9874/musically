@@ -1,8 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toLoadingStateStream } from '../../loading-state-stream';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
+import { Roles } from '../../../../types/interfaces/interfaces.user';
 
 export interface AuthResponse {
   user: SessionUser;
@@ -17,6 +18,14 @@ export class AuthService {
   user = signal<SessionUser | null>(null);
 
   constructor(private http: HttpClient) {}
+
+  isGranted(roles: Roles[]): boolean {
+    this.validateSession().subscribe();
+    const userRoles: Roles[] = this.user()!.roles;
+    let hasRole: boolean = userRoles.some((r) => roles.includes(r));
+    if (hasRole) return true;
+    else return false;
+  }
 
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http

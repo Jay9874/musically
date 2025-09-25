@@ -45,6 +45,11 @@
     padding: 0.25rem 2rem;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 1rem;
+}
+
+.avatar-btn.profile-link {
+    text-decoration: none;
 }
 
 /******************* Media Query at < 480px ************/

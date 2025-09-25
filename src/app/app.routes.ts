@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { resendLinkGuard } from './guards/resend-link.guard';
 import { validateLinkGuard } from './guards/validate-link.guard';
 import { resetPasswordGuard } from './guards/reset-password.guard';
+import { profileGuard } from './guards/profile.guard';
 
 export const routes: Routes = [
   {
@@ -12,7 +13,8 @@ export const routes: Routes = [
     children: [
       // Users profile routes
       {
-        path: 'user/:username',
+        path: 'profile',
+        canActivate: [profileGuard],
         loadComponent: () =>
           import('../app/home/profile/profile.component').then(
             (m) => m.ProfileComponent
