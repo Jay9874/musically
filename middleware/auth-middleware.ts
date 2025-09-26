@@ -12,7 +12,7 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<Response | any> => {
   try {
-    const sessionId: unknown = req.cookies;
+    const sessionId: unknown = req.cookies['musically-longterm'];
     if (!sessionId) {
       return res.status(401).send({
         message: 'You are not authenticated.',
@@ -26,6 +26,9 @@ export const authenticate = async (
         message: 'Your session seems to have expired.',
       });
     }
+    res.locals = {
+      userId: session.user.userId,
+    };
     next();
   } catch (err) {
     console.log('err at authenticating user: ', err);
@@ -42,7 +45,6 @@ export const validateSession = async (
 ): Promise<Response | any> => {
   try {
     const sessionId: unknown = req.cookies['musically-session'];
-    console.log('session: ', sessionId);
     let user: SessionUser | null = null;
     if (sessionId) {
       const session: Session | null = await sessionManger.checkSession(

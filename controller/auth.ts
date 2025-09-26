@@ -632,3 +632,44 @@ export const changePassword = async (
     });
   }
 };
+
+export const changeUsername = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { newUsername } = req.body;
+    if (!newUsername) {
+      return res.status(400).send({
+        message: 'Please provide new username.',
+      });
+    }
+    const { userId } = res.locals;
+    const query = {
+      text: 'UPDATE users SET username=$1 WHERE id=$2 RETURNING email, id, username, roles',
+      values: [newUsername, userId],
+    };
+
+    const updatedUser = await pool.query(query);
+    if (updatedUser.rowCount === 0) {
+      return res.status(404).send({
+        message: 'User could not be found.',
+      });
+    }
+    const user: DbUser = updatedUser.rows[0];
+    return res.status(200).send({
+      user: {
+        email: user.email,
+        userId: user.id,
+        username: user.username,
+        roles: user.roles,
+      },
+    });
+  } catch (err) {
+    console.log('err occurred while changing username: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong.',
+    });
+  }
+};

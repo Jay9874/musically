@@ -1,3 +1,50 @@
-<main>
+<main class="profile">
     Welcome to your profile, <span>{{authService.user()?.username}}</span>
+
+    <main class="login-container">
+        <div class="form-container">
+            <form #usernameForm="ngForm" (submit)="changeUsername()" class="login-form">
+                <h3>Wow! you can change your username</h3>
+                <div class="input-container">
+                    <label for="username">Username</label>
+                    <div class="username-input">
+                        <input id="username" type="text" name="username" (ngModelChange)="onUsernameChange($event)"
+                            [ngModel]="username()" placeholder="eg. speedy-spider_1" required />
+                        <button (click)="checkAvailability()" [disabled]="authService.loading()|| username() === ''"
+                            type="button" name="check-username-button">
+                            @if (usernameAvailable()) {
+                            <img height="20" width="20" src="svgs/toast_success.svg" alt="right check icon" />
+                            <span style="color: #008a2e;">Available</span>
+                            }@else if(this.authService.loading()){
+                            <ul id="loading-container">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                            }
+                            @else{
+                            Check availability
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <button [disabled]="usernameForm.invalid || !usernameAvailable() || authService.loading()"
+                    title="{{usernameForm.invalid?'Enter a unique username': 'Click to save'}}" class="submit-btn"
+                    type="submit">
+                    @if (this.authService.loading()) {
+                    <ul id="loading-container">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                    }@else {
+                    Change
+                    }
+                </button>
+            </form>
+        </div>
+    </main>
 </main>

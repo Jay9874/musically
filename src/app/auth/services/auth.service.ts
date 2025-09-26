@@ -19,13 +19,13 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  isGranted(roles: Roles[]): boolean {
-    this.validateSession().subscribe();
-    const userRoles: Roles[] = this.user()!.roles;
-    let hasRole: boolean = userRoles.some((r) => roles.includes(r));
-    if (hasRole) return true;
-    else return false;
-  }
+  // isGranted(roles: Roles[]): boolean {
+  //   this.validateSession().subscribe();
+  //   const userRoles: Roles[] = this.user()!.roles;
+  //   let hasRole: boolean = userRoles.some((r) => roles.includes(r));
+  //   if (hasRole) return true;
+  //   else return false;
+  // }
 
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http
@@ -68,7 +68,6 @@ export class AuthService {
       .get<AuthResponse>(`${this.apiBaseUrl}/validate-session`)
       .pipe(
         map((res) => {
-          console.log('user: ', res.user);
           this.user.set(res.user);
           return res.user;
         }),
@@ -122,6 +121,22 @@ export class AuthService {
           console.log('the res: ', res);
           this.user.set(res.user);
           return true;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  }
+
+  changeUsername(newUsername: string): Observable<SessionUser> {
+    return this.http
+      .put<AuthResponse>(`${this.apiBaseUrl}/username`, {
+        newUsername,
+      })
+      .pipe(
+        map((res) => {
+          this.user.set(res.user);
+          return res.user;
         }),
         catchError((err) => {
           return throwError(() => err);

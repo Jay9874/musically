@@ -3,6 +3,7 @@ import { resendLinkGuard } from './guards/resend-link.guard';
 import { validateLinkGuard } from './guards/validate-link.guard';
 import { resetPasswordGuard } from './guards/reset-password.guard';
 import { profileGuard } from './guards/profile.guard';
+import { accessGuard } from './guards/access.guard';
 
 export const routes: Routes = [
   {
@@ -11,7 +12,6 @@ export const routes: Routes = [
       import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
     children: [
-      // Users profile routes
       {
         path: 'profile',
         canActivate: [profileGuard],
@@ -20,6 +20,16 @@ export const routes: Routes = [
             (m) => m.ProfileComponent
           ),
         title: 'Musically | Profile',
+      },
+      {
+        path: 'console',
+        canActivate: [accessGuard],
+        loadComponent: () =>
+          import('../app/home/console/console.component').then(
+            (m) => m.ConsoleComponent
+          ),
+        data: { roles: ['admin'] },
+        title: 'Musically | Console',
       },
     ],
   },

@@ -9,7 +9,7 @@
 }
 
 .avatar {
-    padding: 0.25rem 1.25rem;
+    padding: 0.25rem 0.75rem;
     border-radius: 6px;
     background-color: #323232;
     border: 1px solid #3a3a3a;
@@ -19,8 +19,13 @@
     justify-content: center;
     position: relative;
     max-width: 95px;
-    text-overflow: ellipsis;
     cursor: pointer;
+}
+
+.avatar > p{
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .avatar-options {

@@ -1,0 +1,49 @@
+.profile {
+    padding: 2rem;
+}
+
+.login-container {
+    margin-top: 3rem;
+}
+
+.username-input {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+
+.username-input>input {
+    flex-grow: 1;
+}
+
+.username-input>button {
+    padding: 0.5rem;
+    background-color: #323232;
+    color: #fff;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.username-input>button:disabled {
+    background-color: rgba(128, 128, 128, 0.483);
+    color: rgba(255, 255, 255, 0.454);
+    cursor: not-allowed;
+}
+
+.username-input>button:focus {
+    outline: 1px solid white;
+}
+
+
+/******************* Media Query at < 480px ************/
+@media screen and (max-width: 479px) {
+    .username-input {
+        flex-direction: column;
+
+    }
+}

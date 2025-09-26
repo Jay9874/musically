@@ -53,6 +53,17 @@ li {
     cursor: pointer;
 }
 
+.sidebar-link > a{
+    text-decoration: none;
+    color: hsl(0deg 0% 100% / 92%);
+}
+
+.console-link{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .right-section {
     flex-basis: auto;
     flex-grow: 85;
@@ -94,6 +105,7 @@ li {
 .main-container {
     min-height: 200vh;
     background-color: #1f1f1f;
+    color: #ffffffeb;
 }
 
 

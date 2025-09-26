@@ -3,6 +3,7 @@ import express from 'express';
 // Import controllers from
 import {
   changePassword,
+  changeUsername,
   login,
   logout,
   recoverAccount,
@@ -11,7 +12,7 @@ import {
   usernameAvailability,
   validateVerifyToken,
 } from '../controller/auth';
-import { validateSession } from '../middleware/auth-middleware';
+import { authenticate, validateSession } from '../middleware/auth-middleware';
 
 // Setup router
 const router = express.Router();
@@ -39,6 +40,12 @@ router.get('/resend-link', resendVerificationLink);
 router.get('/validate-session', validateSession);
 
 router.get('/username', usernameAvailability);
+/**
+ * @description Change the username for logged user.
+ * @route /api/auth/username
+ * @method PUT
+ */
+router.put('/username', authenticate, changeUsername);
 
 // Export router; should always export as default
 export const authRouter = router;

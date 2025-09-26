@@ -27,8 +27,10 @@
                     <span>Radio</span>
                 </button>
                 <button *hasAccess="['admin']" class="sidebar-link">
-                    <img height="20" width="20" src="icons/log-in.svg" alt="console button icon" />
-                    <span>Console</span>
+                    <a class="console-link" routerLink="/console">
+                        <img height="20" width="20" src="icons/log-in.svg" alt="console button icon" />
+                        <span>Console</span>
+                    </a>
                 </button>
             </ul>
         </nav>
@@ -96,7 +98,6 @@
 
             <!-- Mobile menu content -->
             <div class="mobile-menu {{menuStatus()}}">
-                <!-- <ul class="sidebar-links"> -->
                 <button class="sidebar-link">
                     <img height="30" width="30" src="icons/home.svg" alt="home button icon" />
                     <span class="">Home</span>
@@ -113,11 +114,9 @@
                     <img height="30" width="30" src="icons/log-in.svg" alt="console button icon" />
                     <span>Console</span>
                 </button>
-                <!-- </ul> -->
             </div>
         </section>
         <section class="main-container">
-            Main music list
             <router-outlet />
         </section>
     </section>

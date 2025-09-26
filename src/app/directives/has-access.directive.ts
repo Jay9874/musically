@@ -18,20 +18,38 @@ export class HasAccessDirective {
   authService: AuthService = inject(AuthService);
   private _templateRef = inject(TemplateRef);
   private _viewContainer = inject(ViewContainerRef);
-
   private _roles!: Roles[];
+
+  user = signal<SessionUser | null>(null);
 
   @Input()
   set hasAccess(roles: Roles[]) {
     this._roles = roles;
   }
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      this.user.set(this.authService.user());
+      if (this.user()) {
+        const userRoles: Roles[] = this.user()!.roles;
+        let hasRole: boolean = userRoles.some((r) => this._roles.includes(r));
+        if (hasRole) {
+          this._viewContainer.clear();
+          this._viewContainer.createEmbeddedView(this._templateRef);
+        }
+      }
+    });
+  }
 
   ngOnInit() {
-    if (this.authService.isGranted(this._roles)) {
-      this._viewContainer.clear();
-      this._viewContainer.createEmbeddedView(this._templateRef);
+    this.user.set(this.authService.user());
+    if (this.user()) {
+      const userRoles: Roles[] = this.user()!.roles;
+      let hasRole: boolean = userRoles.some((r) => this._roles.includes(r));
+      if (hasRole) {
+        this._viewContainer.clear();
+        this._viewContainer.createEmbeddedView(this._templateRef);
+      }
     }
   }
 }
