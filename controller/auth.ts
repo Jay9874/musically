@@ -115,7 +115,6 @@ export const logout = async (
   next: NextFunction
 ): Promise<Response | any> => {
   try {
-    console.log('the cookie is: ', req.cookies);
     const sessionId = req.cookies['musically-longterm'];
     if (!sessionId) {
       return res.status(400).send({

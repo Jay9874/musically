@@ -12,7 +12,7 @@ import cookieParser from 'cookie-parser';
 // All the routes
 import { authRouter } from './routes/auth';
 import { consoleRouter } from './routes/console';
-import { authenticate } from './middleware/auth-middleware';
+import { authenticate, authorize } from './middleware/auth-middleware';
 
 export function app(): express.Express {
   const server = express();
@@ -25,7 +25,7 @@ export function app(): express.Express {
   const angularNodeAppEngine = new AngularNodeAppEngine();
 
   server.use('/api/auth', authRouter);
-  server.use('/api/console', authenticate, consoleRouter);
+  server.use('/api/admin/console', authenticate, authorize(['admin']),  consoleRouter);
 
   server.get(
     '**',

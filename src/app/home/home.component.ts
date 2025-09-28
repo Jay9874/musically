@@ -5,6 +5,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { SessionUser } from '../../../types/interfaces/interfaces.session';
 import { UserStatusComponent } from '../common/user-status/user-status.component';
 import { HasAccessDirective } from '../directives/has-access.directive';
+import { ConsoleService } from './console/console.service';
 
 type MenuStates = 'active' | 'inactive';
 
@@ -22,6 +23,7 @@ type MenuStates = 'active' | 'inactive';
 })
 export class HomeComponent {
   authService: AuthService = inject(AuthService);
+  consoleService: ConsoleService = inject(ConsoleService);
   user = signal<SessionUser | null>(this.authService.user());
 
   menuStatus = model<MenuStates>('inactive');

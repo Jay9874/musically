@@ -8,7 +8,7 @@ import { SessionUser } from '../../../../types/interfaces/interfaces.session';
   providedIn: 'root',
 })
 export class ConsoleService {
-  private readonly baseApi = 'api/console';
+  private readonly baseApi = 'api/admin/console';
 
   // Signals
   allUsers = signal<SessionUser[]>([]);
@@ -18,6 +18,7 @@ export class ConsoleService {
     return this.http.get<UsersResponse>(`${this.baseApi}/users`).pipe(
       map((res) => {
         this.allUsers.set(res.users);
+        console.log('res: ', res);
         return res;
       }),
       catchError((err) => {

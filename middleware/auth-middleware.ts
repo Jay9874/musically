@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { SessionManager } from '../utils/sessionManager';
 import { Session, SessionUser } from '../types/interfaces/interfaces.session';
+import { pool } from '../db';
+import { Roles } from '../types/interfaces/interfaces.user';
 
 // @desc Authenticates user and protects routes
 
@@ -63,4 +65,44 @@ export const validateSession = async (
       message: 'Something went wrong.',
     });
   }
+};
+
+export const authorize = function (validRoles: Roles[]) {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | any> => {
+    try {
+      // Getting logged user info from auth middleware
+      const loggedUser = res.locals['userId'];
+
+      const rolesQuery = {
+        text: 'SELECT roles FROM users WHERE id=$1',
+        values: [loggedUser],
+      };
+      const result = await pool.query(rolesQuery);
+      if (result.rowCount === 0) {
+        return res.status(404).send({
+          message: 'Seems you do not have access to perform this action.',
+        });
+      }
+      const user: SessionUser = result.rows[0];
+      const hasAccess: boolean = validRoles.some((role) =>
+        user.roles.includes(role)
+      );
+      console.log('has access: ', hasAccess);
+      if (!hasAccess) {
+        return res.status(403).send({
+          message: 'You are unauthorized to perform this action.',
+        });
+      }
+      next();
+    } catch (err) {
+      console.log('err while checking the role');
+      return res.status(500).send({
+        message: 'Something went wrong',
+      });
+    }
+  };
 };

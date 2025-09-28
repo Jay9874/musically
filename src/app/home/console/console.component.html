@@ -26,10 +26,11 @@
             <tbody>
                 @for (user of consoleService.allUsers(); track $index) {
                 <tr>
-                    <th scope="row">user.username</th>
+                    <th scope="row">{{user.username}}</th>
                     <td>
+                        <div>{{user.roles}}</div>
                         <div>
-                            <input type="checkbox" id="scales" name="admin"/>
+                            <input type="checkbox" id="scales" name="admin" />
                             <label for="admin">Admin</label>
                         </div>
                         <div>
@@ -37,7 +38,7 @@
                             <label for="normal">Normal</label>
                         </div>
                     </td>
-                    <td>user.email</td>
+                    <td>{{user.email}}</td>
                 </tr>
                 }@empty {
                 <div>No users found.</div>
