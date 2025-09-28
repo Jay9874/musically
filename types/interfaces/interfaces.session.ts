@@ -7,7 +7,7 @@ type Roles = 'admin' | 'creator' | 'normal';
 
 export interface SessionUser {
   email: string;
-  userId: number;
+  userId: string;
   username: string;
   roles: Roles[];
 }
