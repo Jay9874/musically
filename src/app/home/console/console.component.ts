@@ -4,6 +4,9 @@ import { ToastService } from '../../toast/services/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConsoleService } from './console.service';
 import { lastValueFrom } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { LoaderService } from '../../services/loader/loader.service';
+import { FileMeta, Song } from '../../../../types/interfaces/interfaces.song';
 
 type Tab = 'console' | 'users';
 
@@ -22,7 +25,7 @@ export interface Roles {
 
 @Component({
   selector: 'app-console',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './console.component.html',
   styleUrl: './console.component.css',
 })
@@ -35,14 +38,44 @@ export class ConsoleComponent implements OnInit {
   // Services
   toast: ToastService = inject(ToastService);
   consoleService: ConsoleService = inject(ConsoleService);
+  loader: LoaderService = inject(LoaderService);
 
   // Signals
   activeTab = model<Tab>('console');
+
+  song = model<Song>({
+    title: '',
+    thumbnail: null,
+    song: null,
+    songMeta: null,
+    thumbnailMeta: null,
+  });
 
   constructor() {}
 
   ngOnInit(): void {
     this.getUsers();
+  }
+
+  onFileChange(event: Event): void {
+    const { name, files } = event.target as HTMLInputElement;
+    if (files) {
+      let meta: FileMeta = {
+        name: files[0].name,
+        type: files[0].type,
+        size: files[0].size,
+      };
+      if (name === 'song') {
+        this.song.update((prev) => ({ ...prev, songMeta: meta }));
+      } else if (name === 'thumbnail') {
+        this.song.update((prev) => ({ ...prev, thumbnailMeta: meta }));
+      }
+    }
+  }
+
+  uploadSong(): void {
+    console.log('song is: ', this.song());
+    console.log('song is getting upload...');
   }
 
   onTabChange(tab: Tab) {

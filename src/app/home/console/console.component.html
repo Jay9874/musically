@@ -52,6 +52,47 @@
             </tfoot>
         </table>
     </div>
+    }
+    @else {
+    <section>
 
+        <main class="login-container">
+            <div class="form-container">
+                <form #loginForm="ngForm" class="login-form" (ngSubmit)="uploadSong()">
+                    <h3>Upload a song</h3>
+                    <div class="input-container">
+                        <label for="email">Title</label>
+                        <input auto id="title" type="text" name="title" [(ngModel)]="song().title"
+                            placeholder="Title of the song" required />
+                    </div>
+
+                    <div class="input-container">
+                        <label for="thumbnail">Thumbnail</label>
+                        <input type="file" id="thumbnail" name="thumbnail" accept="image/*"
+                            (change)="onFileChange($event)">
+                    </div>
+
+                    <div class="input-container">
+                        <label for="song">Song</label>
+                        <input (change)="onFileChange($event)" name="song" accept="audio/*" type="file" id="song" />
+                    </div>
+
+                    <button [disabled]="loginForm.invalid || loader.isLoading()" class="submit-btn" type="submit"
+                        title="{{loginForm.invalid?'Enter your email and password': 'Click to sign in'}}">
+                        @if (this.loader.isLoading()) {
+                        <ul id="loading-container">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        }@else {
+                        Upload
+                        }
+                    </button>
+                </form>
+            </div>
+        </main>
+    </section>
     }
 </main>

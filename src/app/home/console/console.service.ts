@@ -1,8 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, OnInit, signal } from '@angular/core';
 import { UsersResponse } from './console.component';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, finalize, map, Observable, throwError } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
+import { LoaderService } from '../../services/loader/loader.service';
+import { Song } from '../../../../types/interfaces/interfaces.song';
+
+export interface UploadResponse {
+  success: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +36,23 @@ export class ConsoleService {
   updateUser(userId: string, roles: string[]): Observable<UsersResponse> {
     return this.http
       .put<UsersResponse>(`${this.baseApi}/users`, { userId, roles })
+      .pipe(
+        map((res) => res),
+        catchError((err) => throwError(() => err))
+      );
+  }
+
+  uploadSong(song: Song): Observable<any> {
+
+    
+    const formData = new FormData();
+    formData.append('song', song.song);
+    formData.append('thumbnail', song.thumbnail);
+    return this.http
+      .post<any>(`${this.baseApi}/song/upload`, formData, {
+        reportProgress: true,
+        observe: 'events',
+      })
       .pipe(
         map((res) => res),
         catchError((err) => throwError(() => err))
