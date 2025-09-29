@@ -34,10 +34,11 @@ export class ToastService {
       newToastArray = [...newToastArray, newToast];
       this.toasts.set(newToastArray);
 
-      setTimeout(() => {
-        this.remove(newToast.id);
-      }, duration);
-
+      if (Number.isFinite(duration)) {
+        setTimeout(() => {
+          this.remove(newToast.id);
+        }, duration);
+      }
       return newToast.id;
     } catch (err) {
       console.log('err while adding toast: ', err);

@@ -1,15 +1,22 @@
-import { ApplicationConfig, provideExperimentalZonelessChangeDetection, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideExperimentalZonelessChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
+import { loaderInterceptor } from './interceptors/loader.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withFetch())
+    provideHttpClient(withInterceptors([loaderInterceptor])),
   ],
 };
