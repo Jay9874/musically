@@ -1,8 +1,8 @@
 export interface Song {
   title: string;
-  thumbnail: File | null;
+  thumbnail: Blob | null;
   thumbnailMeta: FileMeta | null;
-  song: File | null;
+  song: Blob | null;
   songMeta: FileMeta | null;
 }
 

@@ -91,6 +91,13 @@
                         }
                     </button>
                 </form>
+                <div>
+                    Player
+                    <figure>
+                        <figcaption>Listen to {{this.song().title}}</figcaption>
+                        <audio controls src="{{songUrl()}}"></audio>
+                    </figure>
+                </div>
             </div>
         </main>
     </section>

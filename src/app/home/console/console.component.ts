@@ -1,4 +1,11 @@
-import { Component, inject, model, OnInit } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  model,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 import { ToastService } from '../../toast/services/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -42,6 +49,7 @@ export class ConsoleComponent implements OnInit {
 
   // Signals
   activeTab = model<Tab>('console');
+  songUrl = signal<string | null>(null);
 
   song = model<Song>({
     title: '',
@@ -51,25 +59,64 @@ export class ConsoleComponent implements OnInit {
     thumbnailMeta: null,
   });
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      const song: Blob | null = this.song().song;
+      if (song) {
+        this.loadSong();
+        console.log('the blob is: ', this.song().song);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.getUsers();
   }
 
-  onFileChange(event: Event): void {
+  async onFileChange(event: Event): Promise<void> {
     const { name, files } = event.target as HTMLInputElement;
-    if (files) {
-      let meta: FileMeta = {
-        name: files[0].name,
-        type: files[0].type,
-        size: files[0].size,
-      };
-      if (name === 'song') {
-        this.song.update((prev) => ({ ...prev, songMeta: meta }));
-      } else if (name === 'thumbnail') {
-        this.song.update((prev) => ({ ...prev, thumbnailMeta: meta }));
+
+    // Check if the files is there
+    if (files && files.length > 0) {
+      const file: File | null = files.item(0);
+      const fr: FileReader = new FileReader();
+      if (file) {
+        let blob: Blob = new Blob();
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          blob = new Blob([arrayBuffer], { type: file.type });
+          console.log('Blob created using File.arrayBuffer():', blob);
+        } catch (error) {
+          console.error('Error reading file:', error);
+        }
+        let meta: FileMeta = {
+          name: file.name,
+          type: blob.type,
+          size: blob.size,
+        };
+        if (name === 'song') {
+          this.song.update((prev) => ({
+            ...prev,
+            title: file.name,
+            song: blob,
+            songMeta: meta,
+          }));
+        } else if (name === 'thumbnail') {
+          this.song.update((prev) => ({
+            ...prev,
+            thumbnail: blob,
+            thumbnailMeta: meta,
+          }));
+        }
+        console.log('song is: ', this.song());
       }
+    }
+  }
+
+  loadSong(): void {
+    if (this.song().song) {
+      const url: string = URL.createObjectURL(this.song().song!);
+      this.songUrl.set(url);
     }
   }
 

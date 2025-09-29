@@ -43,11 +43,9 @@ export class ConsoleService {
   }
 
   uploadSong(song: Song): Observable<any> {
-
-    
     const formData = new FormData();
-    formData.append('song', song.song);
-    formData.append('thumbnail', song.thumbnail);
+    // formData.append('song', song.song);
+    // formData.append('thumbnail', song.thumbnail);
     return this.http
       .post<any>(`${this.baseApi}/song/upload`, formData, {
         reportProgress: true,
