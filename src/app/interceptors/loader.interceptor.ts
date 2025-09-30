@@ -5,6 +5,6 @@ import { inject } from '@angular/core';
 
 export const loaderInterceptor: HttpInterceptorFn = (req, next) => {
   const loader: LoaderService = inject(LoaderService);
-  loader.isLoading.set(true);
-  return next(req).pipe(finalize(() => loader.isLoading.set(false)));
+  loader.showLoader();
+  return next(req).pipe(finalize(() => loader.hideLoader()));
 };

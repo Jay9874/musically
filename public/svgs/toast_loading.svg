@@ -2,7 +2,7 @@
     <style>
         line {
             stroke-width: 2;
-            stroke-linecap="round"
+            stroke-linecap: "round";
             animation-name: lightUp;
             animation-duration: 500ms;
             animation-timing-function: linear;
@@ -10,27 +10,48 @@
             animation-iteration-count: infinite;
             animation-delay: calc(var(--i) * 125ms);
         }
-        line:nth-child(1) { --i: 0;}
-        line:nth-child(2) { --i: 1;}
-        line:nth-child(3) { --i: 2;}
-        line:nth-child(4) { --i: 3;}
-        line:nth-child(5) { --i: 4;}
-        line:nth-child(6) { --i: 5;}
-        line:nth-child(7) { --i: 6;}
-        line:nth-child(8) { --i: 7;}
 
-        @keyframes lightUp {
-            0% { stroke: #C4C4C4FF;}
-            12.5% {stroke: #C4C4C4E0;}
-            25% {stroke: #C4C4C4BF;}
-            37.5% {stroke: #C4C4C499;}
-            50% { stroke: #C4C4C480;}
-            62.5% {stroke: #C4C4C460;}
-            75% { stroke: #C4C4C440;}
-            87.5% {stroke: #C4C4C420;}
-            100% {stroke: #C4C4C400;}
+        line:nth-child(1) {
+            --i: 0;
         }
 
+        line:nth-child(2) {
+            --i: 1;
+        }
+
+        line:nth-child(3) {
+            --i: 2;
+        }
+
+        line:nth-child(4) {
+            --i: 3;
+        }
+
+        line:nth-child(5) {
+            --i: 4;
+        }
+
+        line:nth-child(6) {
+            --i: 5;
+        }
+
+        line:nth-child(7) {
+            --i: 6;
+        }
+
+        line:nth-child(8) {
+            --i: 7;
+        }
+
+        @keyframes lightUp {
+            0% {
+                stroke: #ffffff;
+            }
+
+            100% {
+                stroke: #000;
+            }
+        }
     </style>
     <g stroke="#c4c4c4">
         <!-- The first one horizontally right -->

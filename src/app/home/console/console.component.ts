@@ -120,9 +120,10 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
-  uploadSong(): void {
-    console.log('song is: ', this.song());
-    console.log('song is getting upload...');
+  async uploadSong(): Promise<void> {
+    try {
+      const token$ = this.consoleService.uploadSong(this.song());
+    } catch (err) {}
   }
 
   onTabChange(tab: Tab) {

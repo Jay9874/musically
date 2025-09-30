@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import {
   provideHttpClient,
+  withFetch,
   withInterceptors,
 } from '@angular/common/http';
 import { loaderInterceptor } from './interceptors/loader.interceptor';
@@ -17,6 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideExperimentalZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withInterceptors([loaderInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([loaderInterceptor])),
   ],
 };
