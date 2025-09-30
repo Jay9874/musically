@@ -14,6 +14,7 @@ import { lastValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { LoaderService } from '../../services/loader/loader.service';
 import { FileMeta, Song } from '../../../../types/interfaces/interfaces.song';
+import { AuthService } from '../../auth/services/auth.service';
 
 type Tab = 'console' | 'users';
 
@@ -45,6 +46,7 @@ export class ConsoleComponent implements OnInit {
   // Services
   toast: ToastService = inject(ToastService);
   consoleService: ConsoleService = inject(ConsoleService);
+  authService: AuthService = inject(AuthService);
   loader: LoaderService = inject(LoaderService);
 
   // Signals
@@ -68,7 +70,9 @@ export class ConsoleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUsers();
+    if (this.authService.user()) {
+      this.getUsers();
+    }
   }
 
   // Cancel thumbnail upload

@@ -95,7 +95,13 @@ export const uploadSong = async (
   next: NextFunction
 ) => {
   try {
-    const data = req.body;
+    const { meta } = req.body;
+    if (!meta) {
+      return res.status(400).send({
+        message: 'Please provide song meta.',
+      });
+    }
+
     return res.status(200).send({
       message: 'Got the song',
     });

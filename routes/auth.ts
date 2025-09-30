@@ -21,12 +21,12 @@ const router = express.Router();
 router.post('/login', login);
 
 // Logout the user
-router.get('/logout', logout);
+router.get('/logout', authenticate, logout);
 
 // Setup all routes for user
 router.post('/register', register);
 
-router.post('/change-password', changePassword);
+router.post('/change-password', authenticate, changePassword);
 
 router.post('/recovery', recoverAccount);
 

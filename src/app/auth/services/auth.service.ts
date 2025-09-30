@@ -19,14 +19,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // isGranted(roles: Roles[]): boolean {
-  //   this.validateSession().subscribe();
-  //   const userRoles: Roles[] = this.user()!.roles;
-  //   let hasRole: boolean = userRoles.some((r) => roles.includes(r));
-  //   if (hasRole) return true;
-  //   else return false;
-  // }
-
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http
       .post<AuthResponse>(`${this.apiBaseUrl}/login`, { email, password })

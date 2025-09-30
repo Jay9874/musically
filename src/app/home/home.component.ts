@@ -1,4 +1,11 @@
-import { Component, effect, inject, model, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  model,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
@@ -21,7 +28,7 @@ type MenuStates = 'active' | 'inactive';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   authService: AuthService = inject(AuthService);
   consoleService: ConsoleService = inject(ConsoleService);
   user = signal<SessionUser | null>(this.authService.user());
@@ -32,6 +39,10 @@ export class HomeComponent {
     effect(() => {
       this.user.set(this.authService.user());
     });
+  }
+
+  ngOnInit(): void {
+    this.authService.validateSession().subscribe();
   }
 
   onMenuToggle(): void {

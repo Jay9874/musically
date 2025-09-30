@@ -20,7 +20,7 @@ import { ToastService } from './toast/services/toast.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'ang_app';
   version = VERSION.full;
   server: string | undefined;
@@ -47,9 +47,5 @@ export class AppComponent implements OnInit {
       this.transferState.set(this.serverKey, this.server);
     }
     this.server = this.transferState.get(this.serverKey, '');
-  }
-
-  ngOnInit(): void {
-    this.authService.validateSession().subscribe();
   }
 }

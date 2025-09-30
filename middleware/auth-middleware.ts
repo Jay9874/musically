@@ -34,7 +34,7 @@ export const authenticate = async (
     next();
   } catch (err) {
     console.log('err at authenticating user: ', err);
-    return res.status(200).send({
+    return res.status(500).send({
       message: 'Something went wrong.',
     });
   }
@@ -46,22 +46,28 @@ export const validateSession = async (
   next: NextFunction
 ): Promise<Response | any> => {
   try {
-    const sessionId: unknown = req.cookies['musically-session'];
-    let user: SessionUser | null = null;
-    if (sessionId) {
-      const session: Session | null = await sessionManger.checkSession(
-        sessionId as number
-      );
-      if (session) {
-        user = session.user;
-      }
+    const sessionId: unknown = req.cookies['musically-longterm'];
+    console.log('called validate wth session: ', sessionId);
+    if (!sessionId) {
+      return res.status(403).send({
+        message: 'Your session is invalid.',
+      });
     }
+    const session: Session | null = await sessionManger.checkSession(
+      sessionId as number
+    );
+    if (!session) {
+      return res.status(403).send({
+        message: 'You have invalid session.',
+      });
+    }
+
     return res.status(200).send({
-      user: user,
+      user: session.user,
     });
   } catch (err) {
     console.log('err at authenticating user: ', err);
-    return res.status(200).send({
+    return res.status(500).send({
       message: 'Something went wrong.',
     });
   }
@@ -91,7 +97,6 @@ export const authorize = function (validRoles: Roles[]) {
       const hasAccess: boolean = validRoles.some((role) =>
         user.roles.includes(role)
       );
-      console.log('has access: ', hasAccess);
       if (!hasAccess) {
         return res.status(403).send({
           message: 'You are unauthorized to perform this action.',
