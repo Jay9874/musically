@@ -96,7 +96,6 @@ export const uploadSong = async (
 ) => {
   try {
     const data = req.body;
-    console.log('data is: ', data);
     return res.status(200).send({
       message: 'Got the song',
     });
