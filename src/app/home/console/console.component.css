@@ -66,3 +66,64 @@ tfoot th {
 tfoot td {
     font-weight: bold;
 }
+
+
+.thumbnail-container {
+    height: 150px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+#thumbnail-label {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.uploaded-thumbnail {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.thumbnail-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.25rem;
+}
+
+.thumbnail-actions>button,
+.thumbnail-actions>label {
+    height: 26px;
+    width: 26px;
+    border-radius: 13px;
+    padding: 0.25rem;
+    cursor: pointer;
+}
+
+.thumbnail-actions>label {
+    color: #006400;
+    border: 1px solid #00c316;
+    background-color: #ECFFDC;
+}
+
+.thumbnail-actions>button {
+    color: #d50017;
+    border: 1px solid #FF0000;
+    background-color: #FBCEB1;
+}
+
+.uploaded-thumbnail>img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 5px;
+}

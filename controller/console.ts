@@ -3,7 +3,6 @@ dotenv.config();
 
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db';
-import { DbUser } from '../types/interfaces/interfaces.user';
 
 /**
  *
@@ -38,6 +37,14 @@ export const getAllUsers = async (
   }
 };
 
+/**
+ *
+ * @param req The request contains user id and modified roles array.
+ * @param res The response has updated user object.
+ * @param next
+ * @returns Returns the response to client.
+ */
+
 export const updateUser = async (
   req: Request,
   res: Response,
@@ -70,6 +77,33 @@ export const updateUser = async (
     console.log('error occurred while updating user: ', err);
     return res.status(500).send({
       message: 'Something went wrong.',
+    });
+  }
+};
+
+/**
+ *
+ * @param req A form data with song binary
+ * @param res A success message with song meta data
+ * @param next
+ * @returns Response to client.
+ */
+
+export const uploadSong = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = req.body;
+    console.log('data is: ', data);
+    return res.status(200).send({
+      message: 'Got the song',
+    });
+  } catch (err) {
+    console.log('err at uploading song: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong',
     });
   }
 };

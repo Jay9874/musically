@@ -50,6 +50,7 @@ export class ConsoleComponent implements OnInit {
   // Signals
   activeTab = model<Tab>('console');
   songUrl = signal<string | null>(null);
+  thumbnailUrl = signal<string | null>(null);
 
   song = model<Song>({
     title: '',
@@ -61,16 +62,23 @@ export class ConsoleComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      const song: Blob | null = this.song().song;
-      if (song) {
-        this.loadSong();
-        console.log('the blob is: ', this.song().song);
-      }
+      const song: Song = this.song();
+      this.loadUrl();
     });
   }
 
   ngOnInit(): void {
     this.getUsers();
+  }
+
+  // Cancel thumbnail upload
+  cancelThumbnail(): void {
+    this.song.update((prev) => ({
+      ...prev,
+      thumbnail: null,
+      thumbnailMeta: null,
+    }));
+    this.thumbnailUrl.set(null);
   }
 
   async onFileChange(event: Event): Promise<void> {
@@ -79,13 +87,12 @@ export class ConsoleComponent implements OnInit {
     // Check if the files is there
     if (files && files.length > 0) {
       const file: File | null = files.item(0);
-      const fr: FileReader = new FileReader();
       if (file) {
+        console.log('file name is: ', file.name);
         let blob: Blob = new Blob();
         try {
           const arrayBuffer = await file.arrayBuffer();
           blob = new Blob([arrayBuffer], { type: file.type });
-          console.log('Blob created using File.arrayBuffer():', blob);
         } catch (error) {
           console.error('Error reading file:', error);
         }
@@ -97,7 +104,6 @@ export class ConsoleComponent implements OnInit {
         if (name === 'song') {
           this.song.update((prev) => ({
             ...prev,
-            title: file.name,
             song: blob,
             songMeta: meta,
           }));
@@ -108,22 +114,36 @@ export class ConsoleComponent implements OnInit {
             thumbnailMeta: meta,
           }));
         }
-        console.log('song is: ', this.song());
       }
     }
   }
 
-  loadSong(): void {
+  loadUrl(): void {
     if (this.song().song) {
       const url: string = URL.createObjectURL(this.song().song!);
       this.songUrl.set(url);
+    }
+    if (this.song().thumbnail) {
+      const url: string = URL.createObjectURL(this.song().thumbnail!);
+      this.thumbnailUrl.set(url);
     }
   }
 
   async uploadSong(): Promise<void> {
     try {
+      if (!this.song().song || !this.song().thumbnail) {
+        this.toast.info('Please upload correct audio and thumbnail.');
+        return;
+      }
       const token$ = this.consoleService.uploadSong(this.song());
-    } catch (err) {}
+      const res = await lastValueFrom(token$);
+      this.toast.success('Uploaded the song successfully.');
+    } catch (err) {
+      console.log('err occurred while uploading a song: ', err);
+      const { error } = err as HttpErrorResponse;
+      console.log('err:', error);
+      this.toast.error(error.message);
+    }
   }
 
   onTabChange(tab: Tab) {

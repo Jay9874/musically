@@ -4,7 +4,7 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import cookieParser from 'cookie-parser';
@@ -25,7 +25,12 @@ export function app(): express.Express {
   const angularNodeAppEngine = new AngularNodeAppEngine();
 
   server.use('/api/auth', authRouter);
-  server.use('/api/admin/console', authenticate, authorize(['admin']),  consoleRouter);
+  server.use(
+    '/api/admin/console',
+    authenticate,
+    authorize(['admin']),
+    consoleRouter
+  );
 
   server.get(
     '**',
@@ -51,6 +56,14 @@ export function app(): express.Express {
       )
       .catch(next);
   });
+
+  const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+    console.log('error: ', err);
+    console.error(err.stack);
+    res.status(500).send({ message: 'Something went wrong' });
+  };
+
+  server.use(errorHandler);
 
   return server;
 }
