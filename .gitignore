@@ -49,3 +49,7 @@ package-lock.json
 
 # ignore cache files
 .angular
+
+
+# Ignore uploads
+uploads
