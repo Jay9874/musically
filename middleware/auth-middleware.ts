@@ -47,7 +47,6 @@ export const validateSession = async (
 ): Promise<Response | any> => {
   try {
     const sessionId: unknown = req.cookies['musically-longterm'];
-    console.log('called validate with session: ', sessionId);
     if (!sessionId) {
       return res.status(403).send({
         message: 'Your session is invalid.',
@@ -80,7 +79,6 @@ export const checkSession = async (
 ): Promise<Response | any> => {
   try {
     const sessionId: unknown = req.cookies['musically-longterm'];
-    console.log('called check session: ', sessionId);
     if (!sessionId) {
       return res.status(200).send({
         user: null,
@@ -95,7 +93,6 @@ export const checkSession = async (
         user: null,
       });
     }
-
     return res.status(200).send({
       user: session.user,
     });

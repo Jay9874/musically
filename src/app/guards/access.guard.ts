@@ -35,14 +35,11 @@ export class AccessGuard implements CanActivate {
       try {
         const token$ = this.authService.validateSession();
         const user = await lastValueFrom(token$);
-        // return true;
-        console.log('token: ', token$);
         const userRoles: Roles[] = user.roles;
         let hasRole: boolean = userRoles.some((r) => roles.includes(r));
         if (hasRole) return true;
         else return false;
       } catch (err) {
-        console.log('err: ', err);
         this.router.navigate(['']); // Redirect to login if not authenticated
         return false;
       }

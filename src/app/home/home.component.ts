@@ -28,7 +28,7 @@ type MenuStates = 'active' | 'inactive';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   authService: AuthService = inject(AuthService);
   consoleService: ConsoleService = inject(ConsoleService);
   user = signal<SessionUser | null>(this.authService.user());
@@ -38,17 +38,6 @@ export class HomeComponent implements OnInit {
   constructor() {
     effect(() => {
       this.user.set(this.authService.user());
-    });
-  }
-
-  ngOnInit(): void {
-    this.authService.hasSession().subscribe({
-      next: (res) => {
-        console.log('res: ', res);
-      },
-      error: (err) => {
-        console.log('err at home check: ', err);
-      },
     });
   }
 

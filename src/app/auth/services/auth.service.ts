@@ -64,7 +64,6 @@ export class AuthService {
           return res.user;
         }),
         catchError((err) => {
-          console.log('err at check session: ', err);
           return throwError(() => err);
         })
       );
@@ -73,7 +72,6 @@ export class AuthService {
   hasSession(): Observable<SessionUser> {
     return this.http.get<AuthResponse>(`${this.apiBaseUrl}/check-session`).pipe(
       map((res) => {
-        console.log('res: ', res);
         this.user.set(res.user);
         return res.user;
       }),

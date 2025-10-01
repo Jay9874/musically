@@ -4,10 +4,12 @@ import { validateLinkGuard } from './guards/validate-link.guard';
 import { resetPasswordGuard } from './guards/reset-password.guard';
 import { profileGuard } from './guards/profile.guard';
 import { AccessGuard } from './guards/access.guard';
+import { checkSessionGuard } from './guards/check-session.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    canActivate: [checkSessionGuard],
     loadComponent: () =>
       import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
