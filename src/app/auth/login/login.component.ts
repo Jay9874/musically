@@ -25,7 +25,6 @@ export class LoginComponent {
   constructor(private router: Router) {}
 
   submitForm() {
-    console.log('clicked submit');
     this.authService.loading.set(true);
     this.authService
       .submitLoginForm(this.user().email, this.user().password)

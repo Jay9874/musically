@@ -1,6 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
-import { RouterLink } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  Router,
+  RouterLink,
+  UrlTree,
+} from '@angular/router';
 import { ToastService } from '../../toast/services/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -16,28 +21,29 @@ export class UserStatusComponent {
 
   isMenuVisible = signal(false);
 
+  constructor(private router: Router) {}
+
   onAvatarClick(): void {
     this.isMenuVisible.set(!this.isMenuVisible());
   }
 
   async onLogout(): Promise<void> {
-    this.authService.loading.set(true);
-    this.authService.user.set(null);
-    this.authService.logout().subscribe({
+    this.authService.logout(this.router.url).subscribe({
       next: (res) => {
-        console.log('res: ', res);
-        this.toast.success('Successfully logged out.', 2000);
         this.authService.loading.set(false);
+        this.isMenuVisible.set(false);
       },
       error: (err) => {
         const { error }: { error: HttpErrorResponse } =
           err as HttpErrorResponse;
         this.toast.error(error.message);
-      },
-      complete: () => {
         this.isMenuVisible.set(false);
-        this.authService.loading.set(false);
       },
     });
+  }
+
+  routeToProfile(): Promise<boolean> {
+    this.isMenuVisible.set(false);
+    return this.router.navigate(['/profile']);
   }
 }

@@ -3,7 +3,7 @@ import { resendLinkGuard } from './guards/resend-link.guard';
 import { validateLinkGuard } from './guards/validate-link.guard';
 import { resetPasswordGuard } from './guards/reset-password.guard';
 import { profileGuard } from './guards/profile.guard';
-import { AccessGuard } from './guards/access.guard';
+import { consoleGuard } from './guards/access.guard';
 import { checkSessionGuard } from './guards/check-session.guard';
 
 export const routes: Routes = [
@@ -25,7 +25,7 @@ export const routes: Routes = [
       },
       {
         path: 'console',
-        canActivate: [AccessGuard],
+        canActivate: [consoleGuard],
         loadComponent: () =>
           import('../app/home/console/console.component').then(
             (m) => m.ConsoleComponent

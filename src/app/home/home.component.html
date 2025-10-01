@@ -87,13 +87,13 @@
                     <span id="menu-bar-up" class="{{menuStatus()}}"></span>
                     <span id="menu-bar-down" class="{{menuStatus()}}"></span>
                 </button>
-                <div>
+                <div class="mobile-nav-brand">
                     <a routerLink="" id="brand-name">
                         <img id="brand-logo" src="musically.svg" alt="company_logo" />
                         <span>Musically</span>
                     </a>
                 </div>
-                <app-user-status />
+                <app-user-status class="user-avatar" />
             </div>
 
             <!-- Mobile menu content -->
@@ -111,30 +111,31 @@
                     <span>Radio</span>
                 </button>
                 <button *hasAccess="['admin']" class="sidebar-link">
-                    <img height="30" width="30" src="icons/log-in.svg" alt="console button icon" />
-                    <span>Console</span>
+                    <a class="console-link" routerLink="/console">
+                        <img height="30" width="30" src="icons/log-in.svg" alt="console button icon" />
+                        <span>Console</span>
+                    </a>
                 </button>
             </div>
         </section>
         <section class="main-container">
             <router-outlet />
         </section>
-    </section>
-
-    <!-- Mobile Music Player -->
-    <section class="bottom-music-player">
-        <div class="mobile-music-controller">
-            <div class="mobile-song-thumbnail" aria-label="Song thumbnail">
-                <img height="30" width="30" src="icons/musical-notes.svg" alt="music note icon" />
+        <!-- Mobile Music Player -->
+        <section class="bottom-music-player">
+            <div class="mobile-music-controller">
+                <div class="mobile-song-thumbnail" aria-label="Song thumbnail">
+                    <img height="30" width="30" src="icons/musical-notes.svg" alt="music note icon" />
+                </div>
+                <div class="bottom-controls">
+                    <button class="music-control-btn play-btn">
+                        <img height="30" width="30" src="icons/play.svg" alt="shuffle icons" />
+                    </button>
+                    <button class="music-control-btn play-forward-btn">
+                        <img height="25" width="25" src="icons/play-forward.svg" alt="shuffle icons" />
+                    </button>
+                </div>
             </div>
-            <div class="bottom-controls">
-                <button class="music-control-btn play-btn">
-                    <img height="30" width="30" src="icons/play.svg" alt="shuffle icons" />
-                </button>
-                <button class="music-control-btn play-forward-btn">
-                    <img height="25" width="25" src="icons/play-forward.svg" alt="shuffle icons" />
-                </button>
-            </div>
-        </div>
+        </section>
     </section>
 </main>

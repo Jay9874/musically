@@ -1,9 +1,17 @@
-import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { toLoadingStateStream } from '../../loading-state-stream';
-import { catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import {
+  HttpClient,
+  HttpContext,
+  HttpContextToken,
+} from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
-import { Roles } from '../../../../types/interfaces/interfaces.user';
+import { Router } from '@angular/router';
+import { ToastService } from '../../toast/services/toast.service';
+
+export const SKIP_LOADING_INTERCEPTOR = new HttpContextToken<boolean>(
+  () => false
+);
 
 export interface AuthResponse {
   user: SessionUser;
@@ -14,17 +22,18 @@ export interface AuthResponse {
 })
 export class AuthService {
   readonly apiBaseUrl = 'http://localhost:4200/api/auth';
+  toast: ToastService = inject(ToastService);
+
   loading = signal(false);
   user = signal<SessionUser | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http
       .post<AuthResponse>(`${this.apiBaseUrl}/login`, { email, password })
       .pipe(
         map((res) => {
-          console.log('res: ', res);
           this.user.set(res.user);
           return res.user;
         }),
@@ -39,7 +48,6 @@ export class AuthService {
     password: string,
     username: string
   ): Observable<any> {
-    // return toLoadingStateStream(
     return this.http
       .post<any>(`${this.apiBaseUrl}/register`, {
         email,
@@ -52,7 +60,6 @@ export class AuthService {
           return throwError(() => err);
         })
       );
-    // );
   }
 
   validateSession = (): Observable<SessionUser> => {
@@ -82,17 +89,25 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiBaseUrl}/logout`).pipe(
-      map((res) => {
-        console.log('the res is: ', res);
-        return true;
-      }),
-      catchError((err) => {
-        console.log('err while logging out: ', err);
-        return throwError(() => err);
-      })
-    );
+  logout(redirectTo: string): Observable<boolean> {
+    const context = new HttpContext().set(SKIP_LOADING_INTERCEPTOR, true);
+    return this.http
+      .get<boolean>(`${this.apiBaseUrl}/logout`, { context })
+      .pipe(
+        map((res) => {
+          this.user.set(null);
+          this.router
+            .navigateByUrl('/', { skipLocationChange: true })
+            .then(() => {
+              this.router.navigate([redirectTo]);
+            });
+          return true;
+        }),
+        catchError((err) => {
+          console.log('err while logging out: ', err);
+          return throwError(() => err);
+        })
+      );
   }
 
   checkAvailability(username: string): Observable<boolean> {
