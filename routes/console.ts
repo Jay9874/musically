@@ -1,7 +1,12 @@
 import express from 'express';
 
 // Import controllers from
-import { getAllUsers, updateUser, uploadSong } from '../controller/console';
+import {
+  getAllUsers,
+  relatedData,
+  updateUser,
+  uploadSong,
+} from '../controller/console';
 import { uploadMultiple } from '../middleware/multer-middleware';
 
 // Setup router
@@ -27,6 +32,13 @@ router.put('/users', updateUser);
  * @method POST
  */
 router.post('/song/upload', uploadMultiple, uploadSong);
+
+/**
+ * @description User related albums.
+ * @route /api/console/related-data
+ * @method GET
+ */
+router.get('/related-data', relatedData);
 
 // Export router; should always export as default
 export const consoleRouter = router;

@@ -1,0 +1,21 @@
+<nav>
+    <ul class="sidebar-links">
+        @for (link of links; track $index) {
+        <li>
+            @if (link.value === 'console') {
+            <a *hasAccess="['admin']" class="sidebar-link console-link" [routerLink]="link.href"
+                routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <img [src]="link.iconUrl" alt="{{link.value}} link icon" />
+                <span>{{link.title}}</span>
+            </a>
+            }@else {
+            <a class="sidebar-link {{link.value}}-link" [routerLinkActiveOptions]="{exact: true}"
+                [routerLink]="link.href" routerLinkActive="active">
+                <img [src]="link.iconUrl" alt="{{link.value}} link icon" />
+                <span>{{link.title}}</span>
+            </a>
+            }
+        </li>
+        }
+    </ul>
+</nav>

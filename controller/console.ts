@@ -3,6 +3,7 @@ dotenv.config();
 
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db';
+import { Meta } from '../types/interfaces/interfaces.song';
 
 /**
  *
@@ -83,7 +84,7 @@ export const updateUser = async (
 
 /**
  *
- * @param req A form data with song binary
+ * @param req A form data with song binary and meta data
  * @param res A success message with song meta data
  * @param next
  * @returns Response to client.
@@ -95,10 +96,58 @@ export const uploadSong = async (
   next: NextFunction
 ) => {
   try {
-    const { meta } = req.body;
-    if (!meta) {
+    const { metaData } = req.body;
+    if (!metaData) {
       return res.status(400).send({
         message: 'Please provide song meta.',
+      });
+    }
+
+    // Logged in user id
+    const loggedUser = res.locals['userId'];
+
+    const meta: Meta = JSON.parse(metaData);
+    // if new album then create one
+    let albumId: string | null = null;
+    if (meta.album!.newAlbum !== '') {
+      const albumQuery = {
+        text: 'INSERT INTO albums(name, userid) VALUES($1, $2) ON CONFLICT (name, userid) DO UPDATE SET name=EXCLUDED.name RETURNING id',
+        values: [meta.album!.newAlbum, loggedUser],
+      };
+
+      const createdAlbum = await pool.query(albumQuery);
+      if (createdAlbum.rowCount === 0) {
+        return res.status(400).send({
+          message: 'New album could not be created.',
+        });
+      }
+      albumId = createdAlbum.rows[0].id;
+    }
+
+    // Getting blob for song and thumbnail
+    // const song: Blob = req.files['song'][0]
+    console.log('meta: ', meta);
+    console.log('files: ', req.files);
+    const files: { [fieldname: string]: File[] } = req.files as any;
+    const song: Blob = files['song'][0];
+    const thumbnail: Blob = files['thumbnail'][0];
+
+    console.log('song: ', song);
+    console.log('thumb: ', thumbnail);
+
+    // delete the album key from meta
+    delete meta.album;
+
+    // Upload the song with thumbnail
+    const songQuery = {
+      text: 'INSERT INTO songs(albumid, uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5,$6) RETURNING *',
+      values: [albumId, loggedUser, meta.title, meta, song, thumbnail],
+    };
+
+    const songResult = await pool.query(songQuery);
+    if (songResult.rowCount === 0) {
+      return res.status(400).send({
+        message: 'The song could not be uploaded.',
       });
     }
 
@@ -109,6 +158,33 @@ export const uploadSong = async (
     console.log('err at uploading song: ', err);
     return res.status(500).send({
       message: 'Something went wrong',
+    });
+  }
+};
+
+export const relatedData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Logged in user id
+    const loggedUser = res.locals['userId'];
+    console.log('logged user: ', loggedUser);
+    const query = {
+      text: 'SELECT * FROM albums WHERE userid=$1',
+      values: [loggedUser],
+    };
+
+    const result = await pool.query(query);
+    console.log('result is: ', result.rows);
+    return res.status(200).send({
+      albums: result.rows,
+    });
+  } catch (err) {
+    console.log('err occurred while getting related data: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong.',
     });
   }
 };

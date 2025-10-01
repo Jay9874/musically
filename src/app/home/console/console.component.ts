@@ -13,7 +13,12 @@ import { ConsoleService } from './console.service';
 import { lastValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { LoaderService } from '../../services/loader/loader.service';
-import { FileMeta, Song } from '../../../../types/interfaces/interfaces.song';
+import {
+  Album,
+  FileMeta,
+  SelectedAlbum,
+  Song,
+} from '../../../../types/interfaces/interfaces.song';
 import { AuthService } from '../../auth/services/auth.service';
 
 type Tab = 'console' | 'users';
@@ -53,6 +58,12 @@ export class ConsoleComponent implements OnInit {
   activeTab = model<Tab>('console');
   songUrl = signal<string | null>(null);
   thumbnailUrl = signal<string | null>(null);
+  albums = model<Album[]>([]);
+
+  album = model<SelectedAlbum>({
+    existingAlbum: 'chhath',
+    newAlbum: '',
+  });
 
   song = model<Song>({
     title: '',
@@ -69,9 +80,50 @@ export class ConsoleComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (this.authService.user()) {
-      this.getUsers();
+      await this.getUsers();
+      await this.getRelatedData();
+      if (this.albums().length > 0) {
+        this.album.update((prev) => ({
+          ...prev,
+          existingAlbum: this.albums()[0].id,
+        }));
+      }
+    }
+  }
+
+  albumChange(event: Event): void {
+    this.album.update((prev) => ({ ...prev, newAlbum: '' }));
+  }
+
+  onNewAlbum(val: string): void {
+    // this.selectedAlbum.set('');
+    this.album.update((prev) => ({ ...prev, existingAlbum: '' }));
+    if (val) {
+      this.album.update((prev) => ({ ...prev, newAlbum: val }));
+    } else {
+      if (this.albums().length > 0) {
+        this.album.update((prev) => ({
+          ...prev,
+          existingAlbum: this.albums()[0].id,
+        }));
+      } else {
+        this.album.set({ newAlbum: '', existingAlbum: '' });
+      }
+    }
+  }
+
+  // Load users related data such as albums and playlists
+  async getRelatedData(): Promise<void> {
+    try {
+      const token$ = this.consoleService.getRelatedData();
+      const albums: Album[] = await lastValueFrom(token$);
+      this.albums.set(albums);
+    } catch (err) {
+      console.log('err occurred while finding related data: ', err);
+      const { error } = err as HttpErrorResponse;
+      this.toast.error(error.message);
     }
   }
 
@@ -139,13 +191,12 @@ export class ConsoleComponent implements OnInit {
         this.toast.info('Please upload correct audio and thumbnail.');
         return;
       }
-      const token$ = this.consoleService.uploadSong(this.song());
+      const token$ = this.consoleService.uploadSong(this.song(), this.album());
       const res = await lastValueFrom(token$);
       this.toast.success('Uploaded the song successfully.');
     } catch (err) {
       console.log('err occurred while uploading a song: ', err);
       const { error } = err as HttpErrorResponse;
-      console.log('err:', error);
       this.toast.error(error.message);
     }
   }

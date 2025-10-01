@@ -38,7 +38,6 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    console.log('file is: ', file);
     // Define allowed file types and their max sizes in bytes
     const allowedTypes: { [type: string]: number } = {
       image: 0.2 * 1024 * 1024, // 0.2 MB for images

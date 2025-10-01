@@ -60,47 +60,74 @@
                 <h3>Upload a song</h3>
                 <div class="input-container">
                     <label for="email">Title</label>
-                    <input auto id="title" type="text" name="title" [(ngModel)]="song().title"
+                    <input id="title" type="text" name="title" [(ngModel)]="song().title"
                         placeholder="Title of the song" required />
                 </div>
 
-                <div class="input-container">
-                    <label for="thumbnail">Thumbnail</label>
-                    <div class="thumbnail-container">
-                        @if (thumbnailUrl()) {
-                        <div class="uploaded-thumbnail">
-                            <img [src]="thumbnailUrl()" alt="uploaded song thumbnail" />
-                            <div class="thumbnail-actions">
-                                <label for="thumbnail" title="Change image"><svg xmlns="http://www.w3.org/2000/svg"
-                                        class="ionicon" viewBox="0 0 512 512">
-                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                            stroke-linejoin="round" stroke-width="32"
-                                            d="M364.13 125.25L87 403l-23 45 44.99-23 277.76-277.13-22.62-22.62zM420.69 68.69l-22.62 22.62 22.62 22.63 22.62-22.63a16 16 0 000-22.62h0a16 16 0 00-22.62 0z" />
-                                    </svg></label>
-                                <input type="file" aria-hidden="true" hidden id="thumbnail" name="thumbnail"
-                                    accept="image/*" (change)="onFileChange($event)">
-                                <button title="Cancel uploaded" name="cancel-button" type="button"
-                                    (click)="cancelThumbnail()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
-                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                            stroke-linejoin="round" stroke-width="32"
-                                            d="M368 368L144 144M368 144L144 368" />
-                                    </svg>
-                                </button>
+                <div class="album-and-thumbnail">
+                    <div>
+                        <label>Thumbnail</label>
+                        <div class="thumbnail-container">
+                            @if (thumbnailUrl()) {
+                            <div class="uploaded-thumbnail">
+                                <img [src]="thumbnailUrl()" alt="uploaded song thumbnail" />
+                                <div class="thumbnail-actions">
+                                    <label for="thumbnail" title="Change image"><svg xmlns="http://www.w3.org/2000/svg"
+                                            class="ionicon" viewBox="0 0 512 512">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="32"
+                                                d="M364.13 125.25L87 403l-23 45 44.99-23 277.76-277.13-22.62-22.62zM420.69 68.69l-22.62 22.62 22.62 22.63 22.62-22.63a16 16 0 000-22.62h0a16 16 0 00-22.62 0z" />
+                                        </svg></label>
+                                    <input type="file" aria-hidden="true" hidden id="thumbnail" name="thumbnail"
+                                        accept="image/*" (change)="onFileChange($event)">
+                                    <button title="Cancel uploaded" name="cancel-button" type="button"
+                                        (click)="cancelThumbnail()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="32"
+                                                d="M368 368L144 144M368 144L144 368" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
+                            }@else {
+                            <label for="thumbnail" id="thumbnail-label">Add</label>
+                            <input type="file" aria-hidden="true" hidden required id="thumbnail" name="thumbnail"
+                                accept="image/*" (change)="onFileChange($event)">
+                            }
                         </div>
-                        }@else {
-                        <label for="thumbnail" id="thumbnail-label">Add</label>
-                        <input type="file" aria-hidden="true" hidden required id="thumbnail" name="thumbnail"
-                            accept="image/*" (change)="onFileChange($event)">
-                        }
                     </div>
+
+
+                    <!-- Album for song -->
+                    <fieldset class="album-container">
+                        <legend>Album</legend>
+                        @for (_album of albums(); track $index) {
+                        <div class="album-option">
+                            <input (change)="albumChange($event)" [(ngModel)]="album().existingAlbum" type="radio"
+                                [id]="_album.id" name="album" [value]="_album.id"
+                                [checked]="album().existingAlbum ===_album.id" />
+                            <label [for]="_album.id">{{_album.name}}</label>
+                        </div>
+                        }@empty {
+                        <div class="new-album">
+                            <input id="new-album" type="text" [ngModel]="album().newAlbum" name="new-album"
+                                (ngModelChange)="onNewAlbum($event)" placeholder="New album" required />
+                        </div>
+                        }
+                        <div class="new-album">
+                            <input id="new-album" type="text" [ngModel]="album().newAlbum" name="new-album"
+                                (ngModelChange)="onNewAlbum($event)" placeholder="New album" required />
+                        </div>
+                    </fieldset>
                 </div>
+
+
 
                 <div class="input-container">
                     <label for="song">Song</label>
-                    <input (change)="onFileChange($event)" name="song" accept="audio/*" type="file" id="song"
-                        required />
+                    <input (change)="onFileChange($event)" name="song"
+                        accept="audio/*" type="file" id="song" required />
                 </div>
 
                 <button [disabled]="uploadSongForm.invalid || loader.isLoading()" class="submit-btn" type="submit"

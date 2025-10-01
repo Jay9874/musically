@@ -12,28 +12,8 @@
                 <input id="search-song" class="search-field" type="text" placeholder="Search" />
             </div>
         </div>
-        <nav>
-            <ul class="sidebar-links">
-                <button class="sidebar-link">
-                    <img height="20" width="20" src="icons/home.svg" alt="home button icon" />
-                    <span>Home</span>
-                </button>
-                <button class="sidebar-link">
-                    <img height="20" width="20" src="icons/menu.svg" alt="home button icon" />
-                    <span>New</span>
-                </button>
-                <button name="radio-button" class="sidebar-link">
-                    <img height="20" width="20" src="icons/radio.svg" alt="home button icon" />
-                    <span>Radio</span>
-                </button>
-                <button *hasAccess="['admin']" class="sidebar-link">
-                    <a class="console-link" routerLink="/console">
-                        <img height="20" width="20" src="icons/log-in.svg" alt="console button icon" />
-                        <span>Console</span>
-                    </a>
-                </button>
-            </ul>
-        </nav>
+        <!-- Sidebar links -->
+        <app-menu-links [links]="sidebarLinks" />
     </section>
     <section class="right-section">
         <section class="top-nav">
@@ -98,7 +78,8 @@
 
             <!-- Mobile menu content -->
             <div class="mobile-menu {{menuStatus()}}">
-                <button class="sidebar-link">
+                <app-menu-links [links]="sidebarLinks" />
+                <!-- <button class="sidebar-link">
                     <img height="30" width="30" src="icons/home.svg" alt="home button icon" />
                     <span class="">Home</span>
                 </button>
@@ -115,7 +96,7 @@
                         <img height="30" width="30" src="icons/log-in.svg" alt="console button icon" />
                         <span>Console</span>
                     </a>
-                </button>
+                </button> -->
             </div>
         </section>
         <section class="main-container">

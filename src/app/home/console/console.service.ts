@@ -1,12 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { UsersResponse } from './console.component';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
-import { Song } from '../../../../types/interfaces/interfaces.song';
+import {
+  Album,
+  Meta,
+  SelectedAlbum,
+  Song,
+} from '../../../../types/interfaces/interfaces.song';
+import { AuthService } from '../../auth/services/auth.service';
 
 export interface UploadResponse {
   success: boolean;
+}
+
+export interface RelatedResponse {
+  albums: Album[];
 }
 
 @Injectable({
@@ -15,8 +25,12 @@ export interface UploadResponse {
 export class ConsoleService {
   private readonly baseApi = 'api/admin/console';
 
+  // Services
+  authService: AuthService = inject(AuthService);
+
   // Signals
   allUsers = signal<SessionUser[]>([]);
+  albums = signal<Album[]>([]);
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<UsersResponse> {
@@ -40,16 +54,30 @@ export class ConsoleService {
       );
   }
 
-  uploadSong(song: Song): Observable<any> {
-    const meta = {
+  getRelatedData(): Observable<Album[]> {
+    return this.http.get<RelatedResponse>(`${this.baseApi}/related-data`).pipe(
+      map((res) => {
+        console.log('res of related: ', res);
+        this.albums.set(res.albums);
+        return res.albums;
+      }),
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
+  }
+
+  uploadSong(song: Song, album: SelectedAlbum): Observable<any> {
+    const meta: Meta = {
       title: song.title,
-      songMeta: song.songMeta,
-      thumbnailMeta: song.thumbnailMeta,
+      songMeta: song.songMeta!,
+      thumbnailMeta: song.thumbnailMeta!,
+      album: album,
     };
     const formData = new FormData();
     formData.append('song', song.song!, song.songMeta?.name);
     formData.append('thumbnail', song.thumbnail!, song.thumbnailMeta?.name);
-    formData.append('meta', JSON.stringify(meta));
+    formData.append('metaData', JSON.stringify(meta));
     return this.http
       .post<any>(`${this.baseApi}/song/upload`, formData, {
         reportProgress: true,

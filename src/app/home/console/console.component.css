@@ -4,8 +4,6 @@ nav {
 
 .login-container {
     padding: 1rem;
-    width: fit-content;
-    margin: 0 auto;
 }
 
 .console-tabs {
@@ -134,4 +132,30 @@ tfoot td {
     object-fit: cover;
     object-position: center center;
     border-radius: 5px;
+}
+
+
+.album-and-thumbnail {
+    display: flex;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.album-and-thumbnail>div {
+    flex-grow: 1;
+}
+
+/***** Album classes */
+.album-container {
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    flex-grow: 1;
+}
+
+.album-option {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.125rem;
+    margin-bottom: 0.25rem;
 }
