@@ -42,7 +42,14 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.validateSession().subscribe();
+    this.authService.hasSession().subscribe({
+      next: (res) => {
+        console.log('res: ', res);
+      },
+      error: (err) => {
+        console.log('err at home check: ', err);
+      },
+    });
   }
 
   onMenuToggle(): void {

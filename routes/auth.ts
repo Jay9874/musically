@@ -12,7 +12,11 @@ import {
   usernameAvailability,
   validateVerifyToken,
 } from '../controller/auth';
-import { authenticate, validateSession } from '../middleware/auth-middleware';
+import {
+  authenticate,
+  checkSession,
+  validateSession,
+} from '../middleware/auth-middleware';
 
 // Setup router
 const router = express.Router();
@@ -46,6 +50,13 @@ router.get('/username', usernameAvailability);
  * @method PUT
  */
 router.put('/username', authenticate, changeUsername);
+
+/**
+ * @description Check if existing session.
+ * @route /api/auth/check-session
+ * @method GET
+ */
+router.get('/check-session', checkSession);
 
 // Export router; should always export as default
 export const authRouter = router;

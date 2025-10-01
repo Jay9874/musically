@@ -47,7 +47,7 @@ export const validateSession = async (
 ): Promise<Response | any> => {
   try {
     const sessionId: unknown = req.cookies['musically-longterm'];
-    console.log('called validate wth session: ', sessionId);
+    console.log('called validate with session: ', sessionId);
     if (!sessionId) {
       return res.status(403).send({
         message: 'Your session is invalid.',
@@ -66,7 +66,41 @@ export const validateSession = async (
       user: session.user,
     });
   } catch (err) {
-    console.log('err at authenticating user: ', err);
+    console.log('err at validating user: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong.',
+    });
+  }
+};
+
+export const checkSession = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | any> => {
+  try {
+    const sessionId: unknown = req.cookies['musically-longterm'];
+    console.log('called check session: ', sessionId);
+    if (!sessionId) {
+      return res.status(200).send({
+        user: null,
+      });
+    }
+    const session: Session | null = await sessionManger.checkSession(
+      sessionId as number
+    );
+    if (!session) {
+      res.clearCookie('musically-longterm');
+      return res.status(200).send({
+        user: null,
+      });
+    }
+
+    return res.status(200).send({
+      user: session.user,
+    });
+  } catch (err) {
+    console.log('err occurred while checking session: ', err);
     return res.status(500).send({
       message: 'Something went wrong.',
     });
