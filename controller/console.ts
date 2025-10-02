@@ -1,9 +1,8 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db';
 import { Meta } from '../types/interfaces/interfaces.song';
+
+import { promises as fs } from 'fs';
 
 /**
  *
@@ -122,26 +121,36 @@ export const uploadSong = async (
         });
       }
       albumId = createdAlbum.rows[0].id;
+    } else {
+      albumId = meta.album!.existingAlbum;
     }
 
-    // Getting blob for song and thumbnail
-    // const song: Blob = req.files['song'][0]
-    console.log('meta: ', meta);
-    console.log('files: ', req.files);
-    const files: { [fieldname: string]: File[] } = req.files as any;
-    const song: Blob = files['song'][0];
-    const thumbnail: Blob = files['thumbnail'][0];
-
-    console.log('song: ', song);
-    console.log('thumb: ', thumbnail);
+    // Getting buffers for song and thumbnail
+    const files: { [fieldname: string]: Express.Multer.File[] } =
+      req.files as any;
+    const songFile = files['song'][0];
+    const thumbnailFile: Express.Multer.File = files['thumbnail'][0];
+    const thumbnailBuffer: Buffer = Buffer.from(
+      (await fs.readFile(thumbnailFile.path)).buffer
+    );
+    const songBuffer: Buffer = Buffer.from(
+      (await fs.readFile(songFile.path)).buffer
+    );
 
     // delete the album key from meta
     delete meta.album;
 
     // Upload the song with thumbnail
     const songQuery = {
-      text: 'INSERT INTO songs(albumid, uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5,$6) RETURNING *',
-      values: [albumId, loggedUser, meta.title, meta, song, thumbnail],
+      text: 'INSERT INTO songs(albumid, uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5,$6) ON CONFLICT (title, albumid) DO UPDATE SET song = $5 RETURNING *',
+      values: [
+        albumId,
+        loggedUser,
+        meta.title,
+        meta,
+        songBuffer,
+        thumbnailBuffer,
+      ],
     };
 
     const songResult = await pool.query(songQuery);
@@ -151,8 +160,13 @@ export const uploadSong = async (
       });
     }
 
+    console.log('uploaded song is: ', songResult.rows);
+    // Delete the uploaded file.
+    await fs.unlink(songFile.path);
+    await fs.unlink(thumbnailFile.path);
+
     return res.status(200).send({
-      message: 'Got the song',
+      song: songResult.rows,
     });
   } catch (err) {
     console.log('err at uploading song: ', err);
@@ -170,14 +184,12 @@ export const relatedData = async (
   try {
     // Logged in user id
     const loggedUser = res.locals['userId'];
-    console.log('logged user: ', loggedUser);
     const query = {
       text: 'SELECT * FROM albums WHERE userid=$1',
       values: [loggedUser],
     };
 
     const result = await pool.query(query);
-    console.log('result is: ', result.rows);
     return res.status(200).send({
       albums: result.rows,
     });

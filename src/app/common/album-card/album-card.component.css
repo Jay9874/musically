@@ -1,0 +1,10 @@
+main {
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    width: fit-content;
+}
+
+main a {
+    color: #fff;
+}

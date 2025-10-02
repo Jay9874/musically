@@ -12,6 +12,7 @@ import cookieParser from 'cookie-parser';
 // All the routes
 import { authRouter } from './routes/auth';
 import { consoleRouter } from './routes/console';
+import { musicRouter } from './routes/music';
 import { authenticate, authorize } from './middleware/auth-middleware';
 
 export function app(): express.Express {
@@ -31,6 +32,8 @@ export function app(): express.Express {
     authorize(['admin']),
     consoleRouter
   );
+
+  server.use('/api/music', musicRouter);
 
   server.get(
     '**',

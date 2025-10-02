@@ -57,7 +57,6 @@ export class ConsoleService {
   getRelatedData(): Observable<Album[]> {
     return this.http.get<RelatedResponse>(`${this.baseApi}/related-data`).pipe(
       map((res) => {
-        console.log('res of related: ', res);
         this.albums.set(res.albums);
         return res.albums;
       }),

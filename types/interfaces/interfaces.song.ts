@@ -29,3 +29,8 @@ export interface Meta {
   thumbnailMeta: FileMeta;
   album?: SelectedAlbum;
 }
+
+
+export interface LoadedAlbum{
+  
+}

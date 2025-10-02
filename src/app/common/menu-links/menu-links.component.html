@@ -9,8 +9,7 @@
                 <span>{{link.title}}</span>
             </a>
             }@else {
-            <a class="sidebar-link {{link.value}}-link" [routerLinkActiveOptions]="{exact: true}"
-                [routerLink]="link.href" routerLinkActive="active">
+            <a class="sidebar-link {{link.value}}-link" [routerLink]="link.href" routerLinkActive="active">
                 <img [src]="link.iconUrl" alt="{{link.value}} link icon" />
                 <span>{{link.title}}</span>
             </a>

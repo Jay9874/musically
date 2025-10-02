@@ -5,15 +5,39 @@ import { resetPasswordGuard } from './guards/reset-password.guard';
 import { profileGuard } from './guards/profile.guard';
 import { consoleGuard } from './guards/access.guard';
 import { checkSessionGuard } from './guards/check-session.guard';
+import { AlbumNameResolver } from '../../utils/AlbumTitleResolver';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [checkSessionGuard],
+    canActivateChild: [checkSessionGuard],
     loadComponent: () =>
       import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
     children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import(
+            '../app/home/music-collections/music-collections.component'
+          ).then((m) => m.MusicCollectionsComponent),
+        title: 'Musically | Home',
+      },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('../app/home/new/new.component').then((m) => m.NewComponent),
+        title: 'Musically | New',
+      },
+      {
+        path: 'radio',
+        loadComponent: () =>
+          import('../app/home/radio/radio.component').then(
+            (m) => m.RadioComponent
+          ),
+        title: 'Musically | Radio',
+      },
       {
         path: 'profile',
         canActivate: [profileGuard],
@@ -32,6 +56,15 @@ export const routes: Routes = [
           ),
         data: { roles: ['admin'] },
         title: 'Musically | Console',
+      },
+      {
+        path: 'album/:albumid',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('../app/common/album/album.component').then(
+            (m) => m.AlbumComponent
+          ),
+        title: AlbumNameResolver,
       },
     ],
   },
