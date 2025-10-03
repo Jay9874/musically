@@ -1,7 +1,10 @@
 import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MusicService } from '../../services/music/music.service';
-import { Album } from '../../../../types/interfaces/interfaces.song';
+import {
+  Album,
+  LoadedAlbum,
+} from '../../../../types/interfaces/interfaces.song';
 import { of, switchMap } from 'rxjs';
 
 @Component({
@@ -16,8 +19,9 @@ export class AlbumComponent implements OnInit {
 
   albumid!: string | null;
   heroes = [];
-  album = signal<Album | null>(null);
-  albumThumbnailUrl = model<string | null>(null);
+  album = signal<LoadedAlbum | null>(null);
+  thumbnailUrl = model<string | null>(null);
+  songUrl = model<string | null>(null);
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -37,10 +41,26 @@ export class AlbumComponent implements OnInit {
         next: (res) => {
           console.log('res: ', res);
           this.album.set(res);
+          this.thumbnailUrl.set(
+            this.generateFile(
+              res?.thumbnail.data!,
+              res?.meta.thumbnailMeta.type!
+            )
+          );
+
+          this.songUrl.set(
+            this.generateFile(res?.song.data!, res?.meta.songMeta.type!)
+          );
         },
         error: (err) => {
           console.log('err at details: ', err);
         },
       });
+  }
+
+  generateFile(data: Uint8Array, mimetype: string): string {
+    let blob = new Blob([new Uint8Array(data).buffer], { type: mimetype });
+    const url: string = URL.createObjectURL(blob);
+    return url;
   }
 }

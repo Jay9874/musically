@@ -1,9 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { Album } from '../../../../types/interfaces/interfaces.song';
+import {
+  Album,
+  LoadedAlbum,
+} from '../../../../types/interfaces/interfaces.song';
 interface AlbumResponse {
   albums: Album[];
+}
+
+interface LoadAlbumResponse {
+  albums: LoadedAlbum[];
+}
+
+interface Player {
+  title: string;
+  song: string;
+  thumbnail: string;
 }
 
 @Injectable({
@@ -14,6 +27,9 @@ export class MusicService {
 
   // Signals
   allAlbums = signal<Album[]>([]);
+
+  player = signal<Player | null>(null);
+  queue = signal<string[]>([]);
 
   constructor(private http: HttpClient) {}
 
@@ -43,15 +59,33 @@ export class MusicService {
     );
   }
 
-  loadAlbum(albumId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiBase}/load/album/${albumId}`).pipe(
-      map((res) => {
-        console.log('loaded album: ', res);
-        return res;
-      }),
-      catchError((err) => {
-        return throwError(() => err);
-      })
-    );
+  loadAlbum(albumId: string): Observable<LoadedAlbum> {
+    return this.http
+      .get<LoadAlbumResponse>(`${this.apiBase}/load/album/${albumId}`)
+      .pipe(
+        map((res) => {
+          console.log('loaded album: ', res.albums[0]);
+          const album: LoadedAlbum = res.albums[0];
+
+          this.player.set({
+            title: album.title,
+            song: this.generateFile(album.song.data, album.meta.songMeta.type),
+            thumbnail: this.generateFile(
+              album.thumbnail.data,
+              album.meta.thumbnailMeta.type
+            ),
+          });
+          return res.albums[0];
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  }
+
+  generateFile(data: Uint8Array, mimetype: string): string {
+    let blob = new Blob([new Uint8Array(data).buffer], { type: mimetype });
+    const url: string = URL.createObjectURL(blob);
+    return url;
   }
 }

@@ -1,4 +1,12 @@
-import { Component, effect, inject, model, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  model,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
@@ -7,7 +15,8 @@ import { UserStatusComponent } from '../common/user-status/user-status.component
 import { HasAccessDirective } from '../directives/has-access.directive';
 import { ConsoleService } from './console/console.service';
 import { SidebarLink } from '../../../types/interfaces/interfaces.common';
-import { MenuLinksComponent } from "../common/menu-links/menu-links.component";
+import { MenuLinksComponent } from '../common/menu-links/menu-links.component';
+import { MusicService } from '../services/music/music.service';
 
 type MenuStates = 'active' | 'inactive';
 
@@ -18,12 +27,14 @@ type MenuStates = 'active' | 'inactive';
     UserStatusComponent,
     RouterOutlet,
     RouterModule,
-    MenuLinksComponent
-],
+    MenuLinksComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
+  @ViewChild('audioPlayer') audioPlayerRef!: ElementRef<HTMLAudioElement>;
+
   readonly sidebarLinks: SidebarLink[] = [
     { title: 'Home', value: 'home', iconUrl: 'icons/home.svg', href: '' },
     { title: 'New', value: 'new', iconUrl: 'icons/menu.svg', href: '/new' },
@@ -43,7 +54,10 @@ export class HomeComponent {
 
   authService: AuthService = inject(AuthService);
   consoleService: ConsoleService = inject(ConsoleService);
+  musicService: MusicService = inject(MusicService);
   user = signal<SessionUser | null>(this.authService.user());
+
+  musicPlaying = signal(false);
 
   menuStatus = model<MenuStates>('inactive');
 
@@ -58,6 +72,16 @@ export class HomeComponent {
       this.menuStatus.set('active');
     } else {
       this.menuStatus.set('inactive');
+    }
+  }
+
+  playPauseSong(): void {
+    if (this.audioPlayerRef.nativeElement.paused) {
+      this.audioPlayerRef.nativeElement.play();
+      this.musicPlaying.set(true);
+    } else {
+      this.musicPlaying.set(false);
+      this.audioPlayerRef.nativeElement.pause();
     }
   }
 }
