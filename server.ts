@@ -71,14 +71,24 @@ export function app(): express.Express {
   return server;
 }
 
+// const server = app();
+// if (isMainModule(import.meta.url)) {
+//   const port = process.env['PORT'] || 4000;
+//   server.listen(port, () => {
+//     console.log(`Node Express server listening on http://localhost:\${port}`);
+//   });
+// }
+
 const server = app();
-if (isMainModule(import.meta.url)) {
+function run(): void {
   const port = process.env['PORT'] || 4000;
+  // Start up the Node server
   server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:\${port}`);
+    console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
 
+//run();
 console.log('Node Express server started');
 
 // This exposes the RequestHandler
