@@ -1,0 +1,27 @@
+    name: Angular SSR Build
+
+    on:
+      push:
+        branches:
+          - main
+
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Checkout Repository
+            uses: actions/checkout@v4
+
+          - name: Set up Node.js
+            uses: actions/setup-node@v4
+            with:
+              node-version: '22.15.1'
+
+          - name: Install Dependencies
+            run: npm ci
+
+          - name: Build Angular SSR Application
+            run: ng build --configuration production
+            env:
+              NODE_ENV: production
