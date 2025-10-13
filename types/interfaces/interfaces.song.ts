@@ -29,16 +29,3 @@ export interface Meta {
   thumbnailMeta: FileMeta;
   album?: SelectedAlbum;
 }
-
-export interface LoadedAlbum {
-  albumid: string;
-  id: string;
-  meta: { title: string; songMeta: FileMeta; thumbnailMeta: FileMeta };
-  name: string;
-  song: { type: string; data: Uint8Array };
-  thumbnail: { type: string; data: Uint8Array };
-  title: string;
-  uploaded_at: string;
-  uploaded_by: string;
-  userid: string;
-}

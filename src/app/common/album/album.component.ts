@@ -1,10 +1,7 @@
 import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MusicService } from '../../services/music/music.service';
-import {
-  Album,
-  LoadedAlbum,
-} from '../../../../types/interfaces/interfaces.song';
+import { LoadedAlbum } from '../../../../types/interfaces/interfaces.album';
 import { of, switchMap } from 'rxjs';
 
 @Component({
@@ -43,13 +40,16 @@ export class AlbumComponent implements OnInit {
           this.album.set(res);
           this.thumbnailUrl.set(
             this.generateFile(
-              res?.thumbnail.data!,
-              res?.meta.thumbnailMeta.type!
+              res?.songs[0].thumbnail.data!,
+              res?.songs[0].meta.thumbnailMeta.type!
             )
           );
 
           this.songUrl.set(
-            this.generateFile(res?.song.data!, res?.meta.songMeta.type!)
+            this.generateFile(
+              res?.songs[0].thumbnail.data!,
+              res?.songs[0].meta.songMeta.type!
+            )
           );
         },
         error: (err) => {

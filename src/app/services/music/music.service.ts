@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import {
-  Album,
-  LoadedAlbum,
-} from '../../../../types/interfaces/interfaces.song';
+import { Album } from '../../../../types/interfaces/interfaces.song';
+
+import { LoadedAlbum } from '../../../../types/interfaces/interfaces.album';
 interface AlbumResponse {
   albums: Album[];
 }
@@ -64,15 +63,18 @@ export class MusicService {
       .get<LoadAlbumResponse>(`${this.apiBase}/load/album/${albumId}`)
       .pipe(
         map((res) => {
-          console.log('loaded album: ', res.albums[0]);
+          console.log('loaded album: ', res);
           const album: LoadedAlbum = res.albums[0];
 
           this.player.set({
-            title: album.title,
-            song: this.generateFile(album.song.data, album.meta.songMeta.type),
+            title: album.name,
+            song: this.generateFile(
+              album.songs[0].thumbnail.data,
+              album.songs[0].meta.songMeta.type
+            ),
             thumbnail: this.generateFile(
-              album.thumbnail.data,
-              album.meta.thumbnailMeta.type
+              album.songs[0].thumbnail.data,
+              album.songs[0].meta.thumbnailMeta.type
             ),
           });
           return res.albums[0];
