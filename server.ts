@@ -14,6 +14,7 @@ import { authRouter } from './routes/auth';
 import { consoleRouter } from './routes/console';
 import { musicRouter } from './routes/music';
 import { authenticate, authorize } from './middleware/auth-middleware';
+import { pool } from './db';
 
 export function app(): express.Express {
   const server = express();
@@ -85,11 +86,14 @@ function run(): void {
   // Start up the Node server
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
+    pool
+      .connect()
+      .then(() => console.log('Connected to PostgreSQL'))
+      .catch((err) => console.error('DB Connection Error:', err));
   });
 }
 
 //run();
-console.log('Node Express server started');
 
 // This exposes the RequestHandler
 export const reqHandler = createNodeRequestHandler(server);
