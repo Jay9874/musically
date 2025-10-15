@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db';
 import { Meta } from '../types/interfaces/interfaces.song';
 
-import { promises as fs } from 'fs';
-
 /**
  *
  * @param req Request do not have body, query or parameter.
@@ -82,13 +80,11 @@ export const updateUser = async (
 };
 
 /**
- *
  * @param req A form data with song binary and meta data
  * @param res A success message with song meta data
  * @param next
  * @returns Response to client.
  */
-
 export const uploadSong = async (
   req: Request,
   res: Response,
@@ -130,12 +126,6 @@ export const uploadSong = async (
       req.files as any;
     const songFile = files['song'][0];
     const thumbnailFile: Express.Multer.File = files['thumbnail'][0];
-    const thumbnailBuffer: Buffer = Buffer.from(
-      (await fs.readFile(thumbnailFile.path)).buffer
-    );
-    const songBuffer: Buffer = Buffer.from(
-      (await fs.readFile(songFile.path)).buffer
-    );
 
     // delete the album key from meta
     delete meta.album;
@@ -148,8 +138,8 @@ export const uploadSong = async (
         loggedUser,
         meta.title,
         meta,
-        songBuffer,
-        thumbnailBuffer,
+        songFile.buffer,
+        thumbnailFile.buffer,
       ],
     };
 
@@ -159,11 +149,6 @@ export const uploadSong = async (
         message: 'The song could not be uploaded.',
       });
     }
-
-    console.log('uploaded song is: ', songResult.rows);
-    // Delete the uploaded file.
-    await fs.unlink(songFile.path);
-    await fs.unlink(thumbnailFile.path);
 
     return res.status(200).send({
       song: songResult.rows,
