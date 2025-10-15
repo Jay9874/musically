@@ -9,7 +9,7 @@
     "test": "ng test",
     "dev:ssr": "ng run musically:serve-ssr",
     "serve:ssr": "node dist/musically/server/main.js",
-    "build:ssr": "ng build --ssr",
+    "build:ssr": "ng build",
     "prerender": "ng run musically:prerender",
     "vercel-build": "npm run build:ssr"
   },
