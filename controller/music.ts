@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db';
-import { LoadedAlbum, SongInAlbum } from '../types/interfaces/interfaces.album';
+import { LoadedAlbum } from '../types/interfaces/interfaces.album';
 
 /**
  *
@@ -71,13 +71,11 @@ export const albumDetails = async (
 };
 
 /**
- *
  * @param req An id with req parameter to load songs and album.
  * @param res JSON with album details and all the songs in album.
  * @param next
  * @returns Response to client.
  */
-
 export const loadAlbum = async (
   req: Request,
   res: Response,
@@ -112,16 +110,55 @@ export const loadAlbum = async (
     result.rows.forEach((album) => {
       formattedAlbum.songs.push({
         ...album.song,
-        thumbnail: album.songThumbnail,
+        thumbnail: album.songthumbnail,
       });
     });
 
-    console.log('loaded album is: ', formattedAlbum);
     return res.status(200).send({
       album: formattedAlbum,
     });
   } catch (err) {
     console.log('err while loading a album: ', err);
+    return res.status(500).send({
+      message: 'Something went wrong.',
+    });
+  }
+};
+
+/**
+ * @param req An id with req query to load song.
+ * @param res JSON with song binary and its meta.
+ * @param next
+ * @returns Response to client.
+ */
+export const loadSong = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | any> => {
+  try {
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).send({
+        message: 'Please provide song id to load.',
+      });
+    }
+    const query = {
+      text: 'SELECT song, thumbnail, meta FROM songs WHERE id=$1',
+      values: [id],
+    };
+    const result = await pool.query(query);
+    if (result.rowCount === 0) {
+      return res.status(404).send({
+        message: 'The song do not exists.',
+      });
+    }
+    console.log('song result: ', result.rows);
+    return res.status(200).send({
+      ...result.rows[0],
+    });
+  } catch (err) {
+    console.log('err while loading a song: ', err);
     return res.status(500).send({
       message: 'Something went wrong.',
     });

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { Album } from '../../../../types/interfaces/interfaces.song';
+import { Album, FileMeta } from '../../../../types/interfaces/interfaces.song';
 
 import { LoadedAlbum } from '../../../../types/interfaces/interfaces.album';
 interface AlbumResponse {
@@ -9,7 +9,17 @@ interface AlbumResponse {
 }
 
 interface LoadAlbumResponse {
-  albums: LoadedAlbum[];
+  album: LoadedAlbum;
+}
+
+interface SongResponse {
+  thumbnail: { type: string; data: Uint8Array };
+  song: { type: string; data: Uint8Array };
+  meta: {
+    title: string;
+    songMeta: FileMeta;
+    thumbnailMeta: FileMeta;
+  };
 }
 
 interface Player {
@@ -63,9 +73,8 @@ export class MusicService {
       .get<LoadAlbumResponse>(`${this.apiBase}/load/album/${albumId}`)
       .pipe(
         map((res) => {
-          console.log('loaded album: ', res);
-          const album: LoadedAlbum = res.albums[0];
-
+          // console.log('loaded album: ', res);
+          const album: LoadedAlbum = res.album;
           this.player.set({
             title: album.name,
             song: this.generateFile(
@@ -77,7 +86,31 @@ export class MusicService {
               album.songs[0].meta.thumbnailMeta.type
             ),
           });
-          return res.albums[0];
+          return res.album;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  }
+
+  loadSong(songId: string): Observable<Player> {
+    return this.http
+      .get<SongResponse>(`${this.apiBase}/song?id=${songId}`)
+      .pipe(
+        map((res) => {
+          console.log('res: ', res);
+          const { song, meta, thumbnail } = res;
+          const newPlayer: Player = {
+            title: meta.title,
+            song: this.generateFile(song.data, meta.songMeta.type),
+            thumbnail: this.generateFile(
+              thumbnail.data,
+              meta.thumbnailMeta.type
+            ),
+          };
+          this.player.set(newPlayer);
+          return newPlayer;
         }),
         catchError((err) => {
           return throwError(() => err);

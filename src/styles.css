@@ -34,6 +34,9 @@
 
   /* Colors */
   --icon-fill: #fa586a;
+  --rowBackgroundColor: hsla(0, 0%, 100%, .015);
+  --red: #d50017;
+  --fade-red: #fa586a;
 }
 
 * {

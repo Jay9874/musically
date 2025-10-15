@@ -39,3 +39,41 @@ li {
 .songs-container {
     padding: 1rem 0;
 }
+
+.song-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    width: 100%;
+    background-color: transparent;
+    color: #fff;
+}
+
+.song-row:nth-child(odd) {
+    background-color: hsla(0, 0%, 100%, .015);
+}
+
+.song-row:hover {
+    background-color: #4d4d4d;
+}
+
+
+.song-title {
+    margin-left: 1rem;
+    font-size: 0.90rem;
+}
+
+.sr-no {
+    font-size: 0.75rem;
+}
+
+.more-btn {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #fa586a;
+}

@@ -1,7 +1,12 @@
 import express from 'express';
 
 // Import controllers from
-import { albumDetails, getAllAlbums, loadAlbum } from '../controller/music';
+import {
+  albumDetails,
+  getAllAlbums,
+  loadAlbum,
+  loadSong,
+} from '../controller/music';
 
 // Setup router
 const router = express.Router();
@@ -12,6 +17,13 @@ const router = express.Router();
  * @method GET
  */
 router.get('/albums', getAllAlbums);
+
+/**
+ * @description Load the player with song id.
+ * @route /api/music/song;
+ * @method GET
+ */
+router.get('/song', loadSong);
 
 /**
  * @description Get album details with id.
