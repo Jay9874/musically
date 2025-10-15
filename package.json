@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "dev:ssr": "ng run test:serve-ssr",
-    "serve:ssr": "node dist/test/server/main.js",
+    "serve:ssr": "node dist/musically/server/main.js",
     "build:ssr": "ng build && ng run test:server",
     "prerender": "ng run test:prerender",
     "vercel-build": "npm run build:ssr"
