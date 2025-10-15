@@ -1,3 +1,7 @@
+li {
+    list-style-type: none;
+}
+
 .sidebar-links {
     display: flex;
     flex-direction: column;
@@ -34,6 +38,7 @@
     .sidebar-link {
         font-size: 1rem;
     }
+
     .sidebar-link>img {
         height: 30px;
         width: 30px;

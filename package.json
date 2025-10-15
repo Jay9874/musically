@@ -3,13 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "dev": "ng serve",
-    "build": "tsc",
-    "start": "npx tsc && node dist/server.js",
+    "start": "ng serve",
+    "build-dev": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "vercel-build": "tsc",
-    "serve:ssr:musically": "node dist/musically/server/server.mjs"
+    "dev:ssr": "ng run test:serve-ssr",
+    "serve:ssr": "node dist/test/server/main.js",
+    "build:ssr": "ng build && ng run test:server",
+    "prerender": "ng run test:prerender",
+    "vercel-build": "npm run build:ssr"
   },
   "private": true,
   "dependencies": {

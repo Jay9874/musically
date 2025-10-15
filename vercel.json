@@ -10,7 +10,7 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "dist/musically/**"
+      "includeFiles": "dist/musically/browser/**"
     }
   }
 }
