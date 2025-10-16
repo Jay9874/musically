@@ -4,7 +4,12 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
-import express, { ErrorRequestHandler } from 'express';
+import express, {
+  ErrorRequestHandler,
+  NextFunction,
+  Request,
+  Response,
+} from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import cookieParser from 'cookie-parser';
@@ -26,6 +31,19 @@ export function app(): express.Express {
   // Here, we now use the `AngularNodeAppEngine` instead of the `CommonEngine`
   const angularNodeAppEngine = new AngularNodeAppEngine();
 
+  server.get(
+    '/api/test',
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        return res.status(200).send({
+          message: 'Got the request, hurrrraah...',
+        });
+      } catch (err) {
+        console.log('err while testing api status: ', err);
+        return next(err);
+      }
+    }
+  );
   server.use('/api/auth', authRouter);
   server.use(
     '/api/admin/console',

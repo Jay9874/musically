@@ -59,7 +59,6 @@ export class MusicService {
   getAllAlbums(): Observable<Album[]> {
     return this.http.get<AlbumResponse>(`${this.apiBase}/albums`).pipe(
       map((res) => {
-        console.log('all albums: ', res.albums);
         return res.albums;
       }),
       catchError((err) => {

@@ -153,7 +153,6 @@ export const loadSong = async (
         message: 'The song do not exists.',
       });
     }
-    console.log('song result: ', result.rows);
     return res.status(200).send({
       ...result.rows[0],
     });
