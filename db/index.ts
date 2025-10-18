@@ -20,6 +20,9 @@ const pool = new Pool({
   host: process.env.host,
   port: process.env.port,
   database: process.env.database,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 export { pool };
