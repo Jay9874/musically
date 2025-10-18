@@ -12,13 +12,10 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { SessionUser } from '../../../types/interfaces/interfaces.session';
 import { UserStatusComponent } from '../common/user-status/user-status.component';
-import { HasAccessDirective } from '../directives/has-access.directive';
 import { ConsoleService } from './console/console.service';
 import { SidebarLink } from '../../../types/interfaces/interfaces.common';
 import { MenuLinksComponent } from '../common/menu-links/menu-links.component';
 import { MusicService } from '../services/music/music.service';
-
-type MenuStates = 'active' | 'inactive';
 
 @Component({
   selector: 'app-home',
@@ -59,7 +56,7 @@ export class HomeComponent {
 
   musicPlaying = signal(false);
 
-  menuStatus = model<MenuStates>('inactive');
+  menuStatus = model('');
 
   constructor() {
     effect(() => {
@@ -68,10 +65,10 @@ export class HomeComponent {
   }
 
   onMenuToggle(): void {
-    if (this.menuStatus() === 'inactive') {
-      this.menuStatus.set('active');
-    } else {
+    if (this.menuStatus() === 'active') {
       this.menuStatus.set('inactive');
+    } else {
+      this.menuStatus.set('active');
     }
   }
 

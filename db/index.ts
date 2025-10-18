@@ -1,11 +1,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      user: string;
-      password: string;
-      host: string;
-      port: number;
-      database: string;
+      DB_URI: string;
     }
   }
 }
@@ -15,14 +11,7 @@ dotenv.config();
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  user: process.env.user,
-  password: process.env.password,
-  host: process.env.host,
-  port: process.env.port,
-  database: process.env.database,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  connectionString: process.env.DB_URI,
 });
 
 export { pool };

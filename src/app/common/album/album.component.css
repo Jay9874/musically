@@ -62,9 +62,17 @@ li {
 }
 
 
-.song-title {
+.song-info {
     margin-left: 1rem;
     font-size: 0.90rem;
+    text-align: left;
+}
+
+.song-name {
+    font-weight: bold;
+}
+.song-singers{
+    color: var(--gray6);
 }
 
 .sr-no {
@@ -76,4 +84,10 @@ li {
     border: none;
     outline: none;
     color: #fa586a;
+}
+
+.song-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }

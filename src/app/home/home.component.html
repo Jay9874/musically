@@ -65,7 +65,7 @@
             </div>
         </section>
 
-        <!-- Navigation bar -->
+        <!-- Mobile Navigation bar -->
         <section class="navigation-bar">
             <div class="mobile-top-nav">
                 <button (click)="onMenuToggle()" type="button" title="Open menu" name="menu-opener-button"
@@ -94,11 +94,22 @@
         <section class="bottom-music-player">
             <div class="mobile-music-controller">
                 <div class="mobile-song-thumbnail" aria-label="Song thumbnail">
-                    <img height="30" width="30" src="icons/musical-notes.svg" alt="music note icon" />
+                    <!-- <img height="30" width="30" src="icons/musical-notes.svg" alt="music note icon" /> -->
+                    <img height="30" width="30"
+                        [src]="musicService.player() ? musicService.player()?.thumbnail: 'icons/musical-notes.svg'"
+                        alt="music note icon" />
                 </div>
+                @if (musicService.player()) {
+                <p style="height: fit-content; color: #fff;">{{musicService.player()?.title}}
+                </p>
+                }
                 <div class="bottom-controls">
-                    <button class="music-control-btn play-btn">
+                    <!-- <button class="music-control-btn play-btn">
                         <img height="30" width="30" src="icons/play.svg" alt="shuffle icons" />
+                    </button> -->
+                    <button type="button" (click)="playPauseSong()" class="music-control-btn play-btn">
+                        <img height="30" width="30" [src]="musicPlaying()?'icons/pause.svg':'icons/play.svg'"
+                            alt="Play/Pause button icons" />
                     </button>
                     <button class="music-control-btn play-forward-btn">
                         <img height="25" width="25" src="icons/play-forward.svg" alt="shuffle icons" />

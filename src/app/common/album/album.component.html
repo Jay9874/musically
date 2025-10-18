@@ -17,12 +17,12 @@
     <div class="songs-container">
         @for (song of album()?.songs; track $index; let i=$index) {
         <button role="button" (click)="onSongClick(song.id)" type="button" class="song-row">
-            <div>
-                <span class="sr-no">{{i+1}}</span>
-                <span class="song-title">
-                    {{song.meta.title}}<br />
-                    singers
-                </span>
+            <div class="song-row">
+                <p class="sr-no">{{i+1}}</p>
+                <p class="song-info">
+                    <span class="song-name">{{song.meta.title}}</span><br />
+                    <span class="song-singers">singers</span>
+                </p>
             </div>
             <!-- <button type="button" class="more-btn">
                 <img height="20" width="20" src="/icons/ellipsis.svg" alt="more option button icon" />
