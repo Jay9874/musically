@@ -19,12 +19,12 @@ const OTP_EXPIRY = Number(process.env['OTP_EXPIRY_MS']); // in ms
 const verifyEmailUrl =
   process.env['NODE_ENV'] === 'development'
     ? 'http://localhost:4200/auth/new-user'
-    : '';
+    : `${process.env['LIVE_SERVER']}/auth/new-user`;
 
 const recoverAccountUrl =
   process.env['NODE_ENV'] === 'development'
     ? 'http://localhost:4200/auth/reset-password'
-    : '';
+    : `${process.env['LIVE_SERVER']}/auth/reset-password` ;
 
 // @desc     Login the user
 // @route    /login

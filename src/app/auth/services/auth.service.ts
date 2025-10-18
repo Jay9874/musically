@@ -21,13 +21,13 @@ export interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  readonly apiBaseUrl = 'http://localhost:4200/api/auth';
+  readonly apiBaseUrl = '/api/auth';
   toast: ToastService = inject(ToastService);
 
   loading = signal(false);
   user = signal<SessionUser | null>(null);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http
