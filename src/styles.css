@@ -74,7 +74,7 @@ form {
 input[type='text'],
 input[type='password'],
 input[type='email'],
-textarea {
+input[type='file'], textarea {
   padding: 0.5rem;
   font-size: 1rem;
   border-radius: 5px;

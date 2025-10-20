@@ -40,5 +40,12 @@ router.post('/song/upload', uploadMultiple, uploadSong);
  */
 router.get('/related-data', relatedData);
 
+/**
+ * @description Upload song to album.
+ * @route /api/console/upload
+ * @method POST
+ */
+router.post('/upload', relatedData);
+
 // Export router; should always export as default
 export const consoleRouter = router;

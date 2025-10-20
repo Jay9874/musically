@@ -15,3 +15,9 @@ export interface SongInAlbum {
   };
   thumbnail: { type: string; data: Uint8Array };
 }
+
+export interface UploadingAlbum{
+  name: string,
+  description: string,
+  
+}
