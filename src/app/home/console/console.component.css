@@ -2,6 +2,53 @@ nav {
     padding: 1rem;
 }
 
+
+progress {
+    width: 100%;
+    background-color: transparent;
+    border: var(--global-border);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    -webkit-appearance: none;
+    /* Remove default browser styling */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge Chromium) */
+progress::-webkit-progress-bar {
+    background-color: transparent;
+    padding: 0.0625rem;
+    border-radius: 8px;
+}
+
+progress::-webkit-progress-value {
+    background-color: rgba(128, 128, 128, 0.5);
+    /* Blue fill */
+    border-radius: 3px;
+    transition: width 0.5s ease-in-out;
+    /* Smooth transition for progress changes */
+}
+
+/* Mozilla Firefox */
+progress::-moz-progress-bar {
+    background-color: #007bff;
+    /* Blue fill */
+    border-radius: 12px;
+    transition: width 0.5s ease-in-out;
+}
+
+.album-thumbnail {
+    max-width: 200px;
+    width: 100%;
+}
+
+
+.song-progress-container {
+    max-width: 200px;
+    width: 80%;
+}
+
 .login-container {
     padding: 1rem;
 }
@@ -73,10 +120,9 @@ tfoot td {
 
 
 .thumbnail-container {
-    height: 150px;
-    width: 20px;
-    max-width: 150px;
-    width: 80%;
+    height: 175px;
+    max-width: 200px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,6 +183,7 @@ tfoot td {
 
 .album-and-thumbnail {
     display: flex;
+    gap: 0.5rem;
     width: 100%;
     margin-top: 1rem;
 }

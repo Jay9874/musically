@@ -37,6 +37,8 @@
   --rowBackgroundColor: hsla(0, 0%, 100%, .015);
   --red: #d50017;
   --fade-red: #fa586a;
+  /* fixed border */
+  --global-border: 1px solid rgba(128, 128, 128, 0.5);
 }
 
 * {
@@ -56,7 +58,7 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 750px;
+  /* max-width: 750px; */
   width: 100%;
   border: 1px solid rgba(128, 128, 128, 0.5);
   padding: 2rem;
@@ -74,7 +76,8 @@ form {
 input[type='text'],
 input[type='password'],
 input[type='email'],
-input[type='file'], textarea {
+input[type='file'],
+textarea {
   padding: 0.5rem;
   font-size: 1rem;
   border-radius: 5px;

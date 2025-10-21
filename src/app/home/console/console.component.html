@@ -71,7 +71,7 @@
 
                 <div class="album-and-thumbnail">
                     <div>
-                        <div>
+                        <div class="song-progress-container">
                             <label>Song thumbnail</label>
                             <div class="thumbnail-container">
                                 @if (thumbnailUrl()) {
@@ -104,12 +104,14 @@
                                     accept="image/*" (change)="onFileChange($event)">
                                 }
                             </div>
+                            <progress id="file" max="100" value="40">70%</progress>
                         </div>
 
                         <div class="input-container">
                             <label for="song">Song</label>
-                            <input (change)="onFileChange($event)" name="song"
-                                accept="audio/*" type="file" id="song" required />
+                            <input (change)="onFileChange($event)" name="song" accept="audio/*" type="file" id="song"
+                                required />
+                            <progress id="file" max="100" value="40">70%</progress>
                         </div>
                     </div>
 
@@ -131,7 +133,7 @@
                             <input id=" new-album" type="text" [ngModel]="album().newAlbum" name="new-album"
                                 (ngModelChange)="onNewAlbum($event)" placeholder="your album name" required />
                         </div>
-                        <div class="input-container">
+                        <div class="input-container album-thumbnail">
                             <label>Album thumbnail</label>
                             <div class="thumbnail-container">
                                 @if (thumbnailUrl()) {
@@ -164,6 +166,7 @@
                                     accept="image/*" (change)="onFileChange($event)">
                                 }
                             </div>
+                            <progress id="file" max="100" value="40">70%</progress>
                         </div>
                         <div class="input-container">
                             <label for="album-description">Description</label>
