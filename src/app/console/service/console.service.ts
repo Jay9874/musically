@@ -1,15 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { UsersResponse } from './console.component';
+import { UsersResponse } from '../console.component';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
-import {
-  Album,
-  Meta,
-  SelectedAlbum,
-  Song,
-} from '../../../../types/interfaces/interfaces.song';
+import { Album, Meta } from '../../../../types/interfaces/interfaces.song';
 import { AuthService } from '../../auth/services/auth.service';
+import { UploadingAlbum } from '../../../../types/interfaces/interfaces.album';
+import { SongUploadBody } from '../../../../types/interfaces/interfaces.console';
+import { FormsModule } from '@angular/forms';
 
 export interface UploadResponse {
   success: boolean;
@@ -66,17 +64,30 @@ export class ConsoleService {
     );
   }
 
-  uploadSong(song: Song, album: SelectedAlbum): Observable<any> {
-    const meta: Meta = {
-      title: song.title,
-      songMeta: song.songMeta!,
-      thumbnailMeta: song.thumbnailMeta!,
-      album: album,
+  uploadSong(newAlbum: UploadingAlbum): Observable<any> {
+    const body: SongUploadBody = {
+      data: {
+        albumData: {
+          id: newAlbum.id,
+          name: newAlbum.name,
+          description: newAlbum.description,
+        },
+        songData: {
+          title: newAlbum.title,
+          singers: newAlbum.singers,
+        },
+        meta: {
+          songMeta: newAlbum.song!.meta,
+          songThumbnailMeta: newAlbum.songThumbnail!.meta,
+          albumThumbnailMeta: newAlbum.albumThumbnail!.meta,
+        },
+      },
     };
     const formData = new FormData();
-    formData.append('song', song.song!, song.songMeta?.name);
-    formData.append('thumbnail', song.thumbnail!, song.thumbnailMeta?.name);
-    formData.append('metaData', JSON.stringify(meta));
+    formData.append('song', newAlbum.song!.blob);
+    formData.append('songThumbnail', newAlbum.songThumbnail!.blob);
+    formData.append('albumThumbnail', newAlbum.albumThumbnail!.blob);
+    formData.append('body', JSON.stringify(body));
     return this.http
       .post<any>(`${this.baseApi}/song/upload`, formData, {
         reportProgress: true,

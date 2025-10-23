@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../auth/services/auth.service';
 import { SessionUser } from '../../../types/interfaces/interfaces.session';
 import { UserStatusComponent } from '../common/user-status/user-status.component';
-import { ConsoleService } from './console/console.service';
+import { ConsoleService } from '../console/service/console.service';
 import { SidebarLink } from '../../../types/interfaces/interfaces.common';
 import { MenuLinksComponent } from '../common/menu-links/menu-links.component';
 import { MusicService } from '../services/music/music.service';

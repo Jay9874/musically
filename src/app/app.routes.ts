@@ -3,21 +3,21 @@ import { resendLinkGuard } from './guards/resend-link.guard';
 import { validateLinkGuard } from './guards/validate-link.guard';
 import { resetPasswordGuard } from './guards/reset-password.guard';
 import { profileGuard } from './guards/profile.guard';
-import { consoleGuard } from './guards/access.guard';
-import { checkSessionGuard } from './guards/check-session.guard';
 import { AlbumNameResolver } from '../../utils/AlbumTitleResolver';
+import { consoleGuard } from './guards/console/console.guard';
+import { checkSessionGuard } from './guards/check-session.guard';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [checkSessionGuard],
-    canActivateChild: [checkSessionGuard],
     loadComponent: () =>
       import('../app/home/home.component').then((m) => m.HomeComponent),
     title: 'Musically | Home',
     children: [
       {
         path: '',
+        canActivate: [checkSessionGuard],
         loadComponent: () =>
           import(
             '../app/home/music-collections/music-collections.component'
@@ -26,12 +26,14 @@ export const routes: Routes = [
       },
       {
         path: 'new',
+        canActivate: [checkSessionGuard],
         loadComponent: () =>
           import('../app/home/new/new.component').then((m) => m.NewComponent),
         title: 'Musically | New',
       },
       {
         path: 'radio',
+        canActivate: [checkSessionGuard],
         loadComponent: () =>
           import('../app/home/radio/radio.component').then(
             (m) => m.RadioComponent
@@ -50,12 +52,31 @@ export const routes: Routes = [
       {
         path: 'console',
         canActivate: [consoleGuard],
-        loadComponent: () =>
-          import('../app/home/console/console.component').then(
-            (m) => m.ConsoleComponent
-          ),
+        canActivateChild: [consoleGuard],
         data: { roles: ['admin'] },
-        title: 'Musically | Console',
+        loadComponent: () =>
+          import('./console/console.component').then((m) => m.ConsoleComponent),
+        children: [
+          { path: '', redirectTo: 'upload', pathMatch: 'full' },
+          {
+            path: 'upload',
+            loadComponent: () =>
+              import('./console/upload-song/upload-song.component').then(
+                (m) => m.UploadSongComponent
+              ),
+            title: 'Musically | Upload',
+            data: { roles: ['admin'] },
+          },
+          {
+            path: 'users',
+            loadComponent: () =>
+              import('./console/users/users.component').then(
+                (m) => m.UsersComponent
+              ),
+            title: 'Musically | Users',
+            data: { roles: ['admin'] },
+          },
+        ],
       },
       {
         path: 'album/:albumid',
@@ -68,7 +89,6 @@ export const routes: Routes = [
       },
     ],
   },
-
   {
     path: 'auth',
     loadComponent: () =>

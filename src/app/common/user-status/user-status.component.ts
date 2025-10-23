@@ -1,4 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  model,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
 import {
   ActivatedRouteSnapshot,
@@ -8,6 +15,7 @@ import {
 } from '@angular/router';
 import { ToastService } from '../../toast/services/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 
 @Component({
   selector: 'app-user-status',
@@ -15,13 +23,22 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './user-status.component.html',
   styleUrl: './user-status.component.css',
 })
-export class UserStatusComponent {
+export class UserStatusComponent implements OnInit {
   authService: AuthService = inject(AuthService);
   toast: ToastService = inject(ToastService);
 
   isMenuVisible = signal(false);
+  loggedUser = signal<SessionUser | null>(null);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    effect(() => {
+      this.loggedUser.set(this.authService.user());
+    });
+  }
+
+  ngOnInit(): void {
+    this.loggedUser.set(this.authService.user());
+  }
 
   onAvatarClick(): void {
     this.isMenuVisible.set(!this.isMenuVisible());

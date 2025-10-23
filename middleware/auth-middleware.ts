@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { SessionManager } from '../utils/sessionManager';
 import { Session, SessionUser } from '../types/interfaces/interfaces.session';
 import { pool } from '../db';
-import { Roles } from '../types/interfaces/interfaces.user';
+import { Role } from '../types/interfaces/interfaces.user';
 
 // @desc Authenticates user and protects routes
 
@@ -104,7 +104,7 @@ export const checkSession = async (
   }
 };
 
-export const authorize = function (validRoles: Roles[]) {
+export const authorize = function (validRoles: Role[]) {
   return async (
     req: Request,
     res: Response,

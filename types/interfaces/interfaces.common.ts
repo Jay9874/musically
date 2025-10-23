@@ -12,6 +12,11 @@ export interface User {
   password?: string | undefined;
 }
 
+export interface Selectable<valueType, labelType> {
+  value: valueType;
+  label: labelType;
+}
+
 export interface SidebarLink {
   title: string;
   value: string;

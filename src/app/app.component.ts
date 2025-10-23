@@ -20,7 +20,7 @@ import { ToastService } from './toast/services/toast.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'ang_app';
   version = VERSION.full;
   server: string | undefined;
@@ -47,5 +47,13 @@ export class AppComponent {
       this.transferState.set(this.serverKey, this.server);
     }
     this.server = this.transferState.get(this.serverKey, '');
+  }
+
+  ngOnInit(): void {
+    // Check if any user there.
+    this.authService.hasSession().subscribe({
+      next: (res) => {},
+      error: (err) => {},
+    });
   }
 }

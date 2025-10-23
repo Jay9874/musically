@@ -16,8 +16,18 @@ export interface SongInAlbum {
   thumbnail: { type: string; data: Uint8Array };
 }
 
-export interface UploadingAlbum{
-  name: string,
-  description: string,
-  
+export interface UploadingAlbum {
+  id: string | null;
+  name: string;
+  description: string;
+  song: BinaryFile | null;
+  songThumbnail: BinaryFile | null;
+  albumThumbnail: BinaryFile | null;
+  singers: string[];
+  title: string;
+}
+
+export interface BinaryFile {
+  meta: FileMeta;
+  blob: Blob;
 }

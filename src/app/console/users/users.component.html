@@ -1,0 +1,42 @@
+<div class="users-table">
+    <h4>Users</h4>
+    <table>
+        <caption>
+            All registered users
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (user of consoleService.allUsers(); track $index) {
+            <tr>
+                <th scope="row">{{user.username}}</th>
+                <td>
+                    <div>{{user.roles}}</div>
+                    <div>
+                        <input type="checkbox" id="scales" name="admin" />
+                        <label for="admin">Admin</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="scales" name="normal" />
+                        <label for="normal">Normal</label>
+                    </div>
+                </td>
+                <td>{{user.email}}</td>
+            </tr>
+            }@empty {
+            <div>No users found.</div>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th scope="row" colspan="2">Total user</th>
+                <td>{{consoleService.allUsers().length}}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

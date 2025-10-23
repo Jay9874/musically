@@ -9,7 +9,7 @@ export interface NewUser {
   username: string;
 }
 
-export type Roles = 'admin' | 'creator' | 'normal';
+export type Role = 'admin' | 'creator' | 'normal';
 
 export interface DbUser {
   id: number;
@@ -17,5 +17,5 @@ export interface DbUser {
   password: string;
   username: string;
   verified_email: boolean;
-  roles: Roles[];
+  roles: Role[];
 }

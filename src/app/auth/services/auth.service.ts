@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import {
   HttpClient,
   HttpContext,
@@ -27,7 +27,12 @@ export class AuthService {
   loading = signal(false);
   user = signal<SessionUser | null>(null);
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+    effect(() => {
+      const user = this.user();
+      console.log('service auth user: ', user);
+    });
+  }
 
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http
@@ -62,23 +67,26 @@ export class AuthService {
       );
   }
 
-  validateSession = (): Observable<SessionUser> => {
+  validateSession(): Observable<SessionUser> {
     return this.http
       .get<AuthResponse>(`${this.apiBaseUrl}/validate-session`)
       .pipe(
         map((res) => {
+          console.log('validate response: ', res);
           this.user.set(res.user);
+          console.log('auth user in validate: ', this.user());
           return res.user;
         }),
         catchError((err) => {
           return throwError(() => err);
         })
       );
-  };
+  }
 
   hasSession(): Observable<SessionUser> {
     return this.http.get<AuthResponse>(`${this.apiBaseUrl}/check-session`).pipe(
       map((res) => {
+        console.log('checked session');
         this.user.set(res.user);
         return res.user;
       }),
@@ -110,6 +118,7 @@ export class AuthService {
       );
   }
 
+  // Check the username availability
   checkAvailability(username: string): Observable<boolean> {
     return this.http
       .get<boolean>(`${this.apiBaseUrl}/username?username=${username}`)

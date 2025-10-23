@@ -1,7 +1,7 @@
 <div class="user-status">
-    @if(authService.user()){
+    @if(loggedUser()){
     <button (click)="onAvatarClick()" type="button" name="avatar-button" class="avatar">
-        <p>{{authService.user()?.username}}</p>
+        <p>{{loggedUser()?.username}}</p>
     </button>
     }@else {
     <a routerLink="/auth" id="signin-link">Sign

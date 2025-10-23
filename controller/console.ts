@@ -92,35 +92,35 @@ export const uploadSong = async (
   next: NextFunction
 ) => {
   try {
-    const { metaData } = req.body;
-    if (!metaData) {
+    const { body } = req.body;
+    if (!body) {
       return res.status(400).send({
-        message: 'Please provide song meta.',
+        message: 'Please provide body for text info about song and album.',
       });
     }
 
     // Logged in user id
     const loggedUser = res.locals['userId'];
 
-    const meta: Meta = JSON.parse(metaData);
+    const textData: Meta = JSON.parse(body);
     // if new album then create one
-    let albumId: string | null = null;
-    if (meta.album!.newAlbum !== '') {
-      const albumQuery = {
-        text: 'INSERT INTO albums(name, userid) VALUES($1, $2) ON CONFLICT (name, userid) DO UPDATE SET name=EXCLUDED.name RETURNING id',
-        values: [meta.album!.newAlbum, loggedUser],
-      };
+    // let albumId: string | null = null;
+    // if (meta.album!.newAlbum !== '') {
+    //   const albumQuery = {
+    //     text: 'INSERT INTO albums(name, userid) VALUES($1, $2) ON CONFLICT (name, userid) DO UPDATE SET name=EXCLUDED.name RETURNING id',
+    //     values: [meta.album!.newAlbum, loggedUser],
+    //   };
 
-      const createdAlbum = await pool.query(albumQuery);
-      if (createdAlbum.rowCount === 0) {
-        return res.status(400).send({
-          message: 'New album could not be created.',
-        });
-      }
-      albumId = createdAlbum.rows[0].id;
-    } else {
-      albumId = meta.album!.existingAlbum;
-    }
+    //   const createdAlbum = await pool.query(albumQuery);
+    //   if (createdAlbum.rowCount === 0) {
+    //     return res.status(400).send({
+    //       message: 'New album could not be created.',
+    //     });
+    //   }
+    //   albumId = createdAlbum.rows[0].id;
+    // } else {
+    //   albumId = meta.album!.existingAlbum;
+    // }
 
     // Getting buffers for song and thumbnail
     const files: { [fieldname: string]: Express.Multer.File[] } =
@@ -129,30 +129,31 @@ export const uploadSong = async (
     const thumbnailFile: Express.Multer.File = files['thumbnail'][0];
 
     // delete the album key from meta
-    delete meta.album;
+    // delete meta.album;
 
-    // Upload the song with thumbnail
-    const songQuery = {
-      text: 'INSERT INTO songs(albumid, uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5,$6) ON CONFLICT (title, albumid) DO UPDATE SET song = $5 RETURNING *',
-      values: [
-        albumId,
-        loggedUser,
-        meta.title,
-        meta,
-        songFile.buffer,
-        thumbnailFile.buffer,
-      ],
-    };
+    // // Upload the song with thumbnail
+    // const songQuery = {
+    //   text: 'INSERT INTO songs(albumid, uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5,$6) ON CONFLICT (title, albumid) DO UPDATE SET song = $5 RETURNING *',
+    //   values: [
+    //     albumId,
+    //     loggedUser,
+    //     meta.title,
+    //     meta,
+    //     songFile.buffer,
+    //     thumbnailFile.buffer,
+    //   ],
+    // };
 
-    const songResult = await pool.query(songQuery);
-    if (songResult.rowCount === 0) {
-      return res.status(400).send({
-        message: 'The song could not be uploaded.',
-      });
-    }
+    // const songResult = await pool.query(songQuery);
+    // if (songResult.rowCount === 0) {
+    //   return res.status(400).send({
+    //     message: 'The song could not be uploaded.',
+    //   });
+    // }
 
     return res.status(200).send({
-      song: songResult.rows,
+      // song: songResult.rows,
+      data: 'done',
     });
   } catch (err) {
     console.log('err at uploading song: ', err);
