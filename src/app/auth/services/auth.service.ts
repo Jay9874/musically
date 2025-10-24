@@ -27,12 +27,7 @@ export class AuthService {
   loading = signal(false);
   user = signal<SessionUser | null>(null);
 
-  constructor(private http: HttpClient, private router: Router) {
-    effect(() => {
-      const user = this.user();
-      console.log('service auth user: ', user);
-    });
-  }
+  constructor(private http: HttpClient, private router: Router) {}
 
   submitLoginForm(email: string, password: string): Observable<SessionUser> {
     return this.http
@@ -72,9 +67,7 @@ export class AuthService {
       .get<AuthResponse>(`${this.apiBaseUrl}/validate-session`)
       .pipe(
         map((res) => {
-          console.log('validate response: ', res);
           this.user.set(res.user);
-          console.log('auth user in validate: ', this.user());
           return res.user;
         }),
         catchError((err) => {
@@ -86,7 +79,6 @@ export class AuthService {
   hasSession(): Observable<SessionUser> {
     return this.http.get<AuthResponse>(`${this.apiBaseUrl}/check-session`).pipe(
       map((res) => {
-        console.log('checked session');
         this.user.set(res.user);
         return res.user;
       }),

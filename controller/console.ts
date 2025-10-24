@@ -2,6 +2,7 @@ import { Request, type Response, NextFunction } from 'express';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { pool } from '../db';
 import { Meta } from '../types/interfaces/interfaces.song';
+import { SongUploadBody } from '../types/interfaces/interfaces.console';
 
 /**
  *
@@ -98,58 +99,134 @@ export const uploadSong = async (
         message: 'Please provide body for text info about song and album.',
       });
     }
-
     // Logged in user id
     const loggedUser = res.locals['userId'];
-
-    const textData: Meta = JSON.parse(body);
-    // if new album then create one
-    // let albumId: string | null = null;
-    // if (meta.album!.newAlbum !== '') {
-    //   const albumQuery = {
-    //     text: 'INSERT INTO albums(name, userid) VALUES($1, $2) ON CONFLICT (name, userid) DO UPDATE SET name=EXCLUDED.name RETURNING id',
-    //     values: [meta.album!.newAlbum, loggedUser],
-    //   };
-
-    //   const createdAlbum = await pool.query(albumQuery);
-    //   if (createdAlbum.rowCount === 0) {
-    //     return res.status(400).send({
-    //       message: 'New album could not be created.',
-    //     });
-    //   }
-    //   albumId = createdAlbum.rows[0].id;
-    // } else {
-    //   albumId = meta.album!.existingAlbum;
-    // }
+    // Text data in body
+    const textData: SongUploadBody = JSON.parse(body);
+    const { albumData, songData, meta } = textData;
 
     // Getting buffers for song and thumbnail
     const files: { [fieldname: string]: Express.Multer.File[] } =
       req.files as any;
     const songFile = files['song'][0];
-    const thumbnailFile: Express.Multer.File = files['thumbnail'][0];
+    const songThumbnailFile: Express.Multer.File = files['songThumbnail'][0];
+    const albumThumbnailFile: Express.Multer.File = files['albumThumbnail'][0];
 
+    let albumId;
+    /*
+      1. Work with Album.
+        - If !newAlbum.id then check if any pre existing album with this name.
+     */
+    if (!albumData.id) {
+      // Check if album exists with this name
+      const existingAlbum = await pool.query(
+        'SELECT id FROM albums WHERE name = $1',
+        [albumData.name]
+      );
+      if (existingAlbum.rowCount !== 0) {
+        return res.status(409).send({
+          message: 'A album with this name already exists.',
+        });
+      }
+      // Create a new album
+      const albumQuery = {
+        text: 'INSERT INTO albums(name, userid, description, thumbnail, meta) VALUES($1, $2, $3, $4) RETURNING id',
+        values: [
+          albumData.name,
+          loggedUser,
+          albumData.description,
+          albumThumbnailFile.buffer,
+          meta.albumThumbnailMeta,
+        ],
+      };
+
+      const createdAlbum = await pool.query(albumQuery);
+      if (createdAlbum.rowCount === 0) {
+        return res.status(400).send({
+          message: 'New album could not be created.',
+        });
+      } else {
+        albumId = createdAlbum.rows[0].id;
+      }
+    }
+    // Else update the thumbnail and description of old thumbnail with id
+    const updateAlbumQuery = {
+      text: 'UPDATE albums SET thumbnail = $1, meta = $2, description = $3 WHERE id = $4 RETURNING id',
+      values: [
+        albumThumbnailFile.buffer,
+        meta.albumThumbnailMeta,
+        albumData.description,
+        albumData.id,
+      ],
+    };
+    const updatedAlbum = await pool.query(updateAlbumQuery);
+    if (updatedAlbum.rowCount === 0) {
+      return res.status(400).send({
+        message: 'The album could not be updated.',
+      });
+    } else {
+      albumId = updatedAlbum.rows[0].id;
+    }
+
+    /*
+      2. Work with song
+        - Check if song with this title already exists.
+        - If no, then insert the new song.
+    */
+    const existingSong = await pool.query(
+      'SELECT id FROM songs WHERE title = $1',
+      [songData.title]
+    );
+    if (existingSong.rowCount !== 0) {
+      return res.status(409).send({
+        message: 'Song with this title already exits.',
+      });
+    }
+
+    let songId;
+    const songQuery = {
+      text: 'INSERT INTO songs(uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+      values: [
+        loggedUser,
+        songData.title,
+        meta.songThumbnailMeta,
+        songFile.buffer,
+        songThumbnailFile.buffer,
+      ],
+    };
+
+    const songResult = await pool.query(songQuery);
+    if (songResult.rowCount === 0) {
+      return res.status(400).send({
+        message: 'The song could not be uploaded.',
+      });
+    } else {
+      songId = songResult.rows[0].id;
+    }
+
+    /*
+      3. Add the song in album
+    */
+    const addSong = await pool.query(
+      'INSERT INTO song_album(songid, albumid) VALUES($1, $2)',
+      [songId, albumId]
+    );
+    if (addSong.rowCount === 0) {
+      return res.status(400).send({
+        message: 'Song could not be added in album.',
+      });
+    }
+    /*
+      4. Add singer of song
+    */
+   const rows = songData.singers.map(singer => [songId])
+   const addSingers = 
+    console.log('body: ', textData);
+    console.log('files: ', files);
     // delete the album key from meta
     // delete meta.album;
 
     // // Upload the song with thumbnail
-    // const songQuery = {
-    //   text: 'INSERT INTO songs(albumid, uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5,$6) ON CONFLICT (title, albumid) DO UPDATE SET song = $5 RETURNING *',
-    //   values: [
-    //     albumId,
-    //     loggedUser,
-    //     meta.title,
-    //     meta,
-    //     songFile.buffer,
-    //     thumbnailFile.buffer,
-    //   ],
-    // };
-
-    // const songResult = await pool.query(songQuery);
-    // if (songResult.rowCount === 0) {
-    //   return res.status(400).send({
-    //     message: 'The song could not be uploaded.',
-    //   });
-    // }
 
     return res.status(200).send({
       // song: songResult.rows,

@@ -8,11 +8,16 @@
                     placeholder="Title of the song" required />
             </div>
 
-            <div class="input-container">
-                <label for="email">Singers</label>
-                <input id="title" type="text" name="title" [(ngModel)]="newAlbum().singers" placeholder="Type to search"
-                    required />
-            </div>
+            <fieldset>
+                <legend>Singers</legend>
+                <input id="title" type="text" name="singer" [(ngModel)]="newAlbum().singers"
+                    placeholder="Type to search" required />
+                <div class="pill-adder">
+                    <input id="title" type="text" name="newSinger" [(ngModel)]="newSingers" placeholder="new singer"
+                        required />
+                    <button type="submit">Add</button>
+                </div>
+            </fieldset>
 
             <div class="album-and-thumbnail">
                 <div>
@@ -21,15 +26,15 @@
                         <div class="thumbnail-container">
                             @if (newAlbum().songThumbnail) {
                             <div class="uploaded-thumbnail">
-                                <img [src]="newAlbum().songThumbnail" alt="uploaded song thumbnail" />
+                                <img [src]="urls().songThumbnail" alt="uploaded song thumbnail" />
                                 <div class="thumbnail-actions">
-                                    <label for="thumbnail" title="Change image"><svg xmlns="http://www.w3.org/2000/svg"
-                                            class="ionicon" viewBox="0 0 512 512">
+                                    <label for="songThumbnail" title="Change image"><svg
+                                            xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                                             <path fill="none" stroke="currentColor" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="32"
                                                 d="M364.13 125.25L87 403l-23 45 44.99-23 277.76-277.13-22.62-22.62zM420.69 68.69l-22.62 22.62 22.62 22.63 22.62-22.63a16 16 0 000-22.62h0a16 16 0 00-22.62 0z" />
                                         </svg></label>
-                                    <input type="file" aria-hidden="true" hidden id="thumbnail" name="thumbnail"
+                                    <input type="file" aria-hidden="true" hidden id="songThumbnail" name="songThumbnail"
                                         accept="image/*" (change)="onFileChange($event)">
                                     <button title="Cancel uploaded" name="cancel-song-thumbnail" type="button"
                                         (click)="cancelThumbnail('songThumbnail')">
@@ -42,9 +47,9 @@
                                 </div>
                             </div>
                             }@else {
-                            <label for="thumbnail" id="thumbnail-label">Add</label>
-                            <input type="file" aria-hidden="true" hidden required id="thumbnail" name="songThumbnail"
-                                accept="image/*" (change)="onFileChange($event)">
+                            <label for="songThumbnail" id="thumbnail-label">Add</label>
+                            <input type="file" aria-hidden="true" hidden required id="songThumbnail"
+                                name="songThumbnail" accept="image/*" (change)="onFileChange($event)">
                             }
                         </div>
                         <progress id="file" max="100" value="40">70%</progress>
@@ -80,16 +85,16 @@
                         <div class="thumbnail-container">
                             @if (newAlbum().albumThumbnail) {
                             <div class="uploaded-thumbnail">
-                                <img [src]="newAlbum().albumThumbnail" alt="uploaded song thumbnail" />
+                                <img [src]="urls().albumThumbnail" alt="uploaded song thumbnail" />
                                 <div class="thumbnail-actions">
-                                    <label for="thumbnail" title="Change image"><svg xmlns="http://www.w3.org/2000/svg"
-                                            class="ionicon" viewBox="0 0 512 512">
+                                    <label for="albumThumbnail" title="Change image"><svg
+                                            xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
                                             <path fill="none" stroke="currentColor" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="32"
                                                 d="M364.13 125.25L87 403l-23 45 44.99-23 277.76-277.13-22.62-22.62zM420.69 68.69l-22.62 22.62 22.62 22.63 22.62-22.63a16 16 0 000-22.62h0a16 16 0 00-22.62 0z" />
                                         </svg></label>
-                                    <input type="file" aria-hidden="true" hidden id="thumbnail" name="albumThumbnail"
-                                        accept="image/*" (change)="onFileChange($event)">
+                                    <input type="file" aria-hidden="true" hidden id="albumThumbnail"
+                                        name="albumThumbnail" accept="image/*" (change)="onFileChange($event)">
                                     <button title="Cancel uploaded" name="cancel-button" type="button"
                                         (click)="cancelThumbnail('albumThumbnail')">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
@@ -101,18 +106,17 @@
                                 </div>
                             </div>
                             }@else {
-                            <label for="thumbnail" id="thumbnail-label">Add</label>
-                            <input type="file" aria-hidden="true" hidden required id="thumbnail" name="albumThumbnail"
-                                accept=" image/*" (change)="onFileChange($event)">
+                            <label for="albumThumbnail" id="thumbnail-label">Add</label>
+                            <input type="file" aria-hidden="true" hidden required id="albumThumbnail"
+                                name="albumThumbnail" accept=" image/*" (change)="onFileChange($event)">
                             }
                         </div>
                         <progress id="file" max="100" value="40">70%</progress>
                     </div>
                     <div class="input-container">
                         <label for="album-description">Description</label>
-                        <textarea rows="2" id="album-description" type="text" [ngModel]="newAlbum().description"
-                            name="new-album" (ngModelChange)="onNewAlbum($event)"
-                            placeholder="Tell us more about your album" required></textarea>
+                        <textarea rows="2" id="album-description" type="text" [(ngModel)]="newAlbum().description"
+                            name="new-album" placeholder="Tell us more about your album" required></textarea>
                     </div>
                 </fieldset>
             </div>

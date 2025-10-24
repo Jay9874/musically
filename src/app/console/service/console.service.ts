@@ -66,21 +66,19 @@ export class ConsoleService {
 
   uploadSong(newAlbum: UploadingAlbum): Observable<any> {
     const body: SongUploadBody = {
-      data: {
-        albumData: {
-          id: newAlbum.id,
-          name: newAlbum.name,
-          description: newAlbum.description,
-        },
-        songData: {
-          title: newAlbum.title,
-          singers: newAlbum.singers,
-        },
-        meta: {
-          songMeta: newAlbum.song!.meta,
-          songThumbnailMeta: newAlbum.songThumbnail!.meta,
-          albumThumbnailMeta: newAlbum.albumThumbnail!.meta,
-        },
+      albumData: {
+        id: newAlbum.id,
+        name: newAlbum.name,
+        description: newAlbum.description,
+      },
+      songData: {
+        title: newAlbum.title,
+        singers: newAlbum.singers,
+      },
+      meta: {
+        songMeta: newAlbum.song!.meta,
+        songThumbnailMeta: newAlbum.songThumbnail!.meta,
+        albumThumbnailMeta: newAlbum.albumThumbnail!.meta,
       },
     };
     const formData = new FormData();

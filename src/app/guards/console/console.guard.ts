@@ -10,12 +10,10 @@ export const consoleGuard: CanActivateFn = async (
 ): Promise<boolean | UrlTree> => {
   const authService: AuthService = inject(AuthService);
   const router: Router = inject(Router);
-  console.log('route data: ', route.data);
 
   let roles = route.data['roles'] as string[];
 
   if (authService.user()) {
-    console.log('user: ', authService.user());
     const userRoles: Role[] = authService.user()!.roles;
     let hasRole: boolean = userRoles.some((r) => roles.includes(r));
     if (hasRole) return true;

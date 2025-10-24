@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { Request, Response, NextFunction } from 'express';
 
-const storage = multer.memoryStorage()
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -45,7 +45,8 @@ export const uploadMultiple = (
   next: NextFunction
 ) => {
   upload.fields([
-    { name: 'thumbnail', maxCount: 1 },
+    { name: 'songThumbnail', maxCount: 1 },
+    { name: 'albumThumbnail', maxCount: 1 },
     { name: 'song', maxCount: 1 },
   ])(req, res, (err) => {
     if (err) {

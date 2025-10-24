@@ -41,7 +41,7 @@ export class UploadSongComponent {
     songThumbnail: null,
   });
   albums = model<Album[]>([]);
-
+  newSingers = model('');
   newAlbum = model<UploadingAlbum>({
     id: null,
     name: '',
@@ -55,12 +55,12 @@ export class UploadSongComponent {
 
   constructor() {}
 
-  // async ngOnInit(): Promise<void> {
-  //   if (this.authService.user()) {
-  //     await this.getUsers();
-  //     await this.getRelatedData();
-  //   }
-  // }
+  async ngOnInit(): Promise<void> {
+    if (this.authService.user()) {
+      await this.getUsers();
+      await this.getRelatedData();
+    }
+  }
 
   albumChange(event: Event): void {
     this.newAlbum.update((prev) => ({ ...prev, name: '' }));
@@ -87,20 +87,20 @@ export class UploadSongComponent {
   }
 
   // Load users related data such as albums and playlists
-  // async getRelatedData(): Promise<void> {
-  //   try {
-  //     const token$ = this.consoleService.getRelatedData();
-  //     const albums: Album[] = await lastValueFrom(token$);
-  //     this.albums.set(albums);
-  //     if (this.albums().length > 0) {
-  //       this.newAlbum.update((prev) => ({ ...prev, id: this.albums()[0].id }));
-  //     }
-  //   } catch (err) {
-  //     console.log('err occurred while finding related data: ', err);
-  //     const { error } = err as HttpErrorResponse;
-  //     this.toast.error(error.message);
-  //   }
-  // }
+  async getRelatedData(): Promise<void> {
+    try {
+      const token$ = this.consoleService.getRelatedData();
+      const albums: Album[] = await lastValueFrom(token$);
+      this.albums.set(albums);
+      if (this.albums().length > 0) {
+        this.newAlbum.update((prev) => ({ ...prev, id: this.albums()[0].id }));
+      }
+    } catch (err) {
+      console.log('err occurred while finding related data: ', err);
+      const { error } = err as HttpErrorResponse;
+      this.toast.error(error.message);
+    }
+  }
 
   // Cancel thumbnail upload
   cancelThumbnail(buttonName: string): void {
@@ -120,7 +120,6 @@ export class UploadSongComponent {
     if (files && files.length > 0) {
       const file: File | null = files.item(0);
       if (file) {
-        console.log('file name is: ', file.name);
         let blob: Blob = new Blob();
         try {
           const arrayBuffer = await file.arrayBuffer();
@@ -148,10 +147,11 @@ export class UploadSongComponent {
 
   async uploadSong(): Promise<void> {
     try {
+      console.log('album: ', this.newAlbum());
       if (
-        this.newAlbum().song ||
-        this.newAlbum().songThumbnail ||
-        this.newAlbum().albumThumbnail
+        !this.newAlbum().song ||
+        !this.newAlbum().songThumbnail ||
+        !this.newAlbum().albumThumbnail
       ) {
         this.toast.info('Please upload correct audio and thumbnail.');
         return;

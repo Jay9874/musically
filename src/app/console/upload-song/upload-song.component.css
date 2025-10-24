@@ -188,17 +188,21 @@ tfoot td {
     margin-top: 1rem;
 }
 
-/* .album-and-thumbnail>div {
-    flex-grow: 1;
-} */
-
-/***** Album classes */
-.album-container {
+/** Album classes */
+fieldset {
+    margin-top: 1rem;
     padding: 1rem;
     border-radius: 5px;
     border: 1px solid rgba(128, 128, 128, 0.5);
     flex-grow: 2;
 }
+
+.pill-adder {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
 
 .album-option {
     display: flex;

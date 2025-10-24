@@ -8,13 +8,9 @@ import { RouterLink } from '@angular/router';
   templateUrl: './album-card.component.html',
   styleUrl: './album-card.component.css',
 })
-export class AlbumCardComponent implements OnInit {
+export class AlbumCardComponent {
   @Input({ required: true }) album!: Album;
   songs = signal<Song[]>([]);
 
   constructor() {}
-
-  ngOnInit(): void {
-    console.log('album is: ', this.album);
-  }
 }
