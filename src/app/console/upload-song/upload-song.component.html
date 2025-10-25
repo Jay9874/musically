@@ -10,13 +10,30 @@
 
             <fieldset>
                 <legend>Singers</legend>
-                <input id="title" type="text" name="singer" [(ngModel)]="newAlbum().singers"
+                <input id="singer" type="text" name="singer" [(ngModel)]="newAlbum().singers"
                     placeholder="Type to search" required />
-                <div class="pill-adder">
-                    <input id="title" type="text" name="newSinger" [(ngModel)]="newSingers" placeholder="new singer"
-                        required />
-                    <button type="submit">Add</button>
-                </div>
+                <form #newSingerForm="ngForm" class="pill-adder" (submit)="addNewSinger()">
+                    <label for="new-singer" style="margin-bottom: 0.25rem;">New Singers</label>
+                    <div class="tag-with-input">
+                        @for (tag of newSingers(); track $index) {
+                        <div role="search" class="tag">
+                            <span>{{tag}}</span>
+                            <button (click)="removeNewSinger(tag)" type="button" class="tag-cancel-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                    <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
+                                        fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="32"
+                                        d="M320 320L192 192M192 320l128-128" />
+                                </svg>
+                            </button>
+                        </div>
+                        }
+                        <input (keydown.backspace)="onBackspacePressed($event)" id="new-singer" type="text"
+                            name="newSinger" [(ngModel)]="currentInput"
+                            [placeholder]="newSingers().length === 0?'e.g. Arijit Singh':''" required />
+                    </div>
+                </form>
             </fieldset>
 
             <div class="album-and-thumbnail">

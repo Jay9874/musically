@@ -194,15 +194,64 @@ fieldset {
     padding: 1rem;
     border-radius: 5px;
     border: 1px solid rgba(128, 128, 128, 0.5);
-    flex-grow: 2;
+}
+
+.add-button {
+    margin-top: 0;
 }
 
 .pill-adder {
     margin-top: 1rem;
-    display: flex;
-    gap: 1rem;
+    padding: 0;
+    border: none;
 }
 
+.tag-with-input {
+    border-radius: 5px;
+    padding: 0.125rem 0.25rem;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+.tag-with-input:focus-within {
+    border: 1px solid #fff;
+}
+
+.tag-with-input>input {
+    padding: 0.375rem;
+}
+
+.tag {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+    margin: 0.125rem;
+    padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+    border-radius: 25px;
+    background-color: var(--success-bg);
+    border: 1px solid var(--success-text);
+    color: var(--success-text);
+}
+
+
+#new-singer {
+    border: none;
+    width: fit-content;
+}
+
+#new-singer:focus {
+    border: none;
+    outline: none;
+}
+
+.tag-cancel-btn {
+    width: 16px;
+    height: 16px;
+    border: none;
+    /* padding: 1px; */
+    border-radius: 2px;
+    background-color: transparent;
+    color: var(--success-text);
+}
 
 .album-option {
     display: flex;

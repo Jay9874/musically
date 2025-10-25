@@ -1,5 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, model, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  model,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 import { Role } from '../../../../types/interfaces/interfaces.user';
@@ -41,7 +48,9 @@ export class UploadSongComponent {
     songThumbnail: null,
   });
   albums = model<Album[]>([]);
-  newSingers = model('');
+  newSingers = model<string[]>([]);
+  currentInput = model('');
+
   newAlbum = model<UploadingAlbum>({
     id: null,
     name: '',
@@ -60,6 +69,26 @@ export class UploadSongComponent {
       await this.getUsers();
       await this.getRelatedData();
     }
+  }
+
+  addNewSinger(): void {
+    if (this.currentInput() !== '') {
+      this.newSingers.update((prev) => [...prev, this.currentInput()]);
+    }
+    this.currentInput.set('');
+  }
+
+  onBackspacePressed(event: Event): void {
+    if (this.currentInput() === '') {
+      const newSingers = this.newSingers();
+      newSingers.pop();
+      this.newSingers.set(newSingers);
+    }
+  }
+
+  removeNewSinger(singer: string): void {
+    const updatedNewSingers = this.newSingers().filter((obj) => obj !== singer);
+    this.newSingers.set(updatedNewSingers);
   }
 
   albumChange(event: Event): void {

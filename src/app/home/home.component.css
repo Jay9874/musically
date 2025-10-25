@@ -37,6 +37,7 @@ li {
 
 .right-section {
     flex-basis: auto;
+    max-width: 72vw;
     flex-grow: 85;
     flex-shrink: 1;
     position: relative;
@@ -389,6 +390,10 @@ progress::-moz-progress-bar {
         display: none;
     }
 
+    .right-section {
+        max-width: 100vw;
+    }
+
     .top-nav {
         display: none;
     }
@@ -405,6 +410,10 @@ progress::-moz-progress-bar {
 
     .bottom-music-player {
         display: none;
+    }
+
+    .right-section {
+        max-width: 100vw;
     }
 }
 
