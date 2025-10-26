@@ -2,7 +2,17 @@ import { Request, type Response, NextFunction } from 'express';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { pool } from '../db';
 import { Meta } from '../types/interfaces/interfaces.song';
-import { SongUploadBody } from '../types/interfaces/interfaces.console';
+import {
+  SingerOption,
+  SongUploadBody,
+} from '../types/interfaces/interfaces.console';
+import format from 'pg-format';
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  *
@@ -130,7 +140,7 @@ export const uploadSong = async (
       }
       // Create a new album
       const albumQuery = {
-        text: 'INSERT INTO albums(name, userid, description, thumbnail, meta) VALUES($1, $2, $3, $4) RETURNING id',
+        text: 'INSERT INTO albums(name, userid, description, thumbnail, meta) VALUES($1, $2, $3, $4, $5) RETURNING id',
         values: [
           albumData.name,
           loggedUser,
@@ -148,24 +158,25 @@ export const uploadSong = async (
       } else {
         albumId = createdAlbum.rows[0].id;
       }
-    }
-    // Else update the thumbnail and description of old thumbnail with id
-    const updateAlbumQuery = {
-      text: 'UPDATE albums SET thumbnail = $1, meta = $2, description = $3 WHERE id = $4 RETURNING id',
-      values: [
-        albumThumbnailFile.buffer,
-        meta.albumThumbnailMeta,
-        albumData.description,
-        albumData.id,
-      ],
-    };
-    const updatedAlbum = await pool.query(updateAlbumQuery);
-    if (updatedAlbum.rowCount === 0) {
-      return res.status(400).send({
-        message: 'The album could not be updated.',
-      });
     } else {
-      albumId = updatedAlbum.rows[0].id;
+      // Else update the thumbnail and description of old thumbnail with id
+      const updateAlbumQuery = {
+        text: 'UPDATE albums SET thumbnail = $1, meta = $2, description = $3 WHERE id = $4 RETURNING id',
+        values: [
+          albumThumbnailFile.buffer,
+          meta.albumThumbnailMeta,
+          albumData.description,
+          albumData.id,
+        ],
+      };
+      const updatedAlbum = await pool.query(updateAlbumQuery);
+      if (updatedAlbum.rowCount === 0) {
+        return res.status(400).send({
+          message: 'The album could not be updated.',
+        });
+      } else {
+        albumId = updatedAlbum.rows[0].id;
+      }
     }
 
     /*
@@ -200,34 +211,64 @@ export const uploadSong = async (
         message: 'The song could not be uploaded.',
       });
     }
-    const addedSong: 
+    const addedSong: { id: string; title: string } = songResult.rows[0];
 
     /*
-      3. Add the song in album
+      3. Add the song in album; song_album mapping
     */
-    const addSong = await pool.query(
-      'INSERT INTO song_album(songid, albumid) VALUES($1, $2)',
-      [songId, albumId]
+    const addSongToAlbum = await pool.query(
+      'INSERT INTO song_album(songid, albumid, song_title) VALUES($1, $2, $3) RETURNING id',
+      [addedSong.id, albumId, addedSong.title]
     );
-    if (addSong.rowCount === 0) {
+    if (addSongToAlbum.rowCount === 0) {
       return res.status(400).send({
         message: 'Song could not be added in album.',
       });
     }
     /*
-      4. Add singer of song
+      4. Add singer of song to db if new singers
     */
-    const rows = songData.singers.map((singer) => [songId]);
-    const addSingers = console.log('body: ', textData);
-    console.log('files: ', files);
-    // delete the album key from meta
-    // delete meta.album;
+    if (songData.newSingers.length > 0) {
+      const addSingersQuery = {
+        text: 'INSERT INTO singers(name) VALUES ($1) RETURNING id, name',
+        values: [songData.newSingers],
+      };
+      const addedSingers = await pool.query(addSingersQuery);
+      // Create an array of singer ids
+      const newSingersIds: SingerOption[] = addedSingers.rows.map((singer) => ({
+        id: singer.id,
+        name: singer.name,
+      }));
+      songData.singers = [...songData.singers, ...newSingersIds];
+    }
 
-    // // Upload the song with thumbnail
+    /*
+      5. Add to song_singer mapping
+    */
+    const dataToInsert = songData.singers.map((obj) => [
+      addedSong.title,
+      obj.id,
+      addedSong.id,
+      obj.name,
+    ]);
+
+    const addToSingerMappingQuery = format(
+      'INSERT INTO song_singer(song_title, singerid, songid, singer_name) VALUES %L RETURNING id',
+      dataToInsert
+    );
+
+    const addedMaps = await pool.query(addToSingerMappingQuery);
+    if (addedMaps.rowCount === 0) {
+      return res.status(400).send({
+        message: 'Song could not be linked with singers.',
+      });
+    }
 
     return res.status(200).send({
-      // song: songResult.rows,
-      data: 'done',
+      albumId: albumId,
+      mappedToAlbum: addSongToAlbum.rows,
+      singerMaps: addedMaps.rows,
+      song: addedSong,
     });
   } catch (err) {
     console.log('err at uploading song: ', err);

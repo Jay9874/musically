@@ -1,12 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  Component,
-  ElementRef,
-  inject,
-  model,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, model, signal } from '@angular/core';
 import { debounceTime, distinctUntilChanged, lastValueFrom } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 import { Role } from '../../../../types/interfaces/interfaces.user';
@@ -59,6 +52,7 @@ export class UploadSongComponent {
     description: '',
     title: '',
     singers: [],
+    newSinger: [],
     song: null,
     songThumbnail: null,
     albumThumbnail: null,
@@ -84,7 +78,6 @@ export class UploadSongComponent {
           console.log('the value is: ', value);
           // Perform your action here, e.g., trigger an API call with the debounced 'value'
           console.log('Debounced input:', value);
-          
         }
       });
   }
@@ -214,6 +207,11 @@ export class UploadSongComponent {
         this.toast.info('Please upload correct audio and thumbnail.');
         return;
       }
+      // Add newly added singer to new album
+      this.newAlbum.update((prev) => ({
+        ...prev,
+        newSinger: this.newSingers(),
+      }));
       const token$ = this.consoleService.uploadSong(this.newAlbum());
       const res = await lastValueFrom(token$);
       this.toast.success('Uploaded the song successfully.');

@@ -1,5 +1,10 @@
 import { FileMeta } from './interfaces.song';
 
+export interface SingerOption {
+  id: string;
+  name: string;
+}
+
 export interface SongUploadBody {
   albumData: {
     id: string | null;
@@ -8,7 +13,8 @@ export interface SongUploadBody {
   };
   songData: {
     title: string;
-    singers: string[];
+    singers: SingerOption[];
+    newSingers: string[];
   };
   meta: {
     songMeta: FileMeta;

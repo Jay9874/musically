@@ -1,3 +1,4 @@
+import { SingerOption } from './interfaces.console';
 import { FileMeta } from './interfaces.song';
 
 export interface LoadedAlbum {
@@ -23,7 +24,8 @@ export interface UploadingAlbum {
   song: BinaryFile | null;
   songThumbnail: BinaryFile | null;
   albumThumbnail: BinaryFile | null;
-  singers: string[];
+  singers: SingerOption[];
+  newSinger: string[];
   title: string;
 }
 

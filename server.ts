@@ -21,6 +21,9 @@ import { musicRouter } from './routes/music';
 import { authenticate, authorize } from './middleware/auth-middleware';
 import { pool } from './db';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export function app(): express.Express {
   const server = express();
   server.use(express.json());

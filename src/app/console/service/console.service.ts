@@ -86,6 +86,7 @@ export class ConsoleService {
       songData: {
         title: newAlbum.title,
         singers: newAlbum.singers,
+        newSingers: newAlbum.newSinger,
       },
       meta: {
         songMeta: newAlbum.song!.meta,
