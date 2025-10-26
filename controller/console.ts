@@ -229,10 +229,11 @@ export const uploadSong = async (
       4. Add singer of song to db if new singers
     */
     if (songData.newSingers.length > 0) {
-      const addSingersQuery = {
-        text: 'INSERT INTO singers(name) VALUES ($1) RETURNING id, name',
-        values: [songData.newSingers],
-      };
+      const dataToInsert = songData.newSingers.map((singer) => [singer]);
+      const addSingersQuery = format(
+        `INSERT INTO singers(name) VALUES %L RETURNING id, name`,
+        dataToInsert
+      );
       const addedSingers = await pool.query(addSingersQuery);
       // Create an array of singer ids
       const newSingersIds: SingerOption[] = addedSingers.rows.map((singer) => ({
@@ -372,9 +373,10 @@ export const typeToSearch = async (
         message: 'Cant search for singers, please enter search terms',
       });
     }
+    let pattern = `%${term}%`;
     const query = {
-      text: 'SELECT name FROM singers WHERE name ILIKE $1',
-      values: [term],
+      text: 'SELECT id, name FROM singers WHERE name ILIKE $1 LIMIT 5',
+      values: [pattern],
     };
     const singers = await pool.query(query);
     return res.status(200).send({

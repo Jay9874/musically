@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, model, signal } from '@angular/core';
-import { debounceTime, distinctUntilChanged, lastValueFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, lastValueFrom, map } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 import { Role } from '../../../../types/interfaces/interfaces.user';
 import { ToastService } from '../../toast/services/toast.service';
@@ -11,6 +11,7 @@ import { Selectable } from '../../../../types/interfaces/interfaces.common';
 import { Album, FileMeta } from '../../../../types/interfaces/interfaces.song';
 import { UploadingAlbum } from '../../../../types/interfaces/interfaces.album';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SingerOption } from '../../../../types/interfaces/interfaces.console';
 
 interface ThumbnailUrls {
   songThumbnail: string | null;
@@ -43,7 +44,8 @@ export class UploadSongComponent {
   albums = model<Album[]>([]);
   newSingers = model<string[]>([]);
   currentInput = model('');
-
+  foundSingers = signal<SingerOption[]>([]);
+  loadingSinger = model(false);
   searchInput = new FormControl('');
 
   newAlbum = model<UploadingAlbum>({
@@ -69,14 +71,17 @@ export class UploadSongComponent {
     // Listen to input with debounce
     this.searchInput.valueChanges
       .pipe(
-        debounceTime(400), // Wait for 400ms after the last keystroke
+        map((value) => {
+          this.foundSingers.set([]);
+          return value;
+        }),
+        debounceTime(750), // Wait for 400ms after the last keystroke
         distinctUntilChanged() // Only emit if the value is different from the last
       )
-      .subscribe((value) => {
+      .subscribe(async (value) => {
         // call api is value is not only spaces
         if (value && value.trim() !== '') {
-          console.log('the value is: ', value);
-          // Perform your action here, e.g., trigger an API call with the debounced 'value'
+          this.typeToSearch(value);
           console.log('Debounced input:', value);
         }
       });
@@ -86,13 +91,20 @@ export class UploadSongComponent {
     return (event.target as HTMLInputElement).value;
   }
 
-  typeToSearch(): void {
+  async typeToSearch(term: string): Promise<void> {
     try {
+      this.loadingSinger.set(true);
+      this.foundSingers.set([]);
+      const token$ = this.consoleService.typeToSearch(term);
+      const res = await lastValueFrom(token$);
+      this.loadingSinger.set(false);
+      this.foundSingers.set(res);
     } catch (err) {
-      console.log('error occurred while searching for singer: ', err);
+      console.log('err: ', err);
+      const { error } = err as HttpErrorResponse;
+      this.toast.error(error.message);
     }
   }
-
   addNewSinger(): void {
     if (this.currentInput() !== '') {
       this.newSingers.update((prev) => [...prev, this.currentInput()]);

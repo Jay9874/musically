@@ -10,8 +10,22 @@
 
             <fieldset>
                 <legend>Singers</legend>
-                <input id="singer" [formControl]="searchInput" type="text" name="singer" placeholder="Type to search"
-                    required />
+                <div class="singer-search-container">
+                    <input id="singer" [formControl]="searchInput" type="text" name="singer"
+                        placeholder="Type to search" required />
+                    <div class="singers-result">
+                        @if (loadingSinger()) {
+                        <p class="singer-name">Searching...</p>
+                        }@else {
+                        @for (singer of foundSingers(); track $index) {
+                        <p class="singer-name">{{singer.name}}</p>
+                        }@empty {
+                        <p>No singer found with this name, create a new one below.</p>
+                        }
+                        }
+                    </div>
+                </div>
+
                 <form #newSingerForm="ngForm" class="pill-adder" (submit)="addNewSinger()">
                     <label for="new-singer" style="margin-bottom: 0.25rem;">New Singers</label>
                     <div class="tag-with-input">

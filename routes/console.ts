@@ -51,9 +51,9 @@ router.post('/upload', relatedData);
 /**
  * @description Type to search singers
  * @route /api/console/singers?term=term
- * @method POST
+ * @method GET
  */
-router.post('/singers', typeToSearch);
+router.get('/singers', typeToSearch);
 
 // Export router; should always export as default
 export const consoleRouter = router;

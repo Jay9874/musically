@@ -13,6 +13,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "externalDependencies": [
+              "pg-format"
+            ],
             "outputPath": "dist/musically",
             "outputMode": "server",
             "index": "src/index.html",

@@ -6,7 +6,10 @@ import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 import { Album, Meta } from '../../../../types/interfaces/interfaces.song';
 import { AuthService } from '../../auth/services/auth.service';
 import { UploadingAlbum } from '../../../../types/interfaces/interfaces.album';
-import { SongUploadBody } from '../../../../types/interfaces/interfaces.console';
+import {
+  SingerOption,
+  SongUploadBody,
+} from '../../../../types/interfaces/interfaces.console';
 import { FormsModule } from '@angular/forms';
 
 export interface UploadResponse {
@@ -64,16 +67,18 @@ export class ConsoleService {
     );
   }
 
-  typeToSearch(term: string): Observable<string[]> {
-    return this.http.get<any>(`${this.baseApi}/singers?term=${term}`).pipe(
-      map((res) => {
-        console.log('res: ', res);
-        return [''];
-      }),
-      catchError((err) => {
-        return throwError(() => err);
-      })
-    );
+  typeToSearch(term: string): Observable<SingerOption[]> {
+    return this.http
+      .get<{ singers: SingerOption[] }>(`${this.baseApi}/singers?term=${term}`)
+      .pipe(
+        map((res) => {
+          console.log('res: ', res);
+          return res.singers;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
   }
 
   uploadSong(newAlbum: UploadingAlbum): Observable<any> {
