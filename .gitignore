@@ -53,3 +53,5 @@ package-lock.json
 
 # Ignore uploads
 uploads
+# ignore database structure
+sql.md

@@ -64,6 +64,18 @@ export class ConsoleService {
     );
   }
 
+  typeToSearch(term: string): Observable<string[]> {
+    return this.http.get<any>(`${this.baseApi}/singers?term=${term}`).pipe(
+      map((res) => {
+        console.log('res: ', res);
+        return [''];
+      }),
+      catchError((err) => {
+        return throwError(() => err);
+      })
+    );
+  }
+
   uploadSong(newAlbum: UploadingAlbum): Observable<any> {
     const body: SongUploadBody = {
       albumData: {

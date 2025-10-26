@@ -32,6 +32,17 @@ export const routes: Routes = [
         title: 'Musically | New',
       },
       {
+        path: 'album/:albumid',
+        pathMatch: 'full',
+        canActivate: [checkSessionGuard],
+        canActivateChild: [checkSessionGuard],
+        loadComponent: () =>
+          import('../app/common/album/album.component').then(
+            (m) => m.AlbumComponent
+          ),
+        title: AlbumNameResolver,
+      },
+      {
         path: 'radio',
         canActivate: [checkSessionGuard],
         loadComponent: () =>
@@ -77,15 +88,6 @@ export const routes: Routes = [
             data: { roles: ['admin'] },
           },
         ],
-      },
-      {
-        path: 'album/:albumid',
-        pathMatch: 'full',
-        loadComponent: () =>
-          import('../app/common/album/album.component').then(
-            (m) => m.AlbumComponent
-          ),
-        title: AlbumNameResolver,
       },
     ],
   },

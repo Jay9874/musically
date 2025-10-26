@@ -4,6 +4,7 @@ import express from 'express';
 import {
   getAllUsers,
   relatedData,
+  typeToSearch,
   updateUser,
   uploadSong,
 } from '../controller/console';
@@ -27,7 +28,7 @@ router.get('/users', getAllUsers);
 router.put('/users', updateUser);
 
 /**
- * @description Update a song.
+ * @description Update a song with album, singers.
  * @route /api/console/song/upload
  * @method POST
  */
@@ -46,6 +47,13 @@ router.get('/related-data', relatedData);
  * @method POST
  */
 router.post('/upload', relatedData);
+
+/**
+ * @description Type to search singers
+ * @route /api/console/singers?term=term
+ * @method POST
+ */
+router.post('/singers', typeToSearch);
 
 // Export router; should always export as default
 export const consoleRouter = router;

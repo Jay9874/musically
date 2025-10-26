@@ -1,7 +1,7 @@
 <nav>
     <ul class="sidebar-links">
         @for (link of links; track $index) {
-        <li>
+        <li (click)="onLinkClick()">
             @if (link.value === 'console') {
             <a *hasAccess="['admin']" class="sidebar-link console-link" [routerLink]="link.href"
                 routerLinkActive="active">

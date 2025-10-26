@@ -84,7 +84,7 @@
 
             <!-- Mobile menu content -->
             <div class="mobile-menu {{menuStatus()}}">
-                <app-menu-links [links]="sidebarLinks" />
+                <app-menu-links (onClick)="onMenuToggle()" [links]="sidebarLinks" />
             </div>
         </section>
         <section class="main-container">

@@ -7,7 +7,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, lastValueFrom } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
 import { Role } from '../../../../types/interfaces/interfaces.user';
 import { ToastService } from '../../toast/services/toast.service';
@@ -17,7 +17,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { Selectable } from '../../../../types/interfaces/interfaces.common';
 import { Album, FileMeta } from '../../../../types/interfaces/interfaces.song';
 import { UploadingAlbum } from '../../../../types/interfaces/interfaces.album';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 interface ThumbnailUrls {
   songThumbnail: string | null;
@@ -26,7 +26,7 @@ interface ThumbnailUrls {
 
 @Component({
   selector: 'app-upload-song',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './upload-song.component.html',
   styleUrl: './upload-song.component.css',
 })
@@ -51,6 +51,8 @@ export class UploadSongComponent {
   newSingers = model<string[]>([]);
   currentInput = model('');
 
+  searchInput = new FormControl('');
+
   newAlbum = model<UploadingAlbum>({
     id: null,
     name: '',
@@ -68,6 +70,33 @@ export class UploadSongComponent {
     if (this.authService.user()) {
       await this.getUsers();
       await this.getRelatedData();
+    }
+
+    // Listen to input with debounce
+    this.searchInput.valueChanges
+      .pipe(
+        debounceTime(400), // Wait for 400ms after the last keystroke
+        distinctUntilChanged() // Only emit if the value is different from the last
+      )
+      .subscribe((value) => {
+        // call api is value is not only spaces
+        if (value && value.trim() !== '') {
+          console.log('the value is: ', value);
+          // Perform your action here, e.g., trigger an API call with the debounced 'value'
+          console.log('Debounced input:', value);
+          
+        }
+      });
+  }
+
+  getValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
+  }
+
+  typeToSearch(): void {
+    try {
+    } catch (err) {
+      console.log('error occurred while searching for singer: ', err);
     }
   }
 

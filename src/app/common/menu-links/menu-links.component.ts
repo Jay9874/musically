@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SidebarLink } from '../../../../types/interfaces/interfaces.common';
 import { HasAccessDirective } from '../../directives/has-access.directive';
@@ -11,4 +11,8 @@ import { HasAccessDirective } from '../../directives/has-access.directive';
 })
 export class MenuLinksComponent {
   @Input({ required: true }) links!: SidebarLink[];
+  @Output() onClick = new EventEmitter<any>();
+  onLinkClick(): void {
+    this.onClick.emit();
+  }
 }

@@ -88,34 +88,60 @@ export const loadAlbum = async (
         message: 'Please provide album name to search details.',
       });
     }
+    /*
+      1. Get the album details from "albums" with album id and user id.
+      2. Then get songs in album from "song_album"
+    */
 
-    const query = {
-      text: "SELECT albums.*, songs.thumbnail as songThumbnail, json_build_object('id', songs.id, 'meta', songs.meta) as song, albums.id as albumId FROM albums JOIN songs ON songs.albumid=albums.id WHERE albums.id=$1",
+    const album = await pool.query('SELECT * FROM albums WHERE id = $1', [id]);
+
+    /*
+      Get all the songs joining table song_singer for singers details, songs for meta
+    */
+    const songsQuery = {
+      text: `
+    SELECT songs.*, song_singer.* 
+    FROM song_album 
+    JOIN songs ON songs.id = song_album.songid
+    JOIN song_singer ON song_singer.songid = song_album.songid
+    WHERE song_album.albumid = $1
+    `,
       values: [id],
     };
 
-    const result = await pool.query(query);
-    if (result.rowCount === 0) {
-      return res.status(400).send({
-        message: 'The album could not be loaded.',
-      });
-    }
+    const songsDetails = await pool.query(songsQuery);
 
-    const album = result.rows[0];
-    let formattedAlbum: LoadedAlbum = {
-      id: album.id,
-      name: album.name,
-      songs: [],
-    };
-    result.rows.forEach((album) => {
-      formattedAlbum.songs.push({
-        ...album.song,
-        thumbnail: album.songthumbnail,
-      });
-    });
+    console.log('album details: ', album.rows);
+    console.log('songs details: ', songsDetails.rows);
+    // const query = {
+    //   text: "SELECT albums.*, songs.thumbnail as songThumbnail, json_build_object('id', songs.id, 'meta', songs.meta) as song, albums.id as albumId FROM albums JOIN songs ON songs.albumid=albums.id WHERE albums.id=$1",
+    //   values: [id],
+    // };
+
+    // const result = await pool.query(query);
+    // if (result.rowCount === 0) {
+    //   return res.status(400).send({
+    //     message: 'The album could not be loaded.',
+    //   });
+    // }
+
+    // const album = result.rows[0];
+    // let formattedAlbum: LoadedAlbum = {
+    //   id: album.id,
+    //   name: album.name,
+    //   songs: [],
+    // };
+    // result.rows.forEach((album) => {
+    // formattedAlbum.songs.push({
+    //   ...album.song,
+    //   thumbnail: album.songthumbnail,
+    // });
+    // });
 
     return res.status(200).send({
-      album: formattedAlbum,
+      // album: formattedAlbum,
+      album: {}, // album details with name, thumbnail, and description
+      songs: [], // Songs array with only text not binary with thumbnails, name, singers;
     });
   } catch (err) {
     console.log('err while loading a album: ', err);

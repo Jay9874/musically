@@ -44,9 +44,15 @@ progress::-moz-progress-bar {
 }
 
 
-.song-progress-container {
+.song-thumbnail {
     max-width: 200px;
     width: 80%;
+}
+
+.song-data {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .login-container {

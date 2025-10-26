@@ -183,9 +183,8 @@ export const uploadSong = async (
       });
     }
 
-    let songId;
     const songQuery = {
-      text: 'INSERT INTO songs(uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+      text: 'INSERT INTO songs(uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5) RETURNING id, title',
       values: [
         loggedUser,
         songData.title,
@@ -200,9 +199,8 @@ export const uploadSong = async (
       return res.status(400).send({
         message: 'The song could not be uploaded.',
       });
-    } else {
-      songId = songResult.rows[0].id;
     }
+    const addedSong: 
 
     /*
       3. Add the song in album
@@ -219,9 +217,8 @@ export const uploadSong = async (
     /*
       4. Add singer of song
     */
-   const rows = songData.singers.map(singer => [songId])
-   const addSingers = 
-    console.log('body: ', textData);
+    const rows = songData.singers.map((singer) => [songId]);
+    const addSingers = console.log('body: ', textData);
     console.log('files: ', files);
     // delete the album key from meta
     // delete meta.album;
@@ -315,3 +312,35 @@ export async function handler(request: Request) {
     );
   }
 }
+
+/**
+ * @param req Express req object with singer search term in query
+ * @param res Matching singer names with term.
+ * @param next Error handler is error.
+ * @returns Response to client.
+ */
+export const typeToSearch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const term = req.query['term'] as string;
+    if (!term || term.trim() === '') {
+      return res.status(400).send({
+        message: 'Cant search for singers, please enter search terms',
+      });
+    }
+    const query = {
+      text: 'SELECT name FROM singers WHERE name ILIKE $1',
+      values: [term],
+    };
+    const singers = await pool.query(query);
+    return res.status(200).send({
+      singers: singers.rows,
+    });
+  } catch (err) {
+    console.log('err while searching for singers with term: ', err);
+    return next(err);
+  }
+};

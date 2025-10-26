@@ -74,17 +74,6 @@ export class MusicService {
         map((res) => {
           // console.log('loaded album: ', res);
           const album: LoadedAlbum = res.album;
-          this.player.set({
-            title: album.name,
-            song: this.generateFile(
-              album.songs[0].thumbnail.data,
-              album.songs[0].meta.songMeta.type
-            ),
-            thumbnail: this.generateFile(
-              album.songs[0].thumbnail.data,
-              album.songs[0].meta.thumbnailMeta.type
-            ),
-          });
           return res.album;
         }),
         catchError((err) => {
