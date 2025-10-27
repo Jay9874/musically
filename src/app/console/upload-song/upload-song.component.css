@@ -209,13 +209,26 @@ fieldset {
 }
 
 .singers-result {
+    padding: 1rem;
     position: absolute;
     min-height: 30px;
-    bottom: -35px;
     width: 100%;
+    margin-top: 0.5rem;
     border-radius: 5px;
     border: 1px solid rgba(128, 128, 128, 0.5);
     background-color: rgba(128, 128, 128);
+}
+
+.close-singer-result-btn {
+    height: 20px;
+    width: 20px;
+}
+
+.singer-name {
+    background-color: transparent;
+    padding: 0.25rem;
+    border-radius: 5px;
+    border: 1px solid black;
 }
 
 .singers-result>p {
@@ -232,17 +245,20 @@ fieldset {
     border: none;
 }
 
-.tag-with-input {
+.tag-with-input,
+.singer-search-container {
     border-radius: 5px;
     padding: 0.125rem 0.25rem;
     border: 1px solid rgba(128, 128, 128, 0.5);
 }
 
-.tag-with-input:focus-within {
+.tag-with-input:focus-within,
+.singer-search-container:focus-within {
     border: 1px solid #fff;
 }
 
-.tag-with-input>input {
+.tag-with-input>input,
+.singer-search-container>input {
     padding: 0.375rem;
 }
 
@@ -259,12 +275,14 @@ fieldset {
 }
 
 
-#new-singer {
+.new-singer,
+.singer {
     border: none;
     width: fit-content;
 }
 
-#new-singer:focus {
+.new-singer:focus,
+.singer:focus {
     border: none;
     outline: none;
 }

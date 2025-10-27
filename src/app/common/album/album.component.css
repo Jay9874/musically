@@ -9,12 +9,12 @@ li {
 .album-meta {
     display: flex;
     gap: 1rem;
+    /* flex-wrap: wrap; */
 }
 
 .album-thumbnail {
-    flex-grow: 25;
+    flex-grow: 0.40;
     height: 200px;
-    width: 200px;
     border-radius: 5px;
     border: 1px solid rgba(128, 128, 128, 0.5);
     display: flex;
@@ -29,11 +29,15 @@ li {
     object-position: center center;
 }
 
-.album-description {
-    flex-grow: 75;
+.album-info {
+    flex-grow: 0.60;
     border-radius: 5px;
     border: 1px solid rgba(128, 128, 128, 0.5);
     padding: 1rem;
+}
+
+.album-description {
+    margin-top: 1rem;
 }
 
 .songs-container {
@@ -71,8 +75,10 @@ li {
 .song-name {
     font-weight: bold;
 }
-.song-singers{
+
+.song-singers {
     color: var(--gray6);
+    font-size: 0.75rem;
 }
 
 .sr-no {
@@ -88,6 +94,11 @@ li {
 
 .song-row {
     display: flex;
+    gap: 1rem;
     justify-content: flex-start;
     align-items: center;
+}
+
+.song-row img {
+    border-radius: 5px;
 }

@@ -11,26 +11,49 @@
             <fieldset>
                 <legend>Singers</legend>
                 <div class="singer-search-container">
-                    <input id="singer" [formControl]="searchInput" type="text" name="singer"
+                    @for (singer of newAlbum().singers; track $index) {
+                    <div class="tag">
+                        <span>{{singer.name}}</span>
+                        <button (click)="removeSinger(singer)" type="button" class="tag-cancel-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
+                                    fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="32" d="M320 320L192 192M192 320l128-128" />
+                            </svg>
+                        </button>
+                    </div>
+                    }
+                    <input id="singer" class="singer" [formControl]="searchInput" type="text" name="singer"
                         placeholder="Type to search" required />
+                    @if (searchInput.value !== '' && !hideSingerResult()) {
                     <div class="singers-result">
+                        <button type="button" class="close-singer-result-btn" (click)="hideResult()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z"
+                                    fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="32" d="M320 320L192 192M192 320l128-128" />
+                            </svg>
+                        </button>
                         @if (loadingSinger()) {
                         <p class="singer-name">Searching...</p>
                         }@else {
                         @for (singer of foundSingers(); track $index) {
-                        <p class="singer-name">{{singer.name}}</p>
+                        <button type="button" (click)="addSinger(singer)" class="singer-name">{{singer.name}}</button>
                         }@empty {
                         <p>No singer found with this name, create a new one below.</p>
                         }
                         }
                     </div>
+                    }
                 </div>
 
                 <form #newSingerForm="ngForm" class="pill-adder" (submit)="addNewSinger()">
                     <label for="new-singer" style="margin-bottom: 0.25rem;">New Singers</label>
                     <div class="tag-with-input">
                         @for (tag of newSingers(); track $index) {
-                        <div role="search" class="tag">
+                        <div class="tag">
                             <span>{{tag}}</span>
                             <button (click)="removeNewSinger(tag)" type="button" class="tag-cancel-btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
@@ -43,8 +66,8 @@
                             </button>
                         </div>
                         }
-                        <input (keydown.backspace)="onBackspacePressed($event)" id="new-singer" type="text"
-                            name="newSinger" [(ngModel)]="currentInput"
+                        <input (keydown.backspace)="onBackspacePressed($event)" id="new-singer" class="new-singer"
+                            type="text" name="newSinger" [(ngModel)]="currentInput"
                             [placeholder]="newSingers().length === 0?'e.g. Arijit Singh':''" required />
                     </div>
                 </form>
@@ -95,12 +118,6 @@
                     </div>
                 </div>
             </fieldset>
-            <!-- <div> -->
-
-
-
-            <!-- </div> -->
-
 
             <!-- Album for song -->
             <fieldset class="album-container">
@@ -116,7 +133,7 @@
                 <div class="input-container">
                     <label for="new-album">New Album</label>
                     <input id=" new-album" type="text" [ngModel]="newAlbum().name" name="new-album"
-                        (ngModelChange)="onNewAlbum($event)" placeholder="your album name" required />
+                        (ngModelChange)="onNewAlbum($event)" placeholder="your album name" />
                 </div>
                 <div class="input-container album-thumbnail">
                     <label>Album thumbnail</label>
@@ -154,11 +171,9 @@
                 <div class="input-container">
                     <label for="album-description">Description</label>
                     <textarea rows="2" id="album-description" type="text" [(ngModel)]="newAlbum().description"
-                        name="new-album" placeholder="Tell us more about your album" required></textarea>
+                        name="new-album" placeholder="Tell us more about your album"></textarea>
                 </div>
             </fieldset>
-            <!-- </div> -->
-
 
             <button [disabled]="uploadSongForm.invalid || loader.isLoading()" class="submit-btn" type="submit"
                 title="{{uploadSongForm.invalid?'Enter song details to upload': 'Upload the song'}}">

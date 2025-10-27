@@ -1,5 +1,8 @@
 <main>
     <div class="card">
-        <a class="album-link" [routerLink]="['/album', album.id]">{{album.name}}</a>
+        <a class="album-link" [routerLink]="['/album', album.id]">
+            <img [src]="album.thumbnailUrl" alt="Album thumbnail" />
+        </a>
     </div>
+    <a class="album-anchor" [routerLink]="['/album', album.id]">{{album.name}}</a>
 </main>

@@ -13,7 +13,7 @@ li {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.25rem;
+    padding: 0.25rem 0.5rem;
     background-color: transparent;
     border: none;
     color: hsl(0deg 0% 100% / 92%);

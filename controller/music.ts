@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { pool } from '../db';
-import { LoadedAlbum } from '../types/interfaces/interfaces.album';
 
 /**
  *
@@ -100,7 +99,7 @@ export const loadAlbum = async (
     */
     const songsQuery = {
       text: `
-    SELECT songs.*, song_singer.* 
+    SELECT songs.meta, songs.thumbnail, song_singer.* 
     FROM song_album 
     JOIN songs ON songs.id = song_album.songid
     JOIN song_singer ON song_singer.songid = song_album.songid
@@ -110,38 +109,9 @@ export const loadAlbum = async (
     };
 
     const songsDetails = await pool.query(songsQuery);
-
-    console.log('album details: ', album.rows);
-    console.log('songs details: ', songsDetails.rows);
-    // const query = {
-    //   text: "SELECT albums.*, songs.thumbnail as songThumbnail, json_build_object('id', songs.id, 'meta', songs.meta) as song, albums.id as albumId FROM albums JOIN songs ON songs.albumid=albums.id WHERE albums.id=$1",
-    //   values: [id],
-    // };
-
-    // const result = await pool.query(query);
-    // if (result.rowCount === 0) {
-    //   return res.status(400).send({
-    //     message: 'The album could not be loaded.',
-    //   });
-    // }
-
-    // const album = result.rows[0];
-    // let formattedAlbum: LoadedAlbum = {
-    //   id: album.id,
-    //   name: album.name,
-    //   songs: [],
-    // };
-    // result.rows.forEach((album) => {
-    // formattedAlbum.songs.push({
-    //   ...album.song,
-    //   thumbnail: album.songthumbnail,
-    // });
-    // });
-
     return res.status(200).send({
-      // album: formattedAlbum,
-      album: {}, // album details with name, thumbnail, and description
-      songs: [], // Songs array with only text not binary with thumbnails, name, singers;
+      album: album.rows[0], // album details with name, thumbnail, and description
+      songs: songsDetails.rows, // Songs array with only text not binary with thumbnails, name, singers;
     });
   } catch (err) {
     console.log('err while loading a album: ', err);
@@ -169,8 +139,9 @@ export const loadSong = async (
         message: 'Please provide song id to load.',
       });
     }
+    console.log('id to search: ', id);
     const query = {
-      text: 'SELECT song, thumbnail, meta FROM songs WHERE id=$1',
+      text: 'SELECT song, thumbnail, meta, id, title FROM songs WHERE id=$1',
       values: [id],
     };
     const result = await pool.query(query);
@@ -179,8 +150,9 @@ export const loadSong = async (
         message: 'The song do not exists.',
       });
     }
+
     return res.status(200).send({
-      ...result.rows[0],
+      song: result.rows[0],
     });
   } catch (err) {
     console.log('err while loading a song: ', err);

@@ -1,18 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { Album, FileMeta } from '../../../../types/interfaces/interfaces.song';
+import { FileMeta } from '../../../../types/interfaces/interfaces.song';
 
-import { LoadedAlbum } from '../../../../types/interfaces/interfaces.album';
+import { generateFile } from '../../../../utils/FileHandler';
+import {
+  DBAlbum,
+  DBSong,
+  LoadedAlbum,
+} from '../../../../types/interfaces/interfaces.album';
 interface AlbumResponse {
-  albums: Album[];
+  albums: DBAlbum[];
 }
 
-interface LoadAlbumResponse {
-  album: LoadedAlbum;
-}
-
-interface SongResponse {
+export interface LoadedSong {
   thumbnail: { type: string; data: Uint8Array };
   song: { type: string; data: Uint8Array };
   meta: {
@@ -20,6 +21,10 @@ interface SongResponse {
     songMeta: FileMeta;
     thumbnailMeta: FileMeta;
   };
+}
+
+interface SongResponse {
+  song: LoadedSong;
 }
 
 interface Player {
@@ -34,15 +39,13 @@ interface Player {
 export class MusicService {
   private readonly apiBase = 'api/music';
 
-  // Signals
-  allAlbums = signal<Album[]>([]);
-
   player = signal<Player | null>(null);
-  queue = signal<string[]>([]);
+  queue = signal<DBSong[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  getAlbumDetails(albumid: string): Observable<Album> {
+  // Get album name to show in title
+  getAlbumDetails(albumid: string): Observable<DBAlbum> {
     return this.http
       .get<AlbumResponse>(`${this.apiBase}/album/${albumid}`)
       .pipe(
@@ -56,10 +59,19 @@ export class MusicService {
       );
   }
 
-  getAllAlbums(): Observable<Album[]> {
+  getAllAlbums(): Observable<DBAlbum[]> {
     return this.http.get<AlbumResponse>(`${this.apiBase}/albums`).pipe(
       map((res) => {
-        return res.albums;
+        // Loop over albums and create thumbnail url
+        const updatedAlbums: DBAlbum[] = res.albums.map((album) => {
+          return {
+            ...album,
+            id: album.id,
+            name: album.name,
+            thumbnailUrl: generateFile(album.thumbnail.data, album.meta.type),
+          };
+        });
+        return updatedAlbums;
       }),
       catchError((err) => {
         return throwError(() => err);
@@ -69,12 +81,19 @@ export class MusicService {
 
   loadAlbum(albumId: string): Observable<LoadedAlbum> {
     return this.http
-      .get<LoadAlbumResponse>(`${this.apiBase}/load/album/${albumId}`)
+      .get<LoadedAlbum>(`${this.apiBase}/load/album/${albumId}`)
       .pipe(
         map((res) => {
-          // console.log('loaded album: ', res);
-          const album: LoadedAlbum = res.album;
-          return res.album;
+          const { album, songs } = res;
+          const updatedAlbum: DBAlbum = {
+            ...album,
+            thumbnailUrl: generateFile(album.thumbnail.data, album.meta.type),
+          };
+          const updatedSongs: DBSong[] = songs.map((song) => ({
+            ...song,
+            thumbnailUrl: generateFile(song.thumbnail.data, song.meta.type),
+          }));
+          return { album: updatedAlbum, songs: updatedSongs };
         }),
         catchError((err) => {
           return throwError(() => err);
@@ -88,14 +107,11 @@ export class MusicService {
       .pipe(
         map((res) => {
           console.log('res: ', res);
-          const { song, meta, thumbnail } = res;
+          const { song, meta, thumbnail } = res.song;
           const newPlayer: Player = {
             title: meta.title,
-            song: this.generateFile(song.data, meta.songMeta.type),
-            thumbnail: this.generateFile(
-              thumbnail.data,
-              meta.thumbnailMeta.type
-            ),
+            song: generateFile(song.data, meta.songMeta.type),
+            thumbnail: generateFile(thumbnail.data, meta.thumbnailMeta.type),
           };
           this.player.set(newPlayer);
           return newPlayer;
@@ -104,11 +120,5 @@ export class MusicService {
           return throwError(() => err);
         })
       );
-  }
-
-  generateFile(data: Uint8Array, mimetype: string): string {
-    let blob = new Blob([new Uint8Array(data).buffer], { type: mimetype });
-    const url: string = URL.createObjectURL(blob);
-    return url;
   }
 }

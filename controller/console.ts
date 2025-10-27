@@ -1,7 +1,6 @@
 import { Request, type Response, NextFunction } from 'express';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { pool } from '../db';
-import { Meta } from '../types/interfaces/interfaces.song';
 import {
   SingerOption,
   SongUploadBody,
@@ -120,7 +119,10 @@ export const uploadSong = async (
       req.files as any;
     const songFile = files['song'][0];
     const songThumbnailFile: Express.Multer.File = files['songThumbnail'][0];
-    const albumThumbnailFile: Express.Multer.File = files['albumThumbnail'][0];
+    let albumThumbnailFile: Express.Multer.File | null = null;
+    if (meta.albumThumbnailMeta) {
+      albumThumbnailFile = files['albumThumbnail'][0];
+    }
 
     let albumId;
     /*
@@ -145,7 +147,7 @@ export const uploadSong = async (
           albumData.name,
           loggedUser,
           albumData.description,
-          albumThumbnailFile.buffer,
+          albumThumbnailFile?.buffer,
           meta.albumThumbnailMeta,
         ],
       };
@@ -159,25 +161,28 @@ export const uploadSong = async (
         albumId = createdAlbum.rows[0].id;
       }
     } else {
-      // Else update the thumbnail and description of old thumbnail with id
-      const updateAlbumQuery = {
-        text: 'UPDATE albums SET thumbnail = $1, meta = $2, description = $3 WHERE id = $4 RETURNING id',
-        values: [
-          albumThumbnailFile.buffer,
-          meta.albumThumbnailMeta,
-          albumData.description,
-          albumData.id,
-        ],
-      };
-      const updatedAlbum = await pool.query(updateAlbumQuery);
-      if (updatedAlbum.rowCount === 0) {
-        return res.status(400).send({
-          message: 'The album could not be updated.',
-        });
-      } else {
-        albumId = updatedAlbum.rows[0].id;
-      }
+      albumId = albumData.id;
     }
+    // } else {
+    //   // Else update the thumbnail and description of old thumbnail with id
+    //   const updateAlbumQuery = {
+    //     text: 'UPDATE albums SET thumbnail = $1, meta = $2, description = $3 WHERE id = $4 RETURNING id',
+    //     values: [
+    //       albumThumbnailFile.buffer,
+    //       meta.albumThumbnailMeta,
+    //       albumData.description,
+    //       albumData.id,
+    //     ],
+    //   };
+    //   const updatedAlbum = await pool.query(updateAlbumQuery);
+    //   if (updatedAlbum.rowCount === 0) {
+    //     return res.status(400).send({
+    //       message: 'The album could not be updated.',
+    //     });
+    //   } else {
+    //     albumId = updatedAlbum.rows[0].id;
+    //   }
+    // }
 
     /*
       2. Work with song

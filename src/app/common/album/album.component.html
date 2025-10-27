@@ -3,33 +3,37 @@
     <div class="album-meta">
         <!-- Album thumbnail -->
         <div class="album-thumbnail">
-            <!-- @if(thumbnailUrl()){
-            <img [src]="thumbnailUrl()" alt="Album thumbnail" />
-            }@else{ -->
+            @if(album()?.thumbnailUrl){
+            <img [src]="album()?.thumbnailUrl" alt="Album thumbnail" />
+            }@else{
             <b>Album Thumbnail</b>
-            <!-- } -->
+            }
         </div>
-        <div class="album-description">
-            <h2>{{album()?.name}}</h2>
+        <div class="album-info">
+            <h2 style="margin-bottom: 1rem;">{{album()?.name}}</h2>
+
+            <p class="album-description">{{album()?.description}}</p>
         </div>
     </div>
     <!-- Songs list -->
     <div class="songs-container">
-        @for (song of album()?.songs; track $index; let i=$index) {
-        <button role="button" (click)="onSongClick(song.id)" type="button" class="song-row">
+        @for (song of songs(); track $index; let i=$index) {
+        <button role="button" (click)="onSongClick(song.songid)" type="button" class="song-row">
             <div class="song-row">
                 <p class="sr-no">{{i+1}}</p>
+                <img height="40" width="40" [src]="song.thumbnailUrl" alt="song thumbnail">
                 <p class="song-info">
-                    <span class="song-name">{{song.meta.title}}</span><br />
-                    <span class="song-singers">singers</span>
+                    <span class="song-name">{{song.song_title}}</span><br />
+                    <span class="song-singers">{{song.singer_name}}</span>
                 </p>
+                <!-- <button type="button" class="more-btn">
+                    <img height="20" width="20" src="/icons/ellipsis.svg" alt="more option button icon" />
+                </button> -->
             </div>
-            <!-- <button type="button" class="more-btn">
-                <img height="20" width="20" src="/icons/ellipsis.svg" alt="more option button icon" />
-            </button> -->
+
         </button>
         }@empty {
-        <li>No song in this album</li>
+        <p>No song in this album</p>
         }
     </div>
 </main>

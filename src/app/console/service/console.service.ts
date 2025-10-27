@@ -3,21 +3,22 @@ import { inject, Injectable, signal } from '@angular/core';
 import { UsersResponse } from '../console.component';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { SessionUser } from '../../../../types/interfaces/interfaces.session';
-import { Album, Meta } from '../../../../types/interfaces/interfaces.song';
 import { AuthService } from '../../auth/services/auth.service';
-import { UploadingAlbum } from '../../../../types/interfaces/interfaces.album';
+import {
+  DBAlbum,
+  UploadingAlbum,
+} from '../../../../types/interfaces/interfaces.album';
 import {
   SingerOption,
   SongUploadBody,
 } from '../../../../types/interfaces/interfaces.console';
-import { FormsModule } from '@angular/forms';
 
 export interface UploadResponse {
   success: boolean;
 }
 
 export interface RelatedResponse {
-  albums: Album[];
+  albums: DBAlbum[];
 }
 
 @Injectable({
@@ -31,7 +32,7 @@ export class ConsoleService {
 
   // Signals
   allUsers = signal<SessionUser[]>([]);
-  albums = signal<Album[]>([]);
+  albums = signal<DBAlbum[]>([]);
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<UsersResponse> {
@@ -55,7 +56,7 @@ export class ConsoleService {
       );
   }
 
-  getRelatedData(): Observable<Album[]> {
+  getRelatedData(): Observable<DBAlbum[]> {
     return this.http.get<RelatedResponse>(`${this.baseApi}/related-data`).pipe(
       map((res) => {
         this.albums.set(res.albums);
@@ -96,13 +97,17 @@ export class ConsoleService {
       meta: {
         songMeta: newAlbum.song!.meta,
         songThumbnailMeta: newAlbum.songThumbnail!.meta,
-        albumThumbnailMeta: newAlbum.albumThumbnail!.meta,
+        albumThumbnailMeta: newAlbum.albumThumbnail
+          ? newAlbum.albumThumbnail.meta
+          : null,
       },
     };
     const formData = new FormData();
     formData.append('song', newAlbum.song!.blob);
     formData.append('songThumbnail', newAlbum.songThumbnail!.blob);
-    formData.append('albumThumbnail', newAlbum.albumThumbnail!.blob);
+    if (newAlbum.albumThumbnail) {
+      formData.append('albumThumbnail', newAlbum.albumThumbnail!.blob);
+    }
     formData.append('body', JSON.stringify(body));
     return this.http
       .post<any>(`${this.baseApi}/song/upload`, formData, {

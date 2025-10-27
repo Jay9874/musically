@@ -1,4 +1,10 @@
 // Interface for custom class ApiError
+
+export interface FileBuffer {
+  type: string;
+  data: Uint8Array;
+}
+
 export interface ApiError extends Error {
   success: boolean;
   message: string;

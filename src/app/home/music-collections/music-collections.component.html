@@ -1,4 +1,6 @@
 <main>
+    <h1 style="margin-bottom: 2rem;">Home</h1>
+    <p class="home-subtitle">Updated albums</p>
     @for (album of albums(); track $index) {
     <app-album-card [album]="album" />
     }

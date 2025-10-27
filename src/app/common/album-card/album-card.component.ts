@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
-import { Album, Song } from '../../../../types/interfaces/interfaces.song';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { DBAlbum } from '../../../../types/interfaces/interfaces.album';
 
 @Component({
   selector: 'app-album-card',
@@ -9,8 +9,11 @@ import { RouterLink } from '@angular/router';
   styleUrl: './album-card.component.css',
 })
 export class AlbumCardComponent {
-  @Input({ required: true }) album!: Album;
-  songs = signal<Song[]>([]);
+  @Input({ required: true }) album!: DBAlbum;
 
   constructor() {}
+
+  ngOnInit(): void {
+    console.log('album is: ', this.album);
+  }
 }

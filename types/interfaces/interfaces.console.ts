@@ -19,6 +19,6 @@ export interface SongUploadBody {
   meta: {
     songMeta: FileMeta;
     songThumbnailMeta: FileMeta;
-    albumThumbnailMeta: FileMeta;
+    albumThumbnailMeta: FileMeta | null;
   };
 }

@@ -1,3 +1,9 @@
 main {
-    padding: 1rem 0 1rem 1rem;
+    padding: 2.5rem 0 2.5rem 2.5rem;
+}
+
+.home-subtitle {
+    color: #a9a9a9;
+    font-size: 0.90rem;
+    margin-bottom: 0.5rem;
 }

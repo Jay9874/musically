@@ -8,8 +8,11 @@ import { ConsoleService } from '../service/console.service';
 import { AuthService } from '../../auth/services/auth.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { Selectable } from '../../../../types/interfaces/interfaces.common';
-import { Album, FileMeta } from '../../../../types/interfaces/interfaces.song';
-import { UploadingAlbum } from '../../../../types/interfaces/interfaces.album';
+import { FileMeta } from '../../../../types/interfaces/interfaces.song';
+import {
+  DBAlbum,
+  UploadingAlbum,
+} from '../../../../types/interfaces/interfaces.album';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SingerOption } from '../../../../types/interfaces/interfaces.console';
 
@@ -41,12 +44,13 @@ export class UploadSongComponent {
     albumThumbnail: null,
     songThumbnail: null,
   });
-  albums = model<Album[]>([]);
+  albums = model<DBAlbum[]>([]);
   newSingers = model<string[]>([]);
   currentInput = model('');
   foundSingers = signal<SingerOption[]>([]);
   loadingSinger = model(false);
   searchInput = new FormControl('');
+  hideSingerResult = model(true);
 
   newAlbum = model<UploadingAlbum>({
     id: null,
@@ -91,9 +95,22 @@ export class UploadSongComponent {
     return (event.target as HTMLInputElement).value;
   }
 
+  hideResult(): void {
+    this.hideSingerResult.set(true);
+  }
+
+  // Add singer to existing singer list
+  addSinger(singer: SingerOption): void {
+    this.newAlbum.update((prev) => ({
+      ...prev,
+      singers: [...prev.singers, singer],
+    }));
+  }
+
   async typeToSearch(term: string): Promise<void> {
     try {
       this.loadingSinger.set(true);
+      this.hideSingerResult.set(false);
       this.foundSingers.set([]);
       const token$ = this.consoleService.typeToSearch(term);
       const res = await lastValueFrom(token$);
@@ -118,6 +135,13 @@ export class UploadSongComponent {
       newSingers.pop();
       this.newSingers.set(newSingers);
     }
+  }
+
+  removeSinger(singer: SingerOption): void {
+    const updatedSingers = this.newAlbum().singers.filter(
+      (obj) => obj.id !== singer.id
+    );
+    this.newAlbum.update((prev) => ({ ...prev, singers: updatedSingers }));
   }
 
   removeNewSinger(singer: string): void {
@@ -153,7 +177,7 @@ export class UploadSongComponent {
   async getRelatedData(): Promise<void> {
     try {
       const token$ = this.consoleService.getRelatedData();
-      const albums: Album[] = await lastValueFrom(token$);
+      const albums: DBAlbum[] = await lastValueFrom(token$);
       this.albums.set(albums);
       if (this.albums().length > 0) {
         this.newAlbum.update((prev) => ({ ...prev, id: this.albums()[0].id }));
@@ -211,11 +235,7 @@ export class UploadSongComponent {
   async uploadSong(): Promise<void> {
     try {
       console.log('album: ', this.newAlbum());
-      if (
-        !this.newAlbum().song ||
-        !this.newAlbum().songThumbnail ||
-        !this.newAlbum().albumThumbnail
-      ) {
+      if (!this.newAlbum().song || !this.newAlbum().songThumbnail) {
         this.toast.info('Please upload correct audio and thumbnail.');
         return;
       }

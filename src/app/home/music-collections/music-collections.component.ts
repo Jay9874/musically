@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Album } from '../../../../types/interfaces/interfaces.song';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../toast/services/toast.service';
 import { MusicService } from '../../services/music/music.service';
 import { lastValueFrom } from 'rxjs';
-import { AlbumCardComponent } from "../../common/album-card/album-card.component";
+import { AlbumCardComponent } from '../../common/album-card/album-card.component';
+import { DBAlbum } from '../../../../types/interfaces/interfaces.album';
 
 @Component({
   selector: 'app-music-collections',
@@ -17,7 +17,7 @@ export class MusicCollectionsComponent implements OnInit {
   toast: ToastService = inject(ToastService);
   musicService: MusicService = inject(MusicService);
 
-  albums = signal<Album[]>([]);
+  albums = signal<DBAlbum[]>([]);
 
   constructor() {}
 
@@ -29,6 +29,7 @@ export class MusicCollectionsComponent implements OnInit {
     try {
       const token$ = this.musicService.getAllAlbums();
       const res = await lastValueFrom(token$);
+      // Get make url from thumbnail
       this.albums.set(res);
     } catch (err) {
       console.log('err occurred while getting albums: ', err);

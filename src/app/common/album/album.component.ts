@@ -1,10 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MusicService } from '../../services/music/music.service';
-import { LoadedAlbum } from '../../../../types/interfaces/interfaces.album';
 import { lastValueFrom, of, switchMap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../toast/services/toast.service';
+import {
+  DBAlbum,
+  DBSong,
+  LoadedAlbum,
+} from '../../../../types/interfaces/interfaces.album';
 
 @Component({
   selector: 'app-album',
@@ -19,7 +23,8 @@ export class AlbumComponent implements OnInit {
 
   albumid!: string | null;
   heroes = [];
-  album = signal<LoadedAlbum | null>(null);
+  album = signal<DBAlbum | null>(null);
+  songs = signal<DBSong[]>([]);
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -38,7 +43,8 @@ export class AlbumComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('fetched album details: ', res);
-          this.album.set(res);
+          this.album.set(res ? res.album : null);
+          this.songs.set(res ? res.songs : []);
         },
         error: (err) => {
           console.log('err at details: ', err);
