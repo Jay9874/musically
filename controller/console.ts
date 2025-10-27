@@ -7,12 +7,6 @@ import {
 } from '../types/interfaces/interfaces.console';
 import format from 'pg-format';
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 /**
  *
  * @param req Request do not have body, query or parameter.
@@ -198,13 +192,18 @@ export const uploadSong = async (
         message: 'Song with this title already exits.',
       });
     }
+    // Combine song and thumbnail meta
+    const combinedMeta = {
+      songMeta: meta.songMeta,
+      thumbnailMeta: meta.songThumbnailMeta,
+    };
 
     const songQuery = {
       text: 'INSERT INTO songs(uploaded_by, title, meta, song, thumbnail) VALUES ($1, $2, $3, $4, $5) RETURNING id, title',
       values: [
         loggedUser,
         songData.title,
-        meta.songThumbnailMeta,
+        combinedMeta,
         songFile.buffer,
         songThumbnailFile.buffer,
       ],

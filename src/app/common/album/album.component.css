@@ -9,17 +9,36 @@ li {
 .album-meta {
     display: flex;
     gap: 1rem;
-    /* flex-wrap: wrap; */
 }
 
 .album-thumbnail {
-    flex-grow: 0.40;
-    height: 200px;
+    min-width: 150px;
+
+    flex-grow: 1;
     border-radius: 5px;
     border: 1px solid rgba(128, 128, 128, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+}
+
+.album-info {
+    flex-grow: 0;
+    flex-shrink: 1;
+    border-radius: 5px;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    padding: 1rem;
+    max-height: 150px;
+    overflow: hidden;
+}
+
+.album-description {
+    margin-top: 1rem;
+    line-clamp: 5;
+    -webkit-line-clamp: 3;
+    /* height: 50px; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.80rem;
+    color: #a9a9a9;
+    padding-bottom: 1rem;
 }
 
 .album-thumbnail img {
@@ -27,17 +46,6 @@ li {
     width: 100%;
     border-radius: 5px;
     object-position: center center;
-}
-
-.album-info {
-    flex-grow: 0.60;
-    border-radius: 5px;
-    border: 1px solid rgba(128, 128, 128, 0.5);
-    padding: 1rem;
-}
-
-.album-description {
-    margin-top: 1rem;
 }
 
 .songs-container {
@@ -101,4 +109,15 @@ li {
 
 .song-row img {
     border-radius: 5px;
+}
+
+/******************* Media Query at < 480px ************/
+@media screen and (max-width: 479px) {
+    .album-meta {
+        display: block;
+    }
+
+    .album-info {
+        margin-top: 0.5rem;
+    }
 }

@@ -1,7 +1,5 @@
 <main>
-    <!-- Album meta -->
     <div class="album-meta">
-        <!-- Album thumbnail -->
         <div class="album-thumbnail">
             @if(album()?.thumbnailUrl){
             <img [src]="album()?.thumbnailUrl" alt="Album thumbnail" />
@@ -10,11 +8,12 @@
             }
         </div>
         <div class="album-info">
-            <h2 style="margin-bottom: 1rem;">{{album()?.name}}</h2>
-
+            <h3 style="margin-bottom: 1rem;">{{album()?.name}}</h3>
             <p class="album-description">{{album()?.description}}</p>
+
         </div>
     </div>
+
     <!-- Songs list -->
     <div class="songs-container">
         @for (song of songs(); track $index; let i=$index) {

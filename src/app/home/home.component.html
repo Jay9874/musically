@@ -41,15 +41,47 @@
                 </div>
             </div>
             <div class="song-info top-nav-child">
-                <div class="song-thumbnail" aria-label="Song thumbnail">
-                    <img height="30" width="30"
-                        [src]="musicService.player() ? musicService.player()?.thumbnail: 'icons/musical-notes.svg'"
+                <div class="song-thumbnail {{musicService.player()?.thumbnail? 'active':''}}"
+                    aria-label="Song thumbnail">
+                    <img [src]="musicService.player() ? musicService.player()?.thumbnail: 'icons/musical-notes.svg'"
                         alt="music note icon" />
                 </div>
                 <div class="song-progress">
                     <div class="progress-brand-container">
+                        @if(musicService.player()){
+                        <h4>{{musicService.player()?.title}}</h4>
+                        <div>
+                            @for (singer of musicService.player()?.singers; track $index) {
+                            <span>{{singer}}</span>
+                            }
+                        </div>
+                        }@else {
                         <img id="brand-logo" src="musically.svg" alt="company_logo" />
+                        }
                     </div>
+                    @if(musicService.player()){
+                    <div class="player-md-control">
+                        <button type="button" (click)="playPauseSong()" class="player-md-icon">
+                            @if(musicPlaying()){
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor"
+                                    d="M208 432h-48a16 16 0 01-16-16V96a16 16 0 0116-16h48a16 16 0 0116 16v320a16 16 0 01-16 16zM352 432h-48a16 16 0 01-16-16V96a16 16 0 0116-16h48a16 16 0 0116 16v320a16 16 0 01-16 16z" />
+                            </svg>
+                            }@else {
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor"
+                                    d="M133 440a35.37 35.37 0 01-17.5-4.67c-12-6.8-19.46-20-19.46-34.33V111c0-14.37 7.46-27.53 19.46-34.33a35.13 35.13 0 0135.77.45l247.85 148.36a36 36 0 010 61l-247.89 148.4A35.5 35.5 0 01133 440z" />
+                            </svg>
+                            }
+                        </button>
+                        <button class="player-md-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                                <path fill="currentColor"
+                                    d="M481.29 229.47l-188.87-113a30.54 30.54 0 00-31.09-.39 33.74 33.74 0 00-16.76 29.47v79.05L63.85 116.44a30.54 30.54 0 00-31.09-.39A33.74 33.74 0 0016 145.52v221A33.74 33.74 0 0032.76 396a30.54 30.54 0 0031.09-.39L244.57 287.4v79.08A33.74 33.74 0 00261.33 396a30.54 30.54 0 0031.09-.39l188.87-113a31.27 31.27 0 000-53z" />
+                            </svg>
+                        </button>
+                    </div>
+                    }
                     <div class="progress-signin">
                         <app-user-status />
                     </div>
@@ -93,10 +125,10 @@
         <!-- Mobile Music Player -->
         <section class="bottom-music-player">
             <div class="mobile-music-controller">
-                <div class="mobile-song-thumbnail" aria-label="Song thumbnail">
+                <div class="mobile-song-thumbnail {{musicService.player()?.thumbnail? 'active':''}}"
+                    aria-label="Song thumbnail">
                     <!-- <img height="30" width="30" src="icons/musical-notes.svg" alt="music note icon" /> -->
-                    <img height="30" width="30"
-                        [src]="musicService.player() ? musicService.player()?.thumbnail: 'icons/musical-notes.svg'"
+                    <img [src]="musicService.player() ? musicService.player()?.thumbnail: 'icons/musical-notes.svg'"
                         alt="music note icon" />
                 </div>
                 @if (musicService.player()) {

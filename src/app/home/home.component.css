@@ -247,10 +247,28 @@ li {
 }
 
 .mobile-song-thumbnail {
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    outline: 1px solid #3a3a3a;
     padding: 0.5rem;
     background-color: #323232;
-    border-radius: 0.5rem;
-    border: 1px solid #3a3a3a;
+}
+
+.mobile-song-thumbnail.active {
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    padding: 0;
+    outline: 1px solid #3a3a3a;
+}
+
+.mobile-song-thumbnail img {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: center center;
 }
 
 #brand-name {
@@ -294,6 +312,19 @@ li {
 
 .song-thumbnail {
     padding: 0.25rem;
+    height: 46px;
+    width: 46px;
+}
+
+.song-thumbnail.active {
+    padding: 0;
+}
+
+.song-thumbnail.active img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center center;
 }
 
 .song-progress {
@@ -309,6 +340,22 @@ li {
     flex-grow: 1;
     display: flex;
     justify-content: center;
+    color: var(--player-active-text);
+}
+
+.player-md-control {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    padding: 0 0.75rem;
+}
+
+.player-md-icon {
+    color: var(--player-active-text);
+    background-color: transparent;
+    height: 30px;
+    width: 30px;
+    border: none;
 }
 
 .volume-container {
@@ -402,6 +449,10 @@ progress::-moz-progress-bar {
 
 @media screen and (min-width:1001px) {
     .progress-signin {
+        display: none;
+    }
+
+    .player-md-control {
         display: none;
     }
 

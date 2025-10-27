@@ -16,11 +16,13 @@ interface AlbumResponse {
 export interface LoadedSong {
   thumbnail: { type: string; data: Uint8Array };
   song: { type: string; data: Uint8Array };
+  id: string;
+  title: string;
   meta: {
-    title: string;
     songMeta: FileMeta;
     thumbnailMeta: FileMeta;
   };
+  singers: string[];
 }
 
 interface SongResponse {
@@ -31,6 +33,7 @@ interface Player {
   title: string;
   song: string;
   thumbnail: string;
+  singers: string[];
 }
 
 @Injectable({
@@ -107,9 +110,10 @@ export class MusicService {
       .pipe(
         map((res) => {
           console.log('res: ', res);
-          const { song, meta, thumbnail } = res.song;
+          const { song, meta, thumbnail, title } = res.song;
           const newPlayer: Player = {
-            title: meta.title,
+            singers: [],
+            title: title,
             song: generateFile(song.data, meta.songMeta.type),
             thumbnail: generateFile(thumbnail.data, meta.thumbnailMeta.type),
           };

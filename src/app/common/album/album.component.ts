@@ -42,7 +42,6 @@ export class AlbumComponent implements OnInit {
       )
       .subscribe({
         next: (res) => {
-          console.log('fetched album details: ', res);
           this.album.set(res ? res.album : null);
           this.songs.set(res ? res.songs : []);
         },
