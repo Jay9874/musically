@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.css',
 })
-export class ToastComponent implements OnInit, AfterViewInit, OnChanges {
+export class ToastComponent implements OnInit, AfterViewInit {
   @ViewChildren('toast') toastsRef!: QueryList<ElementRef>;
 
   @Input() alignment: Alignment = { vertical: 'top', horizontal: 'center' };
