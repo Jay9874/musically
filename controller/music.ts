@@ -139,7 +139,6 @@ export const loadSong = async (
         message: 'Please provide song id to load.',
       });
     }
-    console.log('id to search: ', id);
     const query = {
       text: 'SELECT song, thumbnail, meta, id, title FROM songs WHERE id=$1',
       values: [id],

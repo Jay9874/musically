@@ -61,7 +61,6 @@ export class ProfileComponent {
     this.data$ = this.authService.changeUsername(this.username());
     this.data$.subscribe({
       next: (value) => {
-        console.log('value', value);
         this.toast.success('Hurrah! your username changed.');
         this.authService.loading.set(false);
       },

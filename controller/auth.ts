@@ -24,7 +24,7 @@ const verifyEmailUrl =
 const recoverAccountUrl =
   process.env['NODE_ENV'] === 'development'
     ? 'http://localhost:4200/auth/reset-password'
-    : `${process.env['LIVE_SERVER']}/auth/reset-password` ;
+    : `${process.env['LIVE_SERVER']}/auth/reset-password`;
 
 // @desc     Login the user
 // @route    /login
@@ -239,7 +239,6 @@ export const register = async (
         });
       })
       .then(() => {
-        console.log('User added:', result.rows[0]);
         return res.status(200).send({
           message: 'User created, check email to proceed ahead.',
         });

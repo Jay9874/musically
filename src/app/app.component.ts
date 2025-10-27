@@ -32,9 +32,6 @@ export class AppComponent implements OnInit {
 
   constructor() {
     const request = inject(REQUEST, { optional: true });
-    if (request) {
-      console.log('Server received a request', request.url);
-    }
 
     const reqContext = inject(REQUEST_CONTEXT, { optional: true }) as {
       server: string;

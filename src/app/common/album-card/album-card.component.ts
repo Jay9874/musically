@@ -12,8 +12,4 @@ export class AlbumCardComponent {
   @Input({ required: true }) album!: DBAlbum;
 
   constructor() {}
-
-  ngOnInit(): void {
-    console.log('album is: ', this.album);
-  }
 }

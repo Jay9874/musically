@@ -26,7 +26,6 @@ export class SecurityService {
       )
       .pipe(
         map((res) => {
-          console.log('res: ', res);
           return true;
         }),
         catchError((err) => {

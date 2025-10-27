@@ -46,10 +46,6 @@ export class ToastComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changed: ', changes);
-  }
-
   ngAfterViewInit(): void {
     // Subscribe to changes in the QueryList for dynamic elements
     this.toastsRef.changes.subscribe((queryList: QueryList<ElementRef>) => {

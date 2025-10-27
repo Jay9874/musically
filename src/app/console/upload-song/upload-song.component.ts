@@ -86,7 +86,6 @@ export class UploadSongComponent {
         // call api is value is not only spaces
         if (value && value.trim() !== '') {
           this.typeToSearch(value);
-          console.log('Debounced input:', value);
         }
       });
   }
@@ -234,7 +233,6 @@ export class UploadSongComponent {
 
   async uploadSong(): Promise<void> {
     try {
-      console.log('album: ', this.newAlbum());
       if (!this.newAlbum().song || !this.newAlbum().songThumbnail) {
         this.toast.info('Please upload correct audio and thumbnail.');
         return;

@@ -116,7 +116,6 @@ export class AuthService {
       .get<boolean>(`${this.apiBaseUrl}/username?username=${username}`)
       .pipe(
         map((res) => {
-          console.log('res is: ', res);
           return true;
         }),
         catchError((err) => {
@@ -138,7 +137,6 @@ export class AuthService {
       })
       .pipe(
         map((res) => {
-          console.log('the res: ', res);
           this.user.set(res.user);
           return true;
         }),

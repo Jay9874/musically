@@ -17,7 +17,6 @@ export const validateLinkGuard: CanActivateFn = async (
   try {
     const verify$ = securityService.validateVerifyToken(token, email);
     let success = await lastValueFrom(verify$);
-    console.log('res: ', success);
     toast.success('Hurrah! Your email got verified.');
     return router.navigate(['auth']);
   } catch (err) {

@@ -53,7 +53,6 @@ export class MusicService {
       .get<AlbumResponse>(`${this.apiBase}/album/${albumid}`)
       .pipe(
         map((res) => {
-          console.log('res: ', res);
           return res.albums[0];
         }),
         catchError((err) => {
@@ -109,7 +108,6 @@ export class MusicService {
       .get<SongResponse>(`${this.apiBase}/song?id=${songId}`)
       .pipe(
         map((res) => {
-          console.log('res: ', res);
           const { song, meta, thumbnail, title } = res.song;
           const newPlayer: Player = {
             singers: [],

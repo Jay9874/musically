@@ -73,7 +73,6 @@ export class ConsoleService {
       .get<{ singers: SingerOption[] }>(`${this.baseApi}/singers?term=${term}`)
       .pipe(
         map((res) => {
-          console.log('res: ', res);
           return res.singers;
         }),
         catchError((err) => {
@@ -116,7 +115,6 @@ export class ConsoleService {
       })
       .pipe(
         map((res) => {
-          console.log('res: ', res);
           return res;
         }),
         catchError((err) => throwError(() => err))

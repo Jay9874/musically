@@ -1,7 +1,6 @@
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
-  isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express, {
@@ -12,6 +11,8 @@ import express, {
 } from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import cors from 'cors';
+
 import cookieParser from 'cookie-parser';
 
 // All the routes
@@ -21,11 +22,32 @@ import { musicRouter } from './routes/music';
 import { authenticate, authorize } from './middleware/auth-middleware';
 import { pool } from './db';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Define allowed origins and other CORS options
+const allowedOrigins = [
+  'http://localhost:4200',
+  'https://musically-murex.vercel.app',
+]; // Replace with your actual frontend origins
 
 export function app(): express.Express {
   const server = express();
+
+  const corsOptions: cors.CorsOptions = {
+    origin: (origin, callback) => {
+      // Check if the requesting origin is in the allowedOrigins list or if it's undefined (for same-origin requests)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true); // Allow the request
+      } else {
+        callback(new Error('Not allowed by CORS')); // Block the request
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed request headers
+    credentials: true, // Allow cookies or other credentials
+  };
+
+  // Apply the CORS middleware with the defined options
+  server.use(cors(corsOptions));
+
   server.use(express.json());
   server.use(cookieParser());
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));

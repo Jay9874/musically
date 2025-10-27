@@ -44,7 +44,6 @@ export class ResendLinkComponent {
     this.securityService.loading.set(true);
     this.securityService.resendVerificationLink(this.email()!).subscribe({
       next: (res) => {
-        console.log('res: ', res);
         this.toast.success('Resent verification email successfully.');
         this.securityService.loading.set(false);
       },
@@ -61,7 +60,6 @@ export class ResendLinkComponent {
     this.securityService.loading.set(true);
     this.securityService.recover(this.email()!).subscribe({
       next: (res) => {
-        console.log('res: ', res);
         this.toast.success('Sent a recovery email, check it out.');
         this.securityService.loading.set(false);
       },

@@ -50,7 +50,6 @@ export class RegisterComponent {
     this.authService.loading.set(false);
     this.authService.checkAvailability(this.user().username).subscribe({
       next: (res) => {
-        console.log('res: ', res);
         this.usernameAvailable.set(true);
         this.authService.loading.set(false);
       },
@@ -73,7 +72,6 @@ export class RegisterComponent {
     );
     this.data$.subscribe({
       next: (value) => {
-        console.log('value', value);
         this.toast.success('Account created, check email to activate it.');
         this.router.navigate(['auth']);
         this.authService.loading.set(false);
