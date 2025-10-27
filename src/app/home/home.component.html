@@ -121,6 +121,9 @@
         </section>
         <section class="main-container">
             <router-outlet />
+            <p class="inspiration">Built with &hearts; and precision in Kolkata<br />
+                by <a href="https://www.google.com/search?q=jay9874&oq=Jay9874" target="_blank">Jay9874</a>
+            </p>
         </section>
         <!-- Mobile Music Player -->
         <section class="bottom-music-player">
@@ -132,7 +135,8 @@
                         alt="music note icon" />
                 </div>
                 @if (musicService.player()) {
-                <p style="height: fit-content; color: #fff;">{{musicService.player()?.title}}
+                <p style="height: fit-content; color: #fff;">
+                    {{musicService.player()?.title}}
                 </p>
                 }
                 <div class="bottom-controls">

@@ -83,9 +83,10 @@ li {
 }
 
 .main-container {
+    position: relative;
     background-color: #1f1f1f;
     color: #ffffffeb;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 64px);
 }
 
 
@@ -402,6 +403,18 @@ progress::-moz-progress-bar {
     width: 100px;
 }
 
+/* Inspiration */
+.inspiration {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    color: rgb(44 44 44);
+}
+
+.inspiration a {
+    color: inherit;
+}
 
 
 /******************* Media Query at 1000px ************/
