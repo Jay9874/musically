@@ -16,7 +16,7 @@ const DB =
     ? process.env.DATABASE_URL
     : process.env.DB_URI;
 const pool = new Pool({
-  connectionString: DB,
+  connectionString: process.env.DATABASE_URL,
 });
 
 export { pool };

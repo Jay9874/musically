@@ -25,7 +25,7 @@ import { pool } from './db';
 // Define allowed origins and other CORS options
 const allowedOrigins = [
   'http://localhost:4200',
-  'https://musically-murex.vercel.app',
+  'https://musically.jay9874.in'
 ]; // Replace with your actual frontend origins
 
 export function app(): express.Express {

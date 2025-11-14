@@ -26,11 +26,13 @@ const recoverAccountUrl =
     ? 'http://localhost:4200/auth/reset-password'
     : `${process.env['LIVE_SERVER']}/auth/reset-password`;
 
-// @desc     Login the user
-// @route    /login
-// @method   POST
-
-// ? asyncHandler should be used for every request for easy async handling
+/**
+ *
+ * @param req Express req object with body having email and password
+ * @param res JSON with logged in user details and a session in cookie.
+ * @param next
+ * @returns Response to client.
+ */
 export const login = async (
   req: Request,
   res: Response,
@@ -140,6 +142,13 @@ export const logout = async (
   }
 };
 
+/**
+ * @description Register a new users with email, password and a username.
+ * @param req Express request object with body having email, password, and username.
+ * @param res A message to verify the email address.
+ * @param next
+ * @returns Response to client.
+ */
 export const register = async (
   req: Request,
   res: Response,
