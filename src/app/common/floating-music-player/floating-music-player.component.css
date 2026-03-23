@@ -1,0 +1,134 @@
+/******* Mobile Music Controller */
+.music-control-btn {
+    border: none;
+    padding: 0.125rem;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.mobile-music-controller {
+    border-radius: 1rem;
+    background-color: rgb(44 44 44);
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+}
+
+.bottom-controls {
+    display: flex;
+    align-items: center;
+}
+
+.mobile-song-thumbnail {
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    outline: 1px solid #3a3a3a;
+    padding: 0.5rem;
+    background-color: #323232;
+}
+
+.mobile-song-thumbnail.active {
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    padding: 0;
+    outline: 1px solid #3a3a3a;
+}
+
+.mobile-song-thumbnail img {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: center center;
+}
+
+
+
+
+/******************* Media Query at 1000px ************/
+@media screen and (480px <=width <=1000px) {
+    .top-nav {
+        padding: 0.5rem;
+    }
+
+    .music-controls-container {
+        display: none;
+    }
+
+    .volume-container {
+        display: none;
+    }
+
+    .navigation-bar {
+        display: none;
+    }
+
+    .sidebar {
+        flex-basis: 28%;
+        flex-shrink: 1;
+    }
+
+    .floating-player {
+        display: none;
+    }
+}
+
+/******************* Media Query at < 480px ************/
+@media screen and (max-width: 479px) {
+    .sidebar {
+        display: none;
+    }
+
+    .right-section {
+        max-width: 100vw;
+    }
+
+    .top-nav {
+        display: none;
+    }
+}
+
+@media screen and (min-width:1001px) {
+    .progress-signin {
+        display: none;
+    }
+
+    .player-md-control {
+        display: none;
+    }
+
+    .navigation-bar {
+        display: none;
+    }
+
+    .floating-player {
+        display: none;
+    }
+
+    .right-section {
+        max-width: 100vw;
+    }
+}
+
+/******************* Break Point for Jio Phone */
+
+@media screen and (151px <=width<=360px) {
+    .mobile-top-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-content: start;
+    }
+
+    .mobile-nav-brand {
+        justify-self: end;
+    }
+
+    .user-avatar {
+        grid-column-start: 2;
+    }
+}

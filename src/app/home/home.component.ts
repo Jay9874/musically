@@ -16,6 +16,8 @@ import { ConsoleService } from '../console/service/console.service';
 import { SidebarLink } from '../../../types/interfaces/interfaces.common';
 import { MenuLinksComponent } from '../common/menu-links/menu-links.component';
 import { MusicService } from '../services/music/music.service';
+import { FloatingMusicPlayerComponent } from "../common/floating-music-player/floating-music-player.component";
+import { NavMusicPlayerComponent } from "../common/nav-music-player/nav-music-player.component";
 
 @Component({
   selector: 'app-home',
@@ -25,7 +27,9 @@ import { MusicService } from '../services/music/music.service';
     RouterOutlet,
     RouterModule,
     MenuLinksComponent,
-  ],
+    FloatingMusicPlayerComponent,
+    NavMusicPlayerComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { FileMeta } from '../../../../types/interfaces/interfaces.song';
 
 import { generateFile } from '../../../../utils/FileHandler';
 import {
@@ -9,43 +8,54 @@ import {
   DBSong,
   LoadedAlbum,
 } from '../../../../types/interfaces/interfaces.album';
-interface AlbumResponse {
-  albums: DBAlbum[];
-}
-
-export interface LoadedSong {
-  thumbnail: { type: string; data: Uint8Array };
-  song: { type: string; data: Uint8Array };
-  id: string;
-  title: string;
-  meta: {
-    songMeta: FileMeta;
-    thumbnailMeta: FileMeta;
-  };
-  singers: string[];
-}
-
-interface SongResponse {
-  song: LoadedSong;
-}
-
-interface Player {
-  title: string;
-  song: string;
-  thumbnail: string;
-  singers: string[];
-}
+import {
+  AlbumResponse,
+  Player,
+  SongResponse,
+} from '../../../../types/interfaces/interfaces.player';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MusicService {
   private readonly apiBase = 'api/music';
-
+  private http = inject(HttpClient);
   player = signal<Player | null>(null);
+  source = signal<AudioBufferSourceNode | null>(null);
   queue = signal<DBSong[]>([]);
+  songBuffer = signal<AudioBuffer | null>(null);
+  context = signal<AudioContext | null>(null);
+  musicPlaying = signal(false);
+  volume = computed(() => {
+    const audioCtx = this.context();
+    if (audioCtx) {
+      return new GainNode(audioCtx);
+    } else return null;
+  });
 
-  constructor(private http: HttpClient) {}
+  ngOnInit(): void {}
+
+  playPause(): void {
+    const audioCtx = this.context();
+    const player = this.player();
+    const song = this.source();
+    console.log('song is: ', song);
+    // check if context is in suspended state (autoplay policy)
+    if (!audioCtx) {
+      return;
+    }
+    if (song && !this.musicPlaying()) {
+      song.start(0);
+      this.source.set(song);
+      this.musicPlaying.set(true);
+    } else {
+      this.musicPlaying.set(false);
+      if (song) {
+        song.stop(0);
+        this.source.set(song);
+      }
+    }
+  }
 
   // Get album name to show in title
   getAlbumDetails(albumid: string): Observable<DBAlbum> {
@@ -61,6 +71,45 @@ export class MusicService {
       );
   }
 
+  loadSong(songId: string): Observable<Player> {
+    return this.http
+      .get<SongResponse>(`${this.apiBase}/song?id=${songId}`)
+      .pipe(
+        map((res) => {
+          const { song, meta, thumbnail, title } = res.song;
+          const uint8 = new Uint8Array(song.data);
+          const audioContext = new AudioContext();
+
+          audioContext
+            .decodeAudioData(uint8.buffer as ArrayBuffer)
+            .then((decodedData) => {
+              this.songBuffer.set(decodedData)
+              const source = audioContext.createBufferSource();
+              source.buffer = decodedData;
+              source.connect(audioContext.destination);
+              this.source.set(source);
+            })
+            .catch((err) => {
+              console.log('Could not decode audio from buffer: ', err);
+            });
+          this.context.set(audioContext);
+          const newPlayer: Player = {
+            singers: [],
+            title: title,
+            song: generateFile(song.data, meta.songMeta.type),
+            thumbnail: generateFile(thumbnail.data, meta.thumbnailMeta.type),
+            isPaused: true,
+          };
+          this.player.set(newPlayer);
+          return newPlayer;
+        }),
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      );
+  }
+
+  // Get all the albums.
   getAllAlbums(): Observable<DBAlbum[]> {
     return this.http.get<AlbumResponse>(`${this.apiBase}/albums`).pipe(
       map((res) => {
@@ -96,27 +145,6 @@ export class MusicService {
             thumbnailUrl: generateFile(song.thumbnail.data, song.meta.type),
           }));
           return { album: updatedAlbum, songs: updatedSongs };
-        }),
-        catchError((err) => {
-          return throwError(() => err);
-        })
-      );
-  }
-
-  loadSong(songId: string): Observable<Player> {
-    return this.http
-      .get<SongResponse>(`${this.apiBase}/song?id=${songId}`)
-      .pipe(
-        map((res) => {
-          const { song, meta, thumbnail, title } = res.song;
-          const newPlayer: Player = {
-            singers: [],
-            title: title,
-            song: generateFile(song.data, meta.songMeta.type),
-            thumbnail: generateFile(thumbnail.data, meta.thumbnailMeta.type),
-          };
-          this.player.set(newPlayer);
-          return newPlayer;
         }),
         catchError((err) => {
           return throwError(() => err);

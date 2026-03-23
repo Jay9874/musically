@@ -60,7 +60,7 @@ line {
     stroke-width: 2;
     stroke-linecap:"round";
     animation-name: lightUp;
-    animation-duration: 500ms;
+    animation-duration: 1s;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
     animation-iteration-count: infinite;
