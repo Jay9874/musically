@@ -26,34 +26,39 @@ export class MusicService {
   songBuffer = signal<AudioBuffer | null>(null);
   context = signal<AudioContext | null>(null);
   musicPlaying = signal(false);
-  volume = computed(() => {
-    const audioCtx = this.context();
-    if (audioCtx) {
-      return new GainNode(audioCtx);
-    } else return null;
-  });
+  volume = signal<GainNode | null>(null);
+  startTime = signal(0);
+  pauseTime = signal(0);
 
   ngOnInit(): void {}
 
   playPause(): void {
     const audioCtx = this.context();
-    const player = this.player();
     const song = this.source();
-    console.log('song is: ', song);
-    // check if context is in suspended state (autoplay policy)
-    if (!audioCtx) {
+    const buffer = this.songBuffer();
+    if (!audioCtx || !song || !buffer) {
       return;
     }
-    if (song && !this.musicPlaying()) {
-      song.start(0);
-      this.source.set(song);
+
+    if (!this.musicPlaying()) {
+      const source = audioCtx.createBufferSource(); // ✅ NEW every time
+      source.buffer = this.songBuffer();
+      // Create the node that controls the volume.
+      const gainNode = new GainNode(audioCtx);
+      source.connect(audioCtx.destination);
+      source.connect(gainNode);
+      // Resume from pauseTime
+      this.startTime.set(audioCtx.currentTime - this.pauseTime());
+      source.start(0, this.pauseTime());
+      this.source.set(source);
+      this.volume.set(gainNode);
       this.musicPlaying.set(true);
     } else {
       this.musicPlaying.set(false);
-      if (song) {
-        song.stop(0);
-        this.source.set(song);
-      }
+      song.stop();
+      // Save current position
+      this.pauseTime.set(audioCtx.currentTime - this.startTime());
+      this.source.set(song);
     }
   }
 
@@ -83,7 +88,7 @@ export class MusicService {
           audioContext
             .decodeAudioData(uint8.buffer as ArrayBuffer)
             .then((decodedData) => {
-              this.songBuffer.set(decodedData)
+              this.songBuffer.set(decodedData);
               const source = audioContext.createBufferSource();
               source.buffer = decodedData;
               source.connect(audioContext.destination);

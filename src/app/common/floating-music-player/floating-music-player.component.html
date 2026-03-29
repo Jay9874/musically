@@ -13,7 +13,7 @@
     }
     <div class="bottom-controls">
         <button type="button" (click)="musicService.playPause()" class="music-control-btn play-btn">
-            <img height="30" width="30" [src]="musicService.context()?'icons/pause.svg':'icons/play.svg'"
+            <img height="30" width="30" [src]="musicService.musicPlaying()?'icons/pause.svg':'icons/play.svg'"
                 alt="Play/Pause button icons" />
         </button>
         <button class="music-control-btn play-forward-btn">
